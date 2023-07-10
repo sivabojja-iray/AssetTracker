@@ -1,0 +1,345 @@
+﻿/* Set padding to keep content from hitting the edges */
+.body-content {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 300px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+body {
+    font: 700 16px/18px 'Open Sans',system-ui;
+}
+
+.main {
+    margin: 0;
+    /* color: #1161ee;*/
+    background: #c8c8c8;
+    background: url('../images/icon/background.png') no-repeat center;
+    font: 700 16px/18px 'Open Sans',system-ui;
+    /* font-family: system-ui;*/
+}
+
+*, :after, :before {
+    box-sizing: border-box;
+    /*border-radius: 30px;*/
+}
+
+.clearfix:after, .clearfix:before {
+    content: '';
+    display: table
+}
+
+.clearfix:after {
+    clear: both;
+    display: block
+}
+
+a {
+    color: inherit;
+    text-decoration: none
+}
+
+    a:active {
+        transform: translateY(0.3rem);
+    }
+
+p {
+    color: #ffc107;
+}
+
+.inputlabel {
+    color: #fff;
+}
+
+.login-wrap {
+    width: 100%;
+    margin: auto;
+    max-width: 525px;
+    min-height: 670px;
+    position: relative;
+    /* background: url(https://raw.githubusercontent.com/khadkamhn/day-01-login-form/master/img/bg.jpg) no-repeat center;*/
+    /*  background: #c8c8c8;*/
+    box-shadow: 0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
+    border-radius: 20px;
+}
+
+.login-html {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    padding: 90px 70px 50px 70px;
+    /*   background: rgba(40,57,101,.9);*/
+    /* background: rgb(1 19 15 / 90%);*/
+    background: rgb(1 1 25 / 50%);
+    border-radius: 15px;
+}
+
+    .login-html .sign-in-htm,
+    .login-html .sign-up-htm {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        transform: rotateY(180deg);
+        backface-visibility: hidden;
+        transition: all .4s linear;
+    }
+
+    .login-html .sign-in,
+    .login-html .sign-up,
+    .login-form .group .check {
+        display: none;
+    }
+
+    .login-html .tab,
+    .login-form .group .label,
+    .login-form .group .button {
+        text-transform: uppercase;
+    }
+
+    .login-html .tab {
+        font-size: 22px;
+        margin-right: 15px;
+        padding-bottom: 5px;
+        margin: 0 15px 10px 0;
+        display: inline-block;
+        border-bottom: 2px solid transparent;
+        color: #fff;
+    }
+
+    .login-html .sign-in:checked + .tab,
+    .login-html .sign-up:checked + .tab {
+        color: #fff;
+        border-color: #1161ee;
+    }
+
+.login-form {
+    min-height: 345px;
+    position: relative;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+}
+
+    .login-form .group {
+        margin-bottom: 15px;
+    }
+
+        .login-form .group .label,
+        .login-form .group .input,
+        .login-form .group .button {
+            width: 100%;
+            display: block;
+        }
+
+        .login-form .group .input,
+        .login-form .group .button {
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: #fff;
+            background: rgba(255,255,255,.1);
+            box-shadow: 0px 0px 10px 2px lightblue;
+        }
+
+            .login-form .group .input:active {
+                transform: translateY(0.3rem);
+            }
+
+        .login-form .group input[data-type="password"] {
+            text-security: circle;
+            -webkit-text-security: circle;
+        }
+
+        .login-form .group .label {
+            font-size: .95rem;
+            margin-bottom: 5px;
+        }
+
+        .login-form .group .button {
+            background: #1161ee;
+            color: #ffc107;
+            box-shadow: 0px 0px 10px 2px #ffc107;
+        }
+
+            .login-form .group .button:active {
+                transform: translateY(0.5rem);
+            }
+
+        .login-form .group label .icon {
+            width: 15px;
+            height: 15px;
+            border-radius: 2px;
+            position: relative;
+            display: inline-block;
+            background: rgba(255,255,255,.1);
+        }
+
+            .login-form .group label .icon:before,
+            .login-form .group label .icon:after {
+                content: '';
+                width: 10px;
+                height: 2px;
+                background: #fff;
+                position: absolute;
+                transition: all .2s ease-in-out 0s;
+            }
+
+            .login-form .group label .icon:before {
+                left: 3px;
+                width: 5px;
+                bottom: 6px;
+                transform: scale(0) rotate(0);
+            }
+
+            .login-form .group label .icon:after {
+                top: 6px;
+                right: 0;
+                transform: scale(0) rotate(0);
+            }
+
+        .login-form .group .check:checked + label {
+            color: #fff;
+        }
+
+            .login-form .group .check:checked + label .icon {
+                background: #1161ee;
+            }
+
+                .login-form .group .check:checked + label .icon:before {
+                    transform: scale(1) rotate(45deg);
+                }
+
+                .login-form .group .check:checked + label .icon:after {
+                    transform: scale(1) rotate(-45deg);
+                }
+
+.login-html .sign-in:checked + .tab + .sign-up + .tab + .login-form .sign-in-htm {
+    transform: rotate(0);
+}
+
+.login-html .sign-up:checked + .tab + .login-form .sign-up-htm {
+    transform: rotate(0);
+}
+
+.hr {
+    /*  height: 2px;
+    margin: 60px 0 50px 0;*/
+    /*  background: rgba(255,255,255,.2);*/
+}
+
+.foot-lnk {
+    text-align: center;
+    color: #fff;
+}
+
+@keyframes fadeInOutAnimation {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.logo {
+    margin: 60px 0 50px 0;
+    cursor: pointer;
+    animation: fadeInOutAnimation 1.5s infinite;
+    animation-direction: alternate-reverse;
+    animation-timing-function: ease-in-out;
+}
+
+.logoAnimation {
+    animation: fadeInOutAnimation 1.5s infinite;
+    animation-direction: alternate-reverse;
+    animation-timing-function: ease-in-out;
+}
+/*AssignAsset and AssertTracker view changes*/
+.table {
+    font-size: .85rem;
+  /*  text-align: center;*/
+}
+
+table#tblAssignAsset {
+    width: 50%;
+    margin-left: 3rem;
+}
+
+/*label {
+    font-size: .95rem;
+}
+*/
+.form-control {
+    font-size: .85rem;
+}
+
+h4, .h4 {
+    color: #0d6efd;
+}
+
+.form-horizontal {
+    box-shadow: 0px 0px 10px 2px #ffc107 !important;
+    border-radius: 20px;
+    background-color: #cfe2ff;
+    padding-top: 1rem;
+}
+
+.pad {
+    padding-top: 2rem;
+}
+
+.input:hover {
+    animation: .8s morph ease infinite;
+}
+
+.button:hover {
+    animation: .8s morph ease infinite;
+}
+
+@keyframes morph {
+    0% {
+        border-radius: 100px 30px 100px 30px;
+    }
+
+    50% {
+        border-radius: 30px 100px 30px 100px;
+    }
+
+    100% {
+        border-radius: 100px 30px 100px 30px;
+    }
+}
+
+@keyframes rot {
+    0% {
+        transform: rotate(-3deg);
+    }
+
+    50% {
+        transform: rotate(3deg);
+    }
+
+    100% {
+        transform: rotate(-3deg);
+    }
+}
+

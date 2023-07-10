@@ -1,0 +1,491 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetRequestModal
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/DashBoardLayout.cshtml";
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+}
+
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
+
+<style>
+    h4 {
+        font-size: 2rem;
+    }
+    .btn {
+        box-shadow: 0px 0px 5px 2px #ffc107!important;
+    }
+
+        .btn:active {
+            transform: translateY(1rem);
+        }
+
+    .submit-progress-bg {
+        background-color: lightgray;
+        opacity: 0.8;
+    }
+
+    .submit-progress {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        height: 6em;
+        padding-top: 2.3em;
+        z-index: 1;
+        /* The following properties are the ones most likely to change */
+        width: 20em;
+        /* Set 'margin-left' to a negative number that is 1/2 of 'width' */
+        margin-left: -10em;
+        padding-left: 2.1em;
+        background-color: #1161ee;
+        color: #fff;
+        -webkit-border-radius: 0.4em;
+        -moz-border-radius: 0.4em;
+        border-radius: 0.4em;
+        box-shadow: 0px 0px 10px 2px #ffc107;
+        -webkit-box-shadow: 0px 0px 10px 2px #ffc107;
+        -moz-box-shadow: 0px 0px 10px 2px #ffc107;
+    }
+    /* Changing style for spinner */
+    .submit-progress {
+        padding-top: 2em;
+        width: 25em;
+        margin-left: -11.5em; /* Set to a negative number that is 1/2 of the width */
+    }
+
+        .submit-progress i {
+            margin-right: 0.5em;
+        }
+</style>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    function DisplaySendProgressMessage(ctl, msg) {
+        // Turn off the "Save" button and change text
+        $(ctl).prop("disabled", true).text(msg);
+        // Gray out background on page
+        $("body").addClass("submit-progress-bg");
+
+        // Wrap in setTimeout so the UI can update the spinners
+        setTimeout(function () {
+            $(".submit-progress").removeClass("visually-hidden");
+        }, 1);
+        $(ctl).prop("disabled", false).text(msg);
+        return true;
+    }
+
+    $(function () {
+        $('#RequestRaisedTo').change(function () {
+            $('#AssetType').empty();
+            $('#AssetName').empty();
+            $('#AvailableSerialNumber').empty();
+            $('#Available').val('');
+            $('#NumberofAssetsRequired').val('');
+            /* debugger;*/
+            if ($('#RequestRaisedTo').val() != "Please select Team") {
+                var RequestRaisedOptions = {};
+                RequestRaisedOptions.url = "/AssetTracker/AssetType";
+                RequestRaisedOptions.type = "POST";
+                RequestRaisedOptions.data = JSON.stringify({
+                    assetType: $('#RequestRaisedTo').val(),
+                });
+                RequestRaisedOptions.datatype = "json";
+                RequestRaisedOptions.contentType = "application/json";
+                RequestRaisedOptions.success = function (assetRequestModal) {
+                    $('#AssetType').empty();
+                    $('#AssetType').append("<option>Please select AssetType</option>");
+                    for (var i = 0; i < assetRequestModal.length; i++) {
+                        /* debugger;  */
+                        $('#AssetType').append("<option>" + assetRequestModal[i] + "</option>");
+                    }
+                    $('#AssetType').prop("disabled", false);
+                };
+                RequestRaisedOptions.error = function () {
+                    alert("Error in Getting AssetTypes!!");
+                };
+                $.ajax(RequestRaisedOptions);
+            } else {
+                $('#AssetType').empty();
+                $('#AssetType').prop("disabled", true);
+            }
+        });
+
+        $('#AssetType').change(function () {
+            $('#AssetName').empty();
+            $('#AvailableSerialNumber').empty();
+            $('#Available').val('');
+            $('#NumberofAssetsRequired').val('');
+            /*debugger;*/
+            if ($('#AssetType').val() != "Please select AssetName") {
+                /*  alert($(this).val());*/
+                var Options = {};
+                Options.url = "/AssetTracker/AssetName";
+                Options.type = "POST";
+                Options.data = JSON.stringify({
+                    team: $('#RequestRaisedTo').val(),
+                    assetType: $('#AssetType').val()
+                });
+                Options.datatype = "json";
+                Options.contentType = "application/json";
+                Options.success = function (assetRequestModal) {
+                    $('#AssetName').empty();
+                    $('#AssetName').append("<option>Please select AssetName</option>");
+                    for (var i = 0; i < assetRequestModal.length; i++) {
+                        $('#AssetName').append("<option>" + assetRequestModal[i] + "</option>");
+                    }
+                };
+                Options.error = function () {
+                    alert("Error in Getting AssetNames!!");
+                };
+                $.ajax(Options);
+            }
+            else {
+                $('#AssetName').empty();
+            }
+        });
+
+        /* debugger;*/
+        $('#AssetName').change(function () {
+            /* debugger;*/
+            $('#AvailableSerialNumber').empty();
+            $('#Available').val('');
+            $('#NumberofAssetsRequired').val('');
+
+            if ($('#Available').val() == "") {
+                /* debugger;*/
+                var Options = {};
+                Options.url = "/AssetTracker/countAssetsList";
+                Options.type = "POST";
+                Options.data = JSON.stringify({
+                    team: $('#RequestRaisedTo').val(),
+                    HWSWName: $('#AssetName').val()
+                });
+                Options.datatype = "json";
+                Options.contentType = "application/json";
+                Options.success = function (assetRequestModal) {
+                    $('#Available').val(assetRequestModal);
+                }
+            };
+            Options.error = function () {
+                alert("Error in Getting Available count Assets!!");
+            };
+            $.ajax(Options);
+
+            if ($('#AssetName').val() != "Please select SerialNumber") {
+                var Options = {};
+                Options.url = "/AssetTracker/serialNumber";
+                Options.type = "POST";
+                Options.data = JSON.stringify({
+                    team: $('#RequestRaisedTo').val(),
+                    HWSWName: $('#AssetName').val()
+                });
+                Options.datatype = "json";
+                Options.contentType = "application/json";
+                Options.success = function (assetRequestModal) {
+                    /* debugger;*/
+                    $('#AvailableSerialNumber').empty();
+                    $('#AvailableSerialNumber').append("<option>Please select SerialNumber</option>");
+                    for (var i = 0; i < assetRequestModal.length; i++) {
+                        $('#AvailableSerialNumber').append("<option>" + assetRequestModal[i] + "</option>");
+                    }
+                };
+                Options.error = function () {
+                    alert("Error in Getting SerialNumbers!!");
+                };
+                $.ajax(Options);
+            }
+            else {
+                $('#AvailableSerialNumber').empty();
+            }
+
+            $('#NumberofAssetsRequired').val('1');
+        })
+
+        //$('#btnsendreq').click(function () {
+        //    alert("Request Send Successfully....");
+        //})
+    });
+</script>
+
+@using (Html.BeginForm("SendRequest", "AssetTracker", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="submit-progress visually-hidden">
+        <i class="fa fa-2x fa-spinner fa-spin"></i>
+        <label>Please wait while Sending the Request...</label>
+    </div>
+
+    <div class="row">
+        <div class="mx-auto col-10 col-md-8 col-lg-6">
+            <div class="form-horizontal animate__animated animate__zoomIn animate__delay-0.8s">
+                <h4 class="text-center">Asset-Request</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <table align="center" width="100%">
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.EmployeeTeam, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.EmployeeTeam, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.EmployeeName, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.RequestRaisedTo, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(model => model.RequestRaisedTo, (IEnumerable<SelectListItem>)ViewData["Teams"], "Please select Team", new { @class = "input form-control" })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AssetType, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(model => model.AssetType, Enumerable.Empty<SelectListItem>(), "Please select AssetType", new { @class = "input form-control" })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AssetName, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(model => model.AssetName, Enumerable.Empty<SelectListItem>(), "Please select AssetName", new { @class = "input form-control" })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Available, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Available, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AvailableSerialNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(model => model.AvailableSerialNumber, Enumerable.Empty<SelectListItem>(), "Please select SerialNumber", new { @class = "input form-control" })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.NumberofAssetsRequired, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.NumberofAssetsRequired, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.RequestDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.RequestDate, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ExpectedReturnDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.ExpectedReturnDate, "{0:dd/MM/yyyy}", new { htmlAttributes = new { @type = "date", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Purpose, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Purpose, new { htmlAttributes = new { @class = "input form-control", rows = "20" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" style="text-align:center">
+                            <div class="form-group">
+                                <div>
+                                    @*<input type="submit" id="submitButton" value="Send Request" class="button btn btn-primary btn-customized mt-4" onclick="return DisplayProgressMessage(this, 'Sending...');" />*@
+                                    <button type="submit" class="button btn btn-primary btn-customized mt-4" onclick="return DisplaySendProgressMessage(this, 'Sending...');">
+                                        Send Request
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.EmployeeTeam, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.EmployeeTeam, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                        </div>
+                    </div>*@
+
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.EmployeeName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                        </div>
+                    </div>*@
+
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.RequestRaisedTo, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.RequestRaisedTo, (IEnumerable<SelectListItem>)ViewData["Teams"], "Please select Team", new { @class = "form-control" })
+                        </div>
+                    </div>*@
+
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.AssetType, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.AssetType, Enumerable.Empty<SelectListItem>(), "Please select AssetType", new { @class = "form-control" })
+                        </div>
+                    </div>*@
+
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.AssetName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.AssetName, Enumerable.Empty<SelectListItem>(), "Please select AssetName", new { @class = "form-control" })
+                        </div>
+                    </div>*@
+
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.Available, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Available, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                        </div>
+                    </div>*@
+
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.AvailableSerialNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.AvailableSerialNumber, Enumerable.Empty<SelectListItem>(), "Please select SerialNumber", new { @class = "form-control" })
+                        </div>
+                    </div>*@
+
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.NumberofAssetsRequired, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.NumberofAssetsRequired, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                        </div>
+                    </div>*@
+
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.RequestDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.RequestDate, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                        </div>
+                    </div>*@
+
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.ExpectedReturnDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.ExpectedReturnDate, "{0:dd/MM/yyyy}", new { htmlAttributes = new { @type = "date", @class = "form-control" } })
+                        </div>
+                    </div>*@
+
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.Purpose, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Purpose, new { htmlAttributes = new { @class = "form-control", rows = "20" } })
+                        </div>
+                    </div>*@
+
+                @*<div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" id="btnsendreq" value="Send Request" class="btn btn-primary btn-customized mt-4" />
+                        </div>
+                    </div>*@
+
+            </div>
+        </div>
+    </div>
+}
+
+@*<div>
+        @Html.ActionLink("Back to List", "Index","DashBoard")
+    </div>*@
+

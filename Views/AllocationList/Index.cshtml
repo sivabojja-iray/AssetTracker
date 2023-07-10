@@ -1,0 +1,97 @@
+﻿@model List<I_RAY_ASSET_TRACKER_MVC.Models.AllocationListModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+}
+
+<style>
+    #tblAllocationList th {
+        background-color: #ffc107;
+    }
+
+    a#btnExport {
+        margin-left: 1.5rem;
+    }
+</style>
+
+<script>
+
+    $(document).ready(function () {
+        $('#tblAllocationList').DataTable();
+    });
+
+    @*$(document).ready(function () {
+        $('#tblAllocationList').DataTable();
+         $.ajax({
+            "url": "@Url.Action("getAllocationList", "AllocationList")",
+            "method": "post",
+            "dataType": "json",
+            success: function (data) {
+                $('#tblAllocationList').DataTable({
+                    paging: true,
+                    sort: true,
+                    searching: true,
+                    data: data,
+                    columns: [
+                        { 'data': 'EmpID' },
+                        { 'data': 'EmployeeName' },
+                        { 'data': 'Team' },
+                        { 'data': 'AssetType' },
+                        { 'data': 'HWSWName' },
+                        { 'data': 'SerialNumberVersionNumber' },
+                        { 'data': 'AssignDate' },
+                        { 'data': 'ExpectedReturnDate' },
+                        { 'data': 'Assetbelongsto' },
+                        { 'data': 'InvoiceNo' },
+                    ]
+                });
+            }
+        });
+    });*@
+</script>
+
+<div align="center">
+    <a id="btnExport" class="button btn btn-primary" href="@Url.Action("ExportToExcel", "AllocationList")">
+        <i class="fas fa-fw fa-file-excel"></i>
+        <span>Export To Excel</span>
+    </a>
+    <a id="btnExport" class="button btn btn-primary" href="@Url.Action("ExportToPdf", "AllocationList")">
+        <i class="fas fa-fw fa-file-pdf"></i>
+        <span>Export To Pdf</span>
+    </a>
+</div>
+<table id="tblAllocationList" style="width:100%;margin-top:2rem" class="display compact table table-bordered table-primary">
+    <thead>
+        <tr>
+            <th>EmpID</th>
+            <th>EmployeeName</th>
+            <th>Team</th>
+            <th>AssetType</th>
+            <th>HWSWName</th>
+            <th>SerialNumberVersionNumber</th>
+            <th>AssignDate</th>
+            <th>ExpectedReturnDate</th>
+            <th>Assetbelongsto</th>
+            <th>InvoiceNo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.EmpID)</td>
+                <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Team)</td>
+                <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.ExpectedReturnDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                <td>@Html.DisplayFor(modelItem => item.InvoiceNo)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

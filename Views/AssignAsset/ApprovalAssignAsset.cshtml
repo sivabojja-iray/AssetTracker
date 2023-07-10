@@ -1,0 +1,305 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssignAssetApproval
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+}
+
+
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
+
+<style>
+    h4{
+        font-size:2rem;
+    }
+    .btn {
+        box-shadow: 0px 0px 5px 2px #ffc107 !important;
+    }
+        .btn:active {
+            transform: translateY(1rem);
+        }
+    .submit-progress-bg {
+        background-color: lightgray;
+        opacity: 0.8;
+    }
+
+    .submit-progress {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        height: 6em;
+        padding-top: 2.3em;
+        z-index: 1;
+        /* The following properties are the ones most likely to change */
+        width: 20em;
+        /* Set 'margin-left' to a negative number that is 1/2 of 'width' */
+        margin-left: -10em;
+        padding-left: 2.1em;
+        background-color: #1161ee;
+        color: #fff;
+        -webkit-border-radius: 0.4em;
+        -moz-border-radius: 0.4em;
+        border-radius: 0.4em;
+        box-shadow: 5px 5px 0px 0px #ffc107;
+        -webkit-box-shadow: 5px 5px 0px 0px #ffc107;
+        -moz-box-shadow: 5px 5px 0px 0px #ffc107;
+    }
+    /* Changing style for spinner */
+    .submit-progress {
+        padding-top: 2em;
+        width: 25em;
+        margin-left: -11.5em; /* Set to a negative number that is 1/2 of the width */
+    }
+
+        .submit-progress i {
+            margin-right: 0.5em;
+        }
+</style>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $(function () {
+        $('#DailyAllocation').click(function () {
+            $('#PermanentAllocation').prop("checked", false);
+        })
+        $('#PermanentAllocation').click(function () {
+            $('#DailyAllocation').prop("checked", false);
+        })
+    })
+
+    function DisplayProgressMessage(ctl, msg) {
+        // Turn off the "Save" button and change text
+        $(ctl).prop("disabled", true).text(msg);
+        // Gray out background on page
+        $("body").addClass("submit-progress-bg");
+
+        // Wrap in setTimeout so the UI can update the spinners
+        setTimeout(function () {
+            $(".submit-progress").removeClass("visually-hidden");
+        }, 1);
+        $(ctl).prop("disabled", false).text(msg);
+        return true;
+    }
+</script>
+
+@*<div class="text-center">
+    <h4>Assign-Asset</h4>
+</div>*@
+
+@using (Html.BeginForm("SaveAssignAsset", "AssignAsset", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="submit-progress visually-hidden">
+        <i class="fa fa-2x fa-spinner fa-spin"></i>
+        <label>Please wait while Assing the Asset...</label>
+    </div>
+
+    <div class="row">
+        <div class="mx-auto col-12 col-md-10 col-lg-8">
+            <div class="form-horizontal pad animate__animated animate__zoomIn animate__delay-0.8s">
+                <h4 class="text-center">Assign-Asset</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <table align="center" width="100%">
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AllocationType, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    <label>
+                                        DailyAllocation
+                                        @Html.CheckBoxFor(model => model.DailyAllocation, new { htmlAttributes = new { @class = "form-control" } })
+                                    </label>
+
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="6">
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    <label>
+                                        PermanentAllocation
+                                        @Html.CheckBoxFor(model => model.PermanentAllocation, new { htmlAttributes = new { @class = "form-control" } })
+                                    </label>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.EmployeeID, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.EmployeeID, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.EmployeeName, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.EmployeeTeam, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.EmployeeTeam, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AssetType, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.AssetType, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.HWSWName, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.HWSWName, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Assetbelongsto, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Assetbelongsto, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AssignDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.AssignDate, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ReturnDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.ReturnDate, new { htmlAttributes = new { @type = "date", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SerialNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.SerialNumber, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Comments, new { htmlAttributes = new { @class = "input form-control" } })
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="1">
+                        </td>
+                        <td colspan="4" style="text-align:center">
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    @*<input type="submit" id="btnsendreq" value="Assign" class="button btn btn-primary btn-customized mt-4" />*@
+                                    <button type="submit" class="button btn btn-primary btn-customized mt-4" onclick="return DisplayProgressMessage(this, 'Assing...');">
+                                        Assign Asset
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+}

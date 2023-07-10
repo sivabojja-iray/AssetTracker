@@ -1,0 +1,125 @@
+﻿@model List<I_RAY_ASSET_TRACKER_MVC.Models.UserModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+}
+
+<style>
+    #tblUserAssetsHaveList th {
+        background-color: #ffc107;
+    }
+
+    .card {
+        --bs-card-spacer-y: 3rem;
+        --bs-card-spacer-x: 3rem;
+    }
+
+    .text-xs {
+        font-size: .85rem;
+    }
+
+    select#ddlDropDownTeam {
+        text-align: center;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#tblUserAssetsHaveList').DataTable();
+    });
+
+     debugger;
+    $(function () {
+        $('.firstDropdown').change(function () {
+               debugger;
+            var rowIndex = $(this).data('rowindex');
+            $('.secondDropdown').empty();
+            if ($('.firstDropdown').val() != "--Select Team--") {
+                var RequestRaisedOptions = {};
+                RequestRaisedOptions.url = "/User/EmployeeName";
+                RequestRaisedOptions.type = "POST";
+                RequestRaisedOptions.data = JSON.stringify({
+                    selectedTeam: $('.firstDropdown[data-rowindex="' + rowIndex + '"]').val(),
+                });
+                RequestRaisedOptions.datatype = "json";
+                RequestRaisedOptions.contentType = "application/json";
+                RequestRaisedOptions.success = function (assetRequestModal) {
+                    $('.secondDropdown[data-rowindex="' + rowIndex + '"]').empty();
+                    $('.secondDropdown[data-rowindex="' + rowIndex + '"]').append("<option>--Select EmployeeName--</option>");
+                    for (var i = 0; i < assetRequestModal.length; i++) {
+                        /* debugger;  */
+                        $('.secondDropdown[data-rowindex="' + rowIndex + '"]').append("<option>" + assetRequestModal[i] + "</option>");
+                    }
+                };
+                RequestRaisedOptions.error = function () {
+                    alert("Error in Getting EmployeeNames!!");
+                };
+                $.ajax(RequestRaisedOptions);
+            } else {
+                $('.secondDropdown[data-rowindex="' + rowIndex + '"]').empty();
+            }
+        });
+    });
+</script>
+
+<div class="row">
+    <!-- Total Assets Card Example -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body animate__animated animate__zoomIn animate__delay-1s">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            What I Have?
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TotalAssetsUserHave</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa fa-user fa-fw fa-3x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <table id="tblUserAssetsHaveList" style="width:100%;margin-top:2rem" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>AssignID</th>
+                <th>EmployeeName</th>
+                <th>AssetBelongsTo</th>
+                <th>AssetType</th>
+                <th>HWSWName</th>
+                <th>SerialNumber</th>
+                <th>AssignDate</th>
+                <th>ReturnDate</th>
+                <th>Team</th>
+                <th>EmployeeName</th>
+                <th>Tranfer</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.AssignID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ExpectedReturnDate)</td>
+                    <td>@Html.DropDownListFor(modelItem => item.TeamDropDown, (IEnumerable<SelectListItem>)ViewData["Teams"], "--Select Team--", new { @class="firstDropdown", data_rowindex = "@item.RowIndex" })</td>
+                    <td>@Html.DropDownListFor(modelItem => item.EmployeeNameDropDown, Enumerable.Empty<SelectListItem>(), "--Select EmployeeName--", new { @class = "secondDropdown", data_rowindex = "@item.RowIndex" })</td>
+                    <td>
+                        <a class="button btn btn-primary">
+                            Transfer
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

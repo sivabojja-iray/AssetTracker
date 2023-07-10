@@ -1,0 +1,404 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetEntryModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+}
+
+<style>
+    h4 {
+        font-size: 2rem;
+    }
+    select#Team, select#AssetType {
+        text-align: center;
+    }
+    table#tblAssetEntry {
+        margin-left: 2rem;
+       /* text-align: center;*/
+    }
+    input#no {
+        margin-left: 2rem;
+    }
+    .row {
+        margin-bottom: 2rem;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    $(function () {
+        $('#yes').click(function () {
+            $('#no').prop("checked", false);
+        })
+        $('#no').click(function () {
+            $('#yes').prop("checked", false);
+        });
+
+        $('#Hardware').click(function () {
+            $('#Software').prop("checked", false);
+        })
+        $('#Software').click(function () {
+            $('#Hardware').prop("checked", false);
+        });
+    });
+</script>
+
+@using (Html.BeginForm("SaveAsset", "AssetEntry", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()  
+    <div class="row">
+        <div class="mx-auto col-12 col-md-10">
+            <div class="form-horizontal pad animate__animated animate__zoomIn animate__delay-0.8s">
+                <h4 class="text-center">Asset Entry</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <table id="tblAssetEntry" align="center" width="100%">
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Team :")   
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.Team, new SelectList(new[] { "FSW", "SV", "IS", "S&R", "Other", "FWV" }), "---Select Team---", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("HW/SW Name :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model=>model.HWSWname, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("HW/SW Validated by ? :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model=>model.HWSWValidatedby, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("HW/SW Description/Category :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.HWSWDescriptionCategory, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Serial Number/ Version Number :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(Model=>Model.SerialNumberVersionNumber, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Asset Type :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.AssetType, new SelectList(new[] { "HI", "Laptop", "Interface", "Accessories", "iDevices", "Android Devices", "Receiver", "ProgrammingCables", "Adaptors", "Monitor", "CPU", "Storage Devices", "Earbuds", "Softwares", "Other" }), "---Select AssetType---", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Date of Reciept :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.EditorFor(model=>model.DateofReciept, new { htmlAttributes = new { @type = "date", @class = "form-control" } })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Owner Ship :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model=>model.OwnerShip, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("HW/SW Verified By :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model=>model.HWSWVerifiedBy, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("HW/SW Verified/Validated Date :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.EditorFor(model=>model.HWSWVerifiedValidatedDate, new { htmlAttributes = new {@type="date" ,@class = "form-control" } })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Invoice Number :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model=>model.InvoiceNumber, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Remarks :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(model=>model.Remarks, new { @class = "form-control",rows="3" })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Is Asset Belongs to GN/Not :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.CheckBoxFor(model => model.yes)<span>Yes</span>
+                                @Html.CheckBoxFor(model => model.no)<span>No</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Category :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.CheckBoxFor(model => model.Hardware)<span>Hardware</span>
+                                @Html.CheckBoxFor(model => model.Software)<span>Software</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Palpatine Version :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model=>model.PalpatineVersion, new { @class = "form-control", @data_toggle = "tooltip", @title = "Enter Palpatine Version" })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Mac Address (SV) :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model=>model.MacAddressSV, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("HI Program :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.HIProgram,  new { @class = "form-control", @data_toggle = "tooltip", @title = "Enter VersionNo" })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("IMEI No :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.IMEINo, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Date of Version Updated :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.DateofVersionUpdated, new { htmlAttributes = new { @type = "date", @class = "form-control" } })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Previous OS :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.PreviousOS, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Model Identifier :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.ModelIdentifier, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("OS Verification Date :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.OSVerificationDate, new { htmlAttributes = new { @type = "date", @class = "form-control" } })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Date of Purchase :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.DateofPurchase, new { htmlAttributes = new { @type = "date", @class = "form-control" } })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Record Updated by ? :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.RecordUpdatedby, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.Label("Record Updated Date :")
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.RecordUpdatedDate, new { htmlAttributes = new { @type = "date", @class = "form-control" } })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1">
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-12">
+                                <button type="submit" class="button btn btn-primary btn-customized mt-4" onclick="return DisplayProgressMessage(this, 'Assing...');">
+                                    Save Details
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </div>
+    </div>
+}
+
