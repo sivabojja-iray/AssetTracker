@@ -15,7 +15,8 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
         public string SerialNumberVersionNumber { get; set; }
         public string AssignDate { get; set; }
         public string ExpectedReturnDate { get; set; }
-        public string TeamDropDown { get; set; }
-        public string EmployeeNameDropDown { get; set; }
+        public string AssetTransferTeam { get; set; }
+        public string AssetTransferEmployeeName { get; set; }
+
     }
 }

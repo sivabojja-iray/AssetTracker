@@ -37,6 +37,11 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             int l = Convert.ToInt32(cmd3.ExecuteScalar());
             FormsAuthentication.SetAuthCookie(lc.UserName, true);
             Session["username"] = lc.UserName.ToString();
+
+            SqlCommand cmd4 = new SqlCommand("select Role from EmployeeRegistration1 where UserName='" + lc.UserName + "'", sqlConnection);
+            string m = (string)(cmd4.ExecuteScalar());
+            Session["Role"] = m;
+
             if (i > 0)
             {              
                 return Redirect("~/User/Index");

@@ -1,8 +1,13 @@
-﻿@model List<I_RAY_ASSET_TRACKER_MVC.Models.UserModel>
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<I_RAY_ASSET_TRACKER_MVC.Models.UserModel>
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
 }
+
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
 
 <style>
     #tblUserAssetsHaveList th {
@@ -18,46 +23,82 @@
         font-size: .85rem;
     }
 
-    select#ddlDropDownTeam {
+    table#tblUserAssetsHaveList {
+        width: auto;
+        margin-left: 12rem;
+    }
+
+
+    /*  Pagination for List of Assets User Details */
+
+    .pagination {
+        margin-block-start: revert;
+        margin-left: 13rem;
+        /*  margin-top: 1rem;*/
+    }
+
+    .pagination-container {
+        margin: auto;
+    }
+
+    .ul.pagination {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+    }
+
+    ul.pagination li {
+        display: inline;
+    }
+
+        ul.pagination li a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+        }
+
+            ul.pagination li a.active {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            ul.pagination li a:hover:not(.active) {
+                background-color: #ddd;
+            }
+
+    h4 {
         text-align: center;
+        font-size: 2.5rem;
+        padding-top: 3rem;
     }
 </style>
 
 <script>
-    $(document).ready(function () {
-        $('#tblUserAssetsHaveList').DataTable();
-    });
-
-     debugger;
+    /* debugger;*/
     $(function () {
-        $('.firstDropdown').change(function () {
-               debugger;
-            var rowIndex = $(this).data('rowindex');
-            $('.secondDropdown').empty();
-            if ($('.firstDropdown').val() != "--Select Team--") {
-                var RequestRaisedOptions = {};
-                RequestRaisedOptions.url = "/User/EmployeeName";
-                RequestRaisedOptions.type = "POST";
-                RequestRaisedOptions.data = JSON.stringify({
-                    selectedTeam: $('.firstDropdown[data-rowindex="' + rowIndex + '"]').val(),
-                });
-                RequestRaisedOptions.datatype = "json";
-                RequestRaisedOptions.contentType = "application/json";
-                RequestRaisedOptions.success = function (assetRequestModal) {
-                    $('.secondDropdown[data-rowindex="' + rowIndex + '"]').empty();
-                    $('.secondDropdown[data-rowindex="' + rowIndex + '"]').append("<option>--Select EmployeeName--</option>");
-                    for (var i = 0; i < assetRequestModal.length; i++) {
-                        /* debugger;  */
-                        $('.secondDropdown[data-rowindex="' + rowIndex + '"]').append("<option>" + assetRequestModal[i] + "</option>");
-                    }
-                };
-                RequestRaisedOptions.error = function () {
-                    alert("Error in Getting EmployeeNames!!");
-                };
-                $.ajax(RequestRaisedOptions);
-            } else {
-                $('.secondDropdown[data-rowindex="' + rowIndex + '"]').empty();
-            }
+        $("#tblUserAssetsHaveList .TransferAsset").click(function () {
+            /*   debugger;*/
+            var Id = $(this).closest("tr").find("td").eq(0).html();
+            $.ajax({
+                type: "POST",
+                url: "/User/TransferAsset",
+                data: '{Id: "' + Id + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    /*   debugger;*/
+                    $("#partialModal").find(".modal-body").html(response);
+                    $("#partialModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
         });
     });
 </script>
@@ -82,8 +123,13 @@
         </div>
     </div>
 </div>
+
 <div class="row">
-    <table id="tblUserAssetsHaveList" style="width:100%;margin-top:2rem" class="display compact table table-bordered table-primary">
+    <h4>What I Have ?</h4>
+</div>
+
+<div class="row">
+    <table id="tblUserAssetsHaveList" class="display compact table table-bordered table-primary">
         <thead>
             <tr>
                 <th>AssignID</th>
@@ -94,8 +140,6 @@
                 <th>SerialNumber</th>
                 <th>AssignDate</th>
                 <th>ReturnDate</th>
-                <th>Team</th>
-                <th>EmployeeName</th>
                 <th>Tranfer</th>
             </tr>
         </thead>
@@ -111,10 +155,8 @@
                     <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
                     <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
                     <td>@Html.DisplayFor(modelItem => item.ExpectedReturnDate)</td>
-                    <td>@Html.DropDownListFor(modelItem => item.TeamDropDown, (IEnumerable<SelectListItem>)ViewData["Teams"], "--Select Team--", new { @class="firstDropdown", data_rowindex = "@item.RowIndex" })</td>
-                    <td>@Html.DropDownListFor(modelItem => item.EmployeeNameDropDown, Enumerable.Empty<SelectListItem>(), "--Select EmployeeName--", new { @class = "secondDropdown", data_rowindex = "@item.RowIndex" })</td>
                     <td>
-                        <a class="button btn btn-primary">
+                        <a class="TransferAsset button btn btn-primary" data-toggle="modal" data-target="#partialModal" href="javascript:void(0);">
                             Transfer
                         </a>
                     </td>
@@ -123,3 +165,30 @@
         </tbody>
     </table>
 </div>
+<div class="pagination">
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+    of @Model.PageCount   @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+</div>
+
+@using (Html.BeginForm("SaveTransferAsset", "User", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div id="partialModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="partialModalLable" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title fs-5" id="partialModalLable">Asset Transfer to Employee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Transfer Asset</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

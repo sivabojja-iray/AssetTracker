@@ -2037,6 +2037,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\Icon\background.png" />
+    <Content Include="Images\Icon\close-button.jpg" />
     <Content Include="Images\Icon\I-Ray-Logo.png" />
     <Content Include="Images\Icon\i-Ray_logo.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -2308,6 +2309,7 @@
     <Content Include="Views\AssignAsset\ApprovalAssignAsset.cshtml" />
     <Content Include="Views\AllocationList\Index.cshtml" />
     <Content Include="Views\AssetEntry\Index.cshtml" />
+    <Content Include="Views\User\TransferAsset.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

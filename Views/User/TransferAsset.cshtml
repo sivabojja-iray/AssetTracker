@@ -1,0 +1,148 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.UserModel
+
+<script>
+    $(function () {
+        $('#AssetTransferTeam').change(function () {
+            $('#AssetTransferEmployeeName').empty();
+            /* debugger;*/
+            if ($('#RequestRaisedTo').val() != "--Select Team--") {
+                var RequestRaisedOptions = {};
+                RequestRaisedOptions.url = "/User/EmployeeName";
+                RequestRaisedOptions.type = "POST";
+                RequestRaisedOptions.data = JSON.stringify({
+                    selectedTeam: $('#AssetTransferTeam').val(),
+                });
+                RequestRaisedOptions.datatype = "json";
+                RequestRaisedOptions.contentType = "application/json";
+                RequestRaisedOptions.success = function (assetRequestModal) {
+                    $('#AssetTransferEmployeeName').empty();
+                    $('#AssetTransferEmployeeName').append("<option>--Select EmployeeName--</option>");
+                    for (var i = 0; i < assetRequestModal.length; i++) {
+                        /* debugger;  */
+                        $('#AssetTransferEmployeeName').append("<option>" + assetRequestModal[i] + "</option>");
+                    }
+                    $('#AssetTransferEmployeeName').prop("disabled", false);
+                };
+                RequestRaisedOptions.error = function () {
+                    alert("Error in Getting AssetTypes!!");
+                };
+                $.ajax(RequestRaisedOptions);
+            } else {
+                $('#AssetTransferEmployeeName').empty();
+                $('#AssetTransferEmployeeName').prop("disabled", true);
+            }
+        });
+    });
+</script>
+
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+        @Html.Label("AssignID : ")
+    </div>
+    <div class="form-group col-md-6">
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.AssignID, new { @readonly = "readonly", @class = "form-control" } )
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+        @Html.Label("EmployeeName : ")
+    </div>
+    <div class="form-group col-md-6">
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.EmployeeName, new { @readonly = "readonly", @class = "form-control" } )
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+        @Html.Label("AssetBelongsTo : ")
+    </div>
+    <div class="form-group col-md-6">
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Assetbelongsto, new { @readonly = "readonly", @class = "form-control" } )
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+        @Html.Label("AssetType : ")
+    </div>
+    <div class="form-group col-md-6">
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.AssetType,new { @readonly = "readonly", @class = "form-control" } )
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+        @Html.Label("HWSWName : ")
+    </div>
+    <div class="form-group col-md-6">
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.HWSWName, new { @readonly = "readonly", @class = "form-control" } )
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+        @Html.Label("SerialNumber : ")
+    </div>
+    <div class="form-group col-md-6">
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.SerialNumberVersionNumber, new { @readonly = "readonly", @class = "form-control" } )
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+        @Html.Label("AssignDate : ")
+    </div>
+    <div class="form-group col-md-6">
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.AssignDate, new { @readonly = "readonly", @class = "form-control" } )
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+        @Html.Label("ReturnDate : ")
+    </div>
+    <div class="form-group col-md-6">
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.ExpectedReturnDate, new { @readonly = "readonly", @class = "form-control" } )
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+        @Html.Label("SelectTeam : ")
+    </div>
+    <div class="form-group col-md-6">
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.AssetTransferTeam, (IEnumerable<SelectListItem>)ViewData["Teams"], "--Select Team--", new { @class = "form-control" } )
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+        @Html.Label("SelectEmployee : ")
+    </div>
+    <div class="form-group col-md-6">
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.AssetTransferEmployeeName, Enumerable.Empty<SelectListItem>(), "--Select EmployeeName--", new { @class = "form-control" } )
+        </div>
+    </div>
+</div>
