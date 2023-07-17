@@ -1,5 +1,6 @@
-﻿@using PagedList.Mvc
-@model PagedList.IPagedList<I_RAY_ASSET_TRACKER_MVC.Models.UserModel>
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.UserModel
+
+@using PagedList.Mvc
 
 @{
     ViewBag.Title = "Index";
@@ -10,7 +11,13 @@
 @Scripts.Render("~/bundles/modernizr")
 
 <style>
+    .btn {
+        box-shadow: 0px 0px 5px 2px #ffc107 !important;
+    }
     #tblUserAssetsHaveList th {
+        background-color: #ffc107;
+    }
+    #table1 th {
         background-color: #ffc107;
     }
 
@@ -27,7 +34,10 @@
         width: auto;
         margin-left: 12rem;
     }
-
+    table#table1 {
+        width: auto;
+        margin-left: 1rem;
+    }
 
     /*  Pagination for List of Assets User Details */
 
@@ -70,16 +80,16 @@
 
     h4 {
         text-align: center;
-        font-size: 2.5rem;
+        font-size: 2rem;
         padding-top: 3rem;
     }
 </style>
 
 <script>
-    /* debugger;*/
+   /*  debugger;*/
     $(function () {
         $("#tblUserAssetsHaveList .TransferAsset").click(function () {
-            /*   debugger;*/
+             /*  debugger;*/
             var Id = $(this).closest("tr").find("td").eq(0).html();
             $.ajax({
                 type: "POST",
@@ -88,7 +98,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
-                    /*   debugger;*/
+                      /* debugger;*/
                     $("#partialModal").find(".modal-body").html(response);
                     $("#partialModal").modal('show');
                 },
@@ -144,7 +154,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Table1Data)
             {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.AssignID)</td>
@@ -166,8 +176,64 @@
     </table>
 </div>
 <div class="pagination">
-    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
-    of @Model.PageCount   @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+    Page @(Model.Table1Data.PageCount < Model.Table1Data.PageNumber ? 0 : Model.Table1Data.PageNumber)
+    of @Model.Table1Data.PageCount @Html.PagedListPager(Model.Table1Data, page => Url.Action("Index", new { page }))
+</div>
+
+<div class="row">
+    <h4>Asset Transfred To?</h4>
+</div>
+
+<div class="row">
+    <table id="table1" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>From_EmpID</th>
+                <th>From EmployeeName</th>
+                <th>Asset Belongs To</th>
+                <th>AssetType</th>
+                <th>HWSW Name</th>
+                <th>SerialNumber</th>
+                <th>Asset TransferDate</th>
+                <th>To_EmpID</th>
+                <th>Team To Which Asset is Transfered</th>
+                <th>ToEmployeeName</th>
+                <th>Approve</th>
+                <th>Reject</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Table2Data)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.FromEmpID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.FromEmployeeName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetTransferDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ToEmpID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.TeamToWhichAssetisTransfered)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ToEmployeeName)</td>
+                    <td>
+                        <a id="btnApprove" class="button btn btn-success" href="@Url.Action("SaveTransferAssetFromEmployee", "User", new { id = item.FromEmpID})">
+                            Approve
+                        </a>
+                    </td>
+                    <td>
+                        <a class="button btn btn-danger" href="@Url.Action("RejectTransferAssetFromEmployee", "User", new { id = item.FromEmpID})">
+                            Reject
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="pagination">
+    Page @(Model.Table2Data.PageCount < Model.Table2Data.PageNumber ? 0 : Model.Table2Data.PageNumber)
+    of @Model.Table2Data.PageCount @Html.PagedListPager(Model.Table2Data, page => Url.Action("Index", new { page }))
 </div>
 
 @using (Html.BeginForm("SaveTransferAsset", "User", FormMethod.Post))

@@ -18,7 +18,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             System.Threading.Thread.Sleep(2000);
 
             SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=fswiray77\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
             SqlCommand cmd = new SqlCommand("select Team,EmployeeName from EmployeeList where EmpID=" + Session["username"] + "");
             sqlConnection.Open();
             cmd.Connection = sqlConnection;
@@ -86,7 +86,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         {
             List<string> assetTypeItems = new List<string>();
             SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=fswiray77\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
             SqlCommand cmd = new SqlCommand(query);
             cmd.Connection = sqlConnection;
             sqlConnection.Open();
@@ -102,7 +102,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         {
             List<string> ListHWSWname = new List<string>();
             SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=fswiray77\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
             SqlCommand cmd = new SqlCommand(query);
             cmd.Connection = sqlConnection;
             sqlConnection.Open();
@@ -118,7 +118,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         {
             List<string> List = new List<string>();
             SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=fswiray77\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
             SqlCommand cmd = new SqlCommand(query);
             cmd.Connection = sqlConnection;
             sqlConnection.Open();
@@ -134,7 +134,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         private static int countavailableAssets(string query)
         {
             SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=fswiray77\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
             SqlCommand cmd = new SqlCommand(query);
             cmd.Connection = sqlConnection;
             sqlConnection.Open();
@@ -149,7 +149,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             System.Threading.Thread.Sleep(5000);
 
             SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=fswiray77\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
             SqlCommand cmd = new SqlCommand("proAssetrequest");
             sqlConnection.Open();
             cmd.Connection = sqlConnection;

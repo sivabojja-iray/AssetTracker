@@ -26,10 +26,9 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                 int pageSize = 5;
                 int pageIndex = 1;
                 pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-                IPagedList<UserModel> userModels = null;
 
                 SqlConnection con = new SqlConnection(constr);
-                SqlCommand cmd = new SqlCommand("SELECT COUNT(AssetType) FROM AssignAsset  where EmpID=" + Session["username"] + "");
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(AssetType) FROM AssignAsset where EmpID='" + Session["username"] + "'");
                 cmd.Connection = con;
                 con.Open();
                 int i = Convert.ToInt32(cmd.ExecuteScalar());
@@ -40,10 +39,10 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                 SqlDataAdapter adp = new SqlDataAdapter(comnd);
                 DataTable dt = new DataTable();
                 adp.Fill(dt);
-                List<UserModel> dataModels = new List<UserModel>();
+                List<Table1Model> dataModels = new List<Table1Model>();
                 foreach (DataRow row in dt.Rows)
                 {
-                    UserModel userList = new UserModel();
+                    Table1Model userList = new Table1Model();
                     {
                         userList.AssignID = row["AssignID"].ToString();
                         userList.EmployeeName = row["EmployeeName"].ToString();
@@ -56,9 +55,38 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                     }
                     dataModels.Add(userList);
                 }
-                userModels= dataModels.ToPagedList(pageIndex, pageSize);
+
+                SqlCommand command = new SqlCommand("SELECT FromEmployeeName,Assetbelongsto,AssetType,HWSWName,SerialNumberVersionNumber,AssetTransferDate,FromEmpID,ToEmpID,TeamToWhichAssetisTransfered,ToEmployeeName FROM AssetTransfer where ToEmpID='" + Session["username"] + "'");
+                command.Connection = con;
+                SqlDataAdapter ad = new SqlDataAdapter(command);
+                DataTable dataTable = new DataTable();
+                ad.Fill(dataTable);
+                List<Table2Model> list = new List<Table2Model>();
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    Table2Model table2Model = new Table2Model();
+                    {
+                        table2Model.FromEmployeeName = row["FromEmployeeName"].ToString();
+                        table2Model.ToEmployeeName = row["ToEmployeeName"].ToString();
+                        table2Model.Assetbelongsto = row["Assetbelongsto"].ToString();
+                        table2Model.AssetType = row["AssetType"].ToString();
+                        table2Model.HWSWName = row["HWSWName"].ToString();
+                        table2Model.SerialNumberVersionNumber = row["SerialNumberVersionNumber"].ToString();
+                        table2Model.AssetTransferDate = row["AssetTransferDate"].ToString();
+                        table2Model.FromEmpID = row["FromEmpID"].ToString();
+                        table2Model.ToEmpID = row["ToEmpID"].ToString();
+                        table2Model.TeamToWhichAssetisTransfered = row["TeamToWhichAssetisTransfered"].ToString();
+                    }
+                    list.Add(table2Model);
+                }
+
+                var viewModal = new UserModel
+                {
+                    Table1Data=dataModels.ToPagedList(pageIndex, pageSize),
+                    Table2Data=list.ToPagedList(pageIndex,pageSize)
+                };
                 con.Close();
-                return View(userModels);
+                return View(viewModal);
             }
             else
             {
@@ -87,14 +115,14 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             sqlConnection.Close();
             return EmployeeList;
         }  
-        public ActionResult TransferAsset(int? Id, UserModel userList)
+        public ActionResult TransferAsset(int? Id, Table1Model userList)
         {
             SqlConnection sqlConnection = new SqlConnection(constr);        
             SqlCommand cmd = new SqlCommand("select AssignID,EmployeeName,Assetbelongsto,AssetType,HWSWName,SerialNumberVersionNumber,AssignDate,ExpectedReturnDate from AssignAsset where AssignID=" + Id, sqlConnection);
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
-            List<UserModel> dataModels = new List<UserModel>();
+            List<Table1Model> dataModels = new List<Table1Model>();
             foreach (DataRow row in dt.Rows)
             {             
                     userList.AssignID = row["AssignID"].ToString();
@@ -123,7 +151,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
 
             return PartialView("TransferAsset",userList);
         }
-        public ActionResult SaveTransferAsset(UserModel userModel) 
+        public ActionResult SaveTransferAsset(Table1Model userModel) 
         {
             SqlConnection sqlConnection = new SqlConnection(constr);
             SqlCommand cmd = new SqlCommand("INSERT INTO AssetTransfer VALUES(@FromEmployeeName,@Assetbelongsto,@AssetType,@HWSWName,@SerialNumberVersionNumber,@AssetTransferDate,@FromEmpID,@ToEmpID,@TeamToWhichAssetisTransfered,@ToEmployeeName)", sqlConnection);
@@ -145,6 +173,47 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             cmd.ExecuteNonQuery();
             sqlConnection.Close();
             return RedirectToAction("Index"); 
+        }
+        public ActionResult SaveTransferAssetFromEmployee(int? id,Table2Model table2Model)
+        {
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            SqlCommand cmd = new SqlCommand("select ToEmpID,ToEmployeeName,TeamToWhichAssetisTransfered,SerialNumberVersionNumber from AssetTransfer where FromEmpID='" + id + "'", sqlConnection);
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            table2Model.ToEmpID = dt.Rows[0][0].ToString();
+            table2Model.ToEmployeeName = dt.Rows[0][1].ToString();
+            table2Model.TeamToWhichAssetisTransfered = dt.Rows[0][2].ToString();
+            table2Model.SerialNumberVersionNumber = dt.Rows[0][3].ToString();
+            SqlCommand command = new SqlCommand("UPDATE AssignAsset SET EmpID='" + table2Model.ToEmpID + "',EmployeeName='" + table2Model.ToEmployeeName + "',Team='" + table2Model.TeamToWhichAssetisTransfered + "' where EmpID='" + id + "' and SerialNumberVersionNumber='" + table2Model.SerialNumberVersionNumber + "'", sqlConnection);
+            sqlConnection.Open();
+            command.CommandType = CommandType.Text;
+            command.ExecuteNonQuery();
+            sqlConnection.Close();
+
+            SqlCommand sql = new SqlCommand("DELETE FROM AssetTransfer WHERE SerialNumberVersionNumber='" + table2Model.SerialNumberVersionNumber + "' and FromEmpID='" + id + "'", sqlConnection);
+            sqlConnection.Open();
+            sql.CommandType = CommandType.Text;
+            sql.ExecuteNonQuery();
+            sqlConnection.Close();
+
+            return RedirectToAction("Index");
+        }
+        public ActionResult RejectTransferAssetFromEmployee(int? id, Table2Model table2Model)
+        {
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            SqlCommand cmd = new SqlCommand("select SerialNumberVersionNumber from AssetTransfer where FromEmpID='" + id + "'", sqlConnection);
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            table2Model.SerialNumberVersionNumber = dt.Rows[0][0].ToString();
+
+            SqlCommand sql = new SqlCommand("DELETE FROM AssetTransfer WHERE SerialNumberVersionNumber='" + table2Model.SerialNumberVersionNumber + "' and FromEmpID='" + id + "'", sqlConnection);
+            sqlConnection.Open();
+            sql.CommandType = CommandType.Text;
+            sql.ExecuteNonQuery();
+            sqlConnection.Close();
+            return RedirectToAction("Index");
         }
     }
 }

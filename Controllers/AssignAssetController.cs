@@ -22,7 +22,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             IPagedList<AssignAssetApproval> assignAssetApprovals = null;
 
             SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=fswiray77\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
             SqlCommand cmd = new SqlCommand("spProAllAssetRequest1");
             cmd.Connection = sqlConnection;
             cmd.CommandType = CommandType.StoredProcedure;
@@ -55,7 +55,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         public ActionResult ApprovalAssignAsset(int? id, AssignAssetApproval assetApproval)
         {        
             SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=fswiray77\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
             SqlCommand cmd = new SqlCommand("select EmpID,EmpTeam,AssetType,HWSWName,AssetTeam,Quantity,Serialnumber from Assetrequest where RequestID=" + id, sqlConnection);
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -90,7 +90,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         public ActionResult RejectAssignAsset(int? id)
         {          
             SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=fswiray77\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
             SqlCommand cmd = new SqlCommand("delete from AssetRequest where RequestID= '" + id + "'", sqlConnection);
             sqlConnection.Open();
             cmd.ExecuteNonQuery();
@@ -114,7 +114,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             System.Threading.Thread.Sleep(3000);
 
             SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=fswiray77\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
 
             /* Get Invoice Number from SaveAssetInQuantity Table */
            

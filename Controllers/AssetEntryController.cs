@@ -23,7 +23,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         public ActionResult SaveAsset(AssetEntryModel assetEntryModel)
         {
             SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=fswiray77\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
             SqlCommand sqlCommand = new SqlCommand("insert into SaveAsset(Team,HWSWName,HWSWDescriptionCategory,SerialNumberVersionNumber,AssetType,DateofReciept,OwnerShip,HWSWVerifiedBy,HWSWValidatedBy,HWSWVerifiedValidatedDate,InvoiceNo,Remarks,Client,Category,FirmwareVersion,MacAddress,HIProgram,IMEINo,VersionUpdatedDate,PreviousOS,ModelIdentifier,OSVerificationDate,PurchaseDate,RecordUpdatedBy,RecordUpdatedDate) values(@Team,@HWSWName,@HWSWDescriptionCategory,@SerialNumberVersionNumber,@AssetType,@DateofReciept,@OwnerShip,@HWSWVerifiedBy,@HWSWValidatedBy,@HWSWVerifiedValidatedDate,@InvoiceNo,@Remarks,@Client,@Category,@FirmwareVersion,@MacAddress,@HIProgram,@IMEINo,@VersionUpdatedDate,@PreviousOS,@ModelIdentifier,@OSVerificationDate,@PurchaseDate,@RecordUpdatedBy,@RecordUpdatedDate)", sqlConnection);
             sqlConnection.Open();
 

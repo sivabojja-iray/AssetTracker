@@ -36,7 +36,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         private static List<AllocationListModel> allocationLists(string query)
         {
             SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=fswiray77\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
             SqlCommand cmd = new SqlCommand(query);
             cmd.Connection = sqlConnection;
             SqlDataAdapter adp = new SqlDataAdapter(cmd);
