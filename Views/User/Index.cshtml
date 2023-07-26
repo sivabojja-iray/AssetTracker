@@ -14,9 +14,11 @@
     .btn {
         box-shadow: 0px 0px 5px 2px #ffc107 !important;
     }
+
     #tblUserAssetsHaveList th {
         background-color: #ffc107;
     }
+
     #table1 th {
         background-color: #ffc107;
     }
@@ -34,6 +36,11 @@
         width: auto;
         margin-left: 12rem;
     }
+
+    tr {
+        text-align: center;
+    }
+
     table#table1 {
         width: auto;
         margin-left: 1rem;
@@ -83,13 +90,50 @@
         font-size: 2rem;
         padding-top: 3rem;
     }
+
+    .transfer-progress-bg {
+        background-color: lightgray;
+        opacity: 0.8;
+    }
+
+    .transfer-progress {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        height: 6em;
+        padding-top: 2.3em;
+        z-index: 1;
+        /* The following properties are the ones most likely to change */
+        width: 20em;
+        /* Set 'margin-left' to a negative number that is 1/2 of 'width' */
+        margin-left: -10em;
+        padding-left: 2.1em;
+        background-color: #1161ee;
+        color: #fff;
+        -webkit-border-radius: 0.4em;
+        -moz-border-radius: 0.4em;
+        border-radius: 0.4em;
+        box-shadow: 0px 0px 10px 2px #ffc107;
+        -webkit-box-shadow: 0px 0px 10px 2px #ffc107;
+        -moz-box-shadow: 0px 0px 10px 2px #ffc107;
+    }
+    /* Changing style for spinner */
+    .transfer-progress {
+        padding-top: 2em;
+        width: 34em;
+        margin-left: -11.5em; /* Set to a negative number that is 1/2 of the width */
+    }
+
+        .transfer-progress i {
+            margin-right: 0.5em;
+        }
 </style>
 
 <script>
-   /*  debugger;*/
+    /*  debugger;*/
     $(function () {
         $("#tblUserAssetsHaveList .TransferAsset").click(function () {
-             /*  debugger;*/
+            /*  debugger;*/
             var Id = $(this).closest("tr").find("td").eq(0).html();
             $.ajax({
                 type: "POST",
@@ -98,7 +142,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
-                      /* debugger;*/
+                    /* debugger;*/
                     $("#partialModal").find(".modal-body").html(response);
                     $("#partialModal").modal('show');
                 },
@@ -111,6 +155,34 @@
             });
         });
     });
+
+    /* debugger;*/
+    function DisplaySendProgressMessage(ctl, msg) {
+         /* debugger;*/
+        var AssetTransferTeam = $('#AssetTransferTeam');
+        if (AssetTransferTeam.val() == '') {
+            alert('Please select the Team.');
+            return false;
+        }
+        var AssetTransferEmployeeName = $('#AssetTransferEmployeeName');
+        if (AssetTransferEmployeeName.val() == '--Select EmployeeName--') {
+            alert('Please select the EmployeeName.');
+            return false;
+        }
+
+        // Turn off the "Save" button and change text
+        $(ctl).prop("disabled", true).text(msg);
+        // Gray out background on page
+        $("body").addClass("transfer-progress-bg");
+
+        // Wrap in setTimeout so the UI can update the spinners
+        setTimeout(function () {
+            $(".transfer-progress").removeClass("visually-hidden");
+        }, 1);
+        $(ctl).prop("disabled", false).text(msg);
+        return true;
+        this.submit();
+    }
 </script>
 
 <div class="row">
@@ -154,23 +226,34 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Table1Data)
+            @if (Model.Table1Data.Count == 0)
             {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.AssignID)</td>
-                    <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
-                    <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
-                    <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
-                    <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
-                    <td>@Html.DisplayFor(modelItem => item.ExpectedReturnDate)</td>
-                    <td>
-                        <a class="TransferAsset button btn btn-primary" data-toggle="modal" data-target="#partialModal" href="javascript:void(0);">
-                            Transfer
-                        </a>
+                    <td colspan="9">
+                        No Matching Records Found
                     </td>
                 </tr>
+            }
+            else
+            {
+                foreach (var item in Model.Table1Data)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.AssignID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                        <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                        <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                        <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ExpectedReturnDate)</td>
+                        <td>
+                            <a class="TransferAsset button btn btn-primary" data-toggle="modal" data-target="#partialModal" href="javascript:void(0);">
+                                Transfer
+                            </a>
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
@@ -203,30 +286,41 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Table2Data)
+            @if (Model.Table2Data.Count == 0)
             {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.FromEmpID)</td>
-                    <td>@Html.DisplayFor(modelItem => item.FromEmployeeName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
-                    <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
-                    <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
-                    <td>@Html.DisplayFor(modelItem => item.AssetTransferDate)</td>
-                    <td>@Html.DisplayFor(modelItem => item.ToEmpID)</td>
-                    <td>@Html.DisplayFor(modelItem => item.TeamToWhichAssetisTransfered)</td>
-                    <td>@Html.DisplayFor(modelItem => item.ToEmployeeName)</td>
-                    <td>
-                        <a id="btnApprove" class="button btn btn-success" href="@Url.Action("SaveTransferAssetFromEmployee", "User", new { id = item.FromEmpID})">
-                            Approve
-                        </a>
-                    </td>
-                    <td>
-                        <a class="button btn btn-danger" href="@Url.Action("RejectTransferAssetFromEmployee", "User", new { id = item.FromEmpID})">
-                            Reject
-                        </a>
+                    <td colspan="12">
+                        No Matching Records Found
                     </td>
                 </tr>
+            }
+            else
+            {
+                foreach (var item in Model.Table2Data)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.FromEmpID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FromEmployeeName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                        <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                        <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                        <td>@Html.DisplayFor(modelItem => item.AssetTransferDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ToEmpID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.TeamToWhichAssetisTransfered)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ToEmployeeName)</td>
+                        <td>
+                            <a id="btnApprove" class="button btn btn-success" href="@Url.Action("SaveTransferAssetFromEmployee", "User", new { id = item.FromEmpID})">
+                                Approve
+                            </a>
+                        </td>
+                        <td>
+                            <a class="button btn btn-danger" href="@Url.Action("RejectTransferAssetFromEmployee", "User", new { id = item.FromEmpID})">
+                                Reject
+                            </a>
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
@@ -235,6 +329,7 @@
     Page @(Model.Table2Data.PageCount < Model.Table2Data.PageNumber ? 0 : Model.Table2Data.PageNumber)
     of @Model.Table2Data.PageCount @Html.PagedListPager(Model.Table2Data, page => Url.Action("Index", new { page }))
 </div>
+
 
 @using (Html.BeginForm("SaveTransferAsset", "User", FormMethod.Post))
 {
@@ -251,7 +346,7 @@
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Transfer Asset</button>
+                    <button type="submit" onclick="return DisplaySendProgressMessage(this, 'Transfer...');" class="btn btn-primary">Transfer Asset</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>

@@ -37,6 +37,10 @@
         background-color: #ffc107;
     }
 
+    tr {
+        text-align: center;
+    }
+
     .approve-progress-bg {
         background-color: lightgray;
         opacity: 0.8;
@@ -224,35 +228,46 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @if (Model.Count == 0)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.RequestID)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EmployeeID)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EmployeeTeam)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
-                        <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
-                        <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
-                        <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
-                        <td>
-                            <a id="btnApprove" class="button btn btn-success" onclick="return DisplayProgressMessageApproveAsset(this, 'Approving...');" href="@Url.Action("ApprovalAssignAsset", "AssignAsset", new { id = item.RequestID})">
-                                Approve
-                            </a>
-                        </td>
-                        <td>
-                            <a class="button btn btn-danger" onclick="return DisplayProgressMessageRejectAsset(this, 'Rejecting...');" href="@Url.Action("RejectAssignAsset", "AssignAsset", new { id = item.RequestID})">
-                                Reject
-                            </a>
+                        <td colspan="12">
+                            No Matching Records Found
                         </td>
                     </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.RequestID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EmployeeID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EmployeeTeam)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                            <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                            <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                            <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
+                            <td>
+                                <a id="btnApprove" class="button btn btn-success" onclick="return DisplayProgressMessageApproveAsset(this, 'Approving...');" href="@Url.Action("ApprovalAssignAsset", "AssignAsset", new { id = item.RequestID})">
+                                    Approve
+                                </a>
+                            </td>
+                            <td>
+                                <a class="button btn btn-danger" onclick="return DisplayProgressMessageRejectAsset(this, 'Rejecting...');" href="@Url.Action("RejectAssignAsset", "AssignAsset", new { id = item.RequestID})">
+                                    Reject
+                                </a>
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
     </div>
-  
+
     <div class="pagination">
         Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
         of @Model.PageCount   @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))

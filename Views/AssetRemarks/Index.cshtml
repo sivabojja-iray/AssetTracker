@@ -1,0 +1,77 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetRemarksModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+}
+<style>
+    .row {
+        margin-left: 15%;
+    }
+
+    .col-md-8 {
+        margin-top: 2rem;
+    }
+</style>
+
+<script>
+   /* debugger;*/
+    $(function () {
+        $("#tracknowId").click(function () {
+             /* debugger;*/
+            var SerailNo = $("#SerialNumberVersionNumber").val();
+            $.ajax({
+                type: "POST",
+                url: "/AssetRemarks/TrackNow",
+                data: '{SerailNo: "' + SerailNo + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                     /*debugger;*/
+                    $("#tracknowDataModal").find(".modal-body").html(response);
+                    $("#tracknowDataModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+<div class="col-md-8">
+    <div class="row">
+        <div class="form-group col-md-3">
+            @Html.Label("Asset Serial No : ")
+        </div>
+        <div class="form-group col-md-6">
+            @Html.TextBoxFor(m => m.SerialNumberVersionNumber, new { @class = "form-control" })
+        </div>
+        <div class="form-group col-md-3">
+            <a id="tracknowId" class="button btn btn-primary" data-toggle="modal" data-target="#tracknowDataModal" href="javascript:void(0);">
+                Track Now
+            </a>
+        </div>
+    </div>
+</div>
+<div id="tracknowDataModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="tracknowModalLable" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title fs-5" id="tracknowModalLable">Asset-Remarks</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

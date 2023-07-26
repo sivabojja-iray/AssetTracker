@@ -31,7 +31,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             }
             sqlConnection.Close();
 
-            SqlCommand cmd1 = new SqlCommand("select distinct Team from EmployeeList", sqlConnection);
+            SqlCommand cmd1 = new SqlCommand("SELECT DISTINCT Team FROM EmployeeList WHERE Team NOT IN('Support','HR')", sqlConnection);
             sqlConnection.Open();
             SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd1);
             DataSet ds = new DataSet();
@@ -144,81 +144,85 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             sdr.NextResult();
             return countAssests;
         }
+        [HttpPost]
         public ActionResult SendRequest(AssetRequestModal assetRequest)
         {
-            System.Threading.Thread.Sleep(5000);
+            if(ModelState.IsValid)
+            {
+                SqlConnection sqlConnection = new SqlConnection();
+                sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+                SqlCommand cmd = new SqlCommand("proAssetrequest");
+                sqlConnection.Open();
+                cmd.Connection = sqlConnection;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@EmpID", Session["username"].ToString());
+                cmd.Parameters.AddWithValue("@EmpTeam", assetRequest.EmployeeTeam);
+                cmd.Parameters.AddWithValue("@AssetTeam", assetRequest.RequestRaisedTo);
+                cmd.Parameters.AddWithValue("@AssetType", assetRequest.AssetType);
+                cmd.Parameters.AddWithValue("@HWSWName", assetRequest.AssetName);
+                cmd.Parameters.AddWithValue("@RequestDate", assetRequest.RequestDate);
+                cmd.Parameters.AddWithValue("@ReturnDate", assetRequest.ExpectedReturnDate);
+                cmd.Parameters.AddWithValue("@Quantity", assetRequest.NumberofAssetsRequired);
+                cmd.Parameters.AddWithValue("@Approveornot", assetRequest.NumberofAssetsRequired);
+                cmd.Parameters.AddWithValue("@Purpose", assetRequest.Purpose);
+                cmd.Parameters.AddWithValue("@EmployeeName", assetRequest.EmployeeName);
+                cmd.Parameters.AddWithValue("@Serialnumber", assetRequest.AvailableSerialNumber);
+                int i = cmd.ExecuteNonQuery();
 
-            SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
-            SqlCommand cmd = new SqlCommand("proAssetrequest");
-            sqlConnection.Open();
-            cmd.Connection = sqlConnection;
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@EmpID", Session["username"].ToString());    
-            cmd.Parameters.AddWithValue("@EmpTeam", assetRequest.EmployeeTeam);
-            cmd.Parameters.AddWithValue("@AssetTeam", assetRequest.RequestRaisedTo);
-            cmd.Parameters.AddWithValue("@AssetType", assetRequest.AssetType);
-            cmd.Parameters.AddWithValue("@HWSWName", assetRequest.AssetName);           
-            cmd.Parameters.AddWithValue("@RequestDate", assetRequest.RequestDate);
-            cmd.Parameters.AddWithValue("@ReturnDate", assetRequest.ExpectedReturnDate);
-            cmd.Parameters.AddWithValue("@Quantity", assetRequest.NumberofAssetsRequired);
-            cmd.Parameters.AddWithValue("@Approveornot", assetRequest.NumberofAssetsRequired);
-            cmd.Parameters.AddWithValue("@Purpose", assetRequest.Purpose);
-            cmd.Parameters.AddWithValue("@EmployeeName", assetRequest.EmployeeName);
-            cmd.Parameters.AddWithValue("@Serialnumber", assetRequest.AvailableSerialNumber);
-            int i = cmd.ExecuteNonQuery();
-           
 
-            SqlCommand command = new SqlCommand("proPermanentAssetrequest");         
-            command.Connection = sqlConnection;
-            command.CommandType = CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("EmpID", Session["username"].ToString());
-            command.Parameters.AddWithValue("EmpTeam", assetRequest.EmployeeTeam);
-            command.Parameters.AddWithValue("AssetTeam", assetRequest.RequestRaisedTo);
-            command.Parameters.AddWithValue("AssetType", assetRequest.AssetType);
-            command.Parameters.AddWithValue("HWSWName", assetRequest.AssetName);
-            command.Parameters.AddWithValue("RequestDate", assetRequest.RequestDate);
-            command.Parameters.AddWithValue("ReturnDate", assetRequest.ExpectedReturnDate);
-            command.Parameters.AddWithValue("Quantity", assetRequest.NumberofAssetsRequired);           
-            command.Parameters.AddWithValue("Purpose", assetRequest.Purpose);
-            command.Parameters.AddWithValue("Approveornot", assetRequest.NumberofAssetsRequired);
-            command.Parameters.AddWithValue("Serialnumber", assetRequest.AvailableSerialNumber);
-            int j = command.ExecuteNonQuery();
-            sqlConnection.Close();
+                SqlCommand command = new SqlCommand("proPermanentAssetrequest");
+                command.Connection = sqlConnection;
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("EmpID", Session["username"].ToString());
+                command.Parameters.AddWithValue("EmpTeam", assetRequest.EmployeeTeam);
+                command.Parameters.AddWithValue("AssetTeam", assetRequest.RequestRaisedTo);
+                command.Parameters.AddWithValue("AssetType", assetRequest.AssetType);
+                command.Parameters.AddWithValue("HWSWName", assetRequest.AssetName);
+                command.Parameters.AddWithValue("RequestDate", assetRequest.RequestDate);
+                command.Parameters.AddWithValue("ReturnDate", assetRequest.ExpectedReturnDate);
+                command.Parameters.AddWithValue("Quantity", assetRequest.NumberofAssetsRequired);
+                command.Parameters.AddWithValue("Purpose", assetRequest.Purpose);
+                command.Parameters.AddWithValue("Approveornot", assetRequest.NumberofAssetsRequired);
+                command.Parameters.AddWithValue("Serialnumber", assetRequest.AvailableSerialNumber);
+                int j = command.ExecuteNonQuery();
+                sqlConnection.Close();
 
-            //SqlCommand sqlCommand = new SqlCommand("SELECT EmployeeName,Mail FROM EmployeeList WHERE EmpID='" + Session["username"] + "'", sqlConnection);
-            //sqlConnection.Open();
-            //SqlDataReader reader = sqlCommand.ExecuteReader();
-            //string mail = null;
-            //string employeeNAme = null;
-            //if (reader.Read())
-            //{
-            //    mail = reader["Mail"].ToString();
-            //    employeeNAme = reader["EmployeeName"].ToString();
-            //    sqlConnection.Close();
-            //}
+                //SqlCommand sqlCommand = new SqlCommand("SELECT EmployeeName,Mail FROM EmployeeList WHERE EmpID='" + Session["username"] + "'", sqlConnection);
+                //sqlConnection.Open();
+                //SqlDataReader reader = sqlCommand.ExecuteReader();
+                //string mail = null;
+                //string employeeNAme = null;
+                //if (reader.Read())
+                //{
+                //    mail = reader["Mail"].ToString();
+                //    employeeNAme = reader["EmployeeName"].ToString();
+                //    sqlConnection.Close();
+                //}
 
-            //MailMessage mailMessage = new MailMessage();
-            //mailMessage.From = new MailAddress("assettracker@i-raysolutions.com");
-            //mailMessage.To.Add(new MailAddress("siva.bojja143@gmail.com"));
-            //mailMessage.Subject = "Request Asset";
-            //mailMessage.IsBodyHtml = true;
-            //mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" +
-            //    "<tr>" + "<th> EmpID </th>" + "<th> EmployeeName </th>" +
-            //    "<th> Request Raised to ? </th>" + "<th> AssetType </th>" +
-            //    "<th> SerialNumber </th>" + "<th> HWSWName </th>" +
-            //    "<th>RequestDate </th>" + "<th> Quantity </th>" + "</tr>" +
-            //    "<tr>" + "<td>" + Session["username"] + "</td>" + "<td>" +
-            //    employeeNAme + "</td>" + "<td>" + assetRequest.RequestRaisedTo
-            //    + "</td>" + "<td>" + assetRequest.AssetType + "</td>" + "<td>"
-            //    + assetRequest.AvailableSerialNumber + "</td>" + "<td>" +
-            //    assetRequest.AssetName + "</td>" + "<td>" + assetRequest.RequestDate
-            //    + "</td>" + "<td>" + assetRequest.NumberofAssetsRequired + "</td>" + "</tr>" + "</table>";
-            //mailMessage.Priority = MailPriority.High;
-            //SmtpClient smtpClient = new SmtpClient();
-            //smtpClient.Send(mailMessage);
+                //MailMessage mailMessage = new MailMessage();
+                //mailMessage.From = new MailAddress("assettracker@i-raysolutions.com");
+                //mailMessage.To.Add(new MailAddress("siva.bojja143@gmail.com"));
+                //mailMessage.Subject = "Request Asset";
+                //mailMessage.IsBodyHtml = true;
+                //mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" +
+                //    "<tr>" + "<th> EmpID </th>" + "<th> EmployeeName </th>" +
+                //    "<th> Request Raised to ? </th>" + "<th> AssetType </th>" +
+                //    "<th> SerialNumber </th>" + "<th> HWSWName </th>" +
+                //    "<th>RequestDate </th>" + "<th> Quantity </th>" + "</tr>" +
+                //    "<tr>" + "<td>" + Session["username"] + "</td>" + "<td>" +
+                //    employeeNAme + "</td>" + "<td>" + assetRequest.RequestRaisedTo
+                //    + "</td>" + "<td>" + assetRequest.AssetType + "</td>" + "<td>"
+                //    + assetRequest.AvailableSerialNumber + "</td>" + "<td>" +
+                //    assetRequest.AssetName + "</td>" + "<td>" + assetRequest.RequestDate
+                //    + "</td>" + "<td>" + assetRequest.NumberofAssetsRequired + "</td>" + "</tr>" + "</table>";
+                //mailMessage.Priority = MailPriority.High;
+                //SmtpClient smtpClient = new SmtpClient();
+                //smtpClient.Send(mailMessage);
 
-            return RedirectToAction("Index");          
+                System.Threading.Thread.Sleep(1000);
+                return RedirectToAction("Index");
+            }
+            return View(assetRequest);
         }
     }
 }

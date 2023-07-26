@@ -1,0 +1,176 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.EmployeeEntryModel
+
+<style>
+    select#Team, select#Role {
+        text-align: center;
+    }
+</style>
+
+<script>
+  /*  debugger;*/
+    function registerUser() {
+      /*  debugger;*/
+         var username = $('#EmployeeID').val();
+         var email = $('#Mail').val();
+        var firstname = $('#FirstName').val();
+        var middlename = $('#MiddleName').val();
+        var lastname = $('#LastName').val();
+        var contactnumber = $('#ContactNumber').val();
+        var team = $('#Team');
+        var role = $('#Role');
+
+            // Check if the username and email are not empty
+            if (username.trim() === '' || email.trim() === '') {
+                alert('Please enter both EmployeeID and email.');
+                return false;
+         }
+         if (firstname.trim() === '') {
+             alert('Please enter firstname.');
+             return false;
+        }
+        if (middlename.trim() === '') {
+            alert('Please enter middlename.');
+            return false;
+        }
+        if (lastname.trim() === '') {
+            alert('Please enter lastname.');
+            return false;
+        }
+        if(contactnumber.trim() === '') {
+            alert('Please enter contactnumber.');
+            return false;
+        }
+        if (team.val() == '') {
+            alert('Please select the Team.');
+            return false;
+        }
+        if (role.val() == '') {
+            alert('Please select the Role.');
+            return flase;
+        }
+
+
+            // Make an AJAX request to check if the username and email exist
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("IsUsernameOrEmailExists", "EmployeeEntry")',
+                data: { username: username, email: email },
+                success: function (response) {
+                    if (response.isUsernameExists) {
+                        alert('EmployeeID already exists. Please choose a different EmployeeID.');
+                    } else if (response.isEmailExists) {
+                        alert('Email already exists. Please use a different email.');
+                    }
+                    else {
+                        // If both username and email do not exist, proceed with registration
+                        $('#registerForm').submit();
+                        alert('Employee registration is successfully completed..');
+                    }
+                },
+                error: function () {
+                    alert('Error occurred while checking username and email availability.');
+                }
+            });
+     }
+</script>
+
+<form id="registerForm" method="post" action="@Url.Action("RegisterEmployee", "EmployeeEntry")">
+    <div class="row">
+        <div class="form-group col-md-4 ml-auto">
+            @Html.Label("EmployeeID : ")
+        </div>
+        <div class="form-group col-md-6">
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.EmployeeID, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="form-group col-md-4 ml-auto">
+            @Html.Label("FirstName : ")
+        </div>
+        <div class="form-group col-md-6">
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="form-group col-md-4 ml-auto">
+            @Html.Label("MiddleName : ")
+        </div>
+        <div class="form-group col-md-6">
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-4 ml-auto">
+            @Html.Label("LastName : ")
+        </div>
+        <div class="form-group col-md-6">
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-4 ml-auto">
+            @Html.Label("Team : ")
+        </div>
+        <div class="form-group col-md-6">
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.Team, new SelectList(new[] { "SV", "FSW", "IS", "S&R", "Automation", "HIMS", "HR", "Support", "FWV" }), "--Select Team--", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-4 ml-auto">
+            @Html.Label("Role : ")
+        </div>
+        <div class="form-group col-md-6">
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.Role, new SelectList(new[] { "User", "AssetManager", "Admin" }), "--Select Role--", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-4 ml-auto">
+            @Html.Label("Mail : ")
+        </div>
+        <div class="form-group col-md-6">
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Mail, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-4 ml-auto">
+            @Html.Label("ContactNumber : ")
+        </div>
+        <div class="form-group col-md-6">
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.ContactNumber, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+
+    </div>
+    <div class="form-group col-md-6">
+        <button id="btnsubmit" type="submit" onclick="registerUser()" class="btn btn-primary">Submit</button>
+    </div>
+</div>

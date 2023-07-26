@@ -1,12 +1,23 @@
 ﻿@model I_RAY_ASSET_TRACKER_MVC.Models.LoginModelClass
 @{
     ViewBag.Title = "Login";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
 @Styles.Render("~/Content/css")
 @Scripts.Render("~/bundles/modernizr")
+
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style>
+    body {
+        background: url('../images/icon/background.png') no-repeat center;
+    }
+    form {
+        margin-top: 4rem;
+    }
+</style>
 
 
 @using (Html.BeginForm())

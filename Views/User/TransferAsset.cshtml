@@ -1,11 +1,11 @@
-﻿@model I_RAY_ASSET_TRACKER_MVC.Models.Table1Model 
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.Table1Model
 
 <script>
     $(function () {
         $('#AssetTransferTeam').change(function () {
             $('#AssetTransferEmployeeName').empty();
             /* debugger;*/
-            if ($('#RequestRaisedTo').val() != "--Select Team--") {
+            if ($('#AssetTransferTeam').val() != "--Select Team--") {
                 var RequestRaisedOptions = {};
                 RequestRaisedOptions.url = "/User/EmployeeName";
                 RequestRaisedOptions.type = "POST";
@@ -35,13 +35,18 @@
     });
 </script>
 
+<div class="transfer-progress visually-hidden">
+    <i class="fa fa-2x fa-spinner fa-spin"></i>
+    <label>Please wait while you transfer the Asset to the employee...</label>
+</div>
+
 <div class="row">
     <div class="form-group col-md-4 ml-auto">
         @Html.Label("AssignID : ")
     </div>
     <div class="form-group col-md-6">
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.AssignID, new { @readonly = "readonly", @class = "form-control" } )
+            @Html.TextBoxFor(m => m.AssignID, new { @readonly = "readonly", @class = "form-control" })
         </div>
     </div>
 </div>
@@ -53,7 +58,7 @@
     </div>
     <div class="form-group col-md-6">
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.EmployeeName, new { @readonly = "readonly", @class = "form-control" } )
+            @Html.TextBoxFor(m => m.EmployeeName, new { @readonly = "readonly", @class = "form-control" })
         </div>
     </div>
 </div>
@@ -65,7 +70,7 @@
     </div>
     <div class="form-group col-md-6">
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Assetbelongsto, new { @readonly = "readonly", @class = "form-control" } )
+            @Html.TextBoxFor(m => m.Assetbelongsto, new { @readonly = "readonly", @class = "form-control" })
         </div>
     </div>
 </div>
@@ -76,7 +81,7 @@
     </div>
     <div class="form-group col-md-6">
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.AssetType,new { @readonly = "readonly", @class = "form-control" } )
+            @Html.TextBoxFor(m => m.AssetType, new { @readonly = "readonly", @class = "form-control" })
         </div>
     </div>
 </div>
@@ -87,7 +92,7 @@
     </div>
     <div class="form-group col-md-6">
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.HWSWName, new { @readonly = "readonly", @class = "form-control" } )
+            @Html.TextBoxFor(m => m.HWSWName, new { @readonly = "readonly", @class = "form-control" })
         </div>
     </div>
 </div>
@@ -98,7 +103,7 @@
     </div>
     <div class="form-group col-md-6">
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.SerialNumberVersionNumber, new { @readonly = "readonly", @class = "form-control" } )
+            @Html.TextBoxFor(m => m.SerialNumberVersionNumber, new { @readonly = "readonly", @class = "form-control" })
         </div>
     </div>
 </div>
@@ -109,7 +114,7 @@
     </div>
     <div class="form-group col-md-6">
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.AssignDate, new { @readonly = "readonly", @class = "form-control" } )
+            @Html.TextBoxFor(m => m.AssignDate, new { @readonly = "readonly", @class = "form-control" })
         </div>
     </div>
 </div>
@@ -120,7 +125,7 @@
     </div>
     <div class="form-group col-md-6">
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.ExpectedReturnDate, new { @readonly = "readonly", @class = "form-control" } )
+            @Html.TextBoxFor(m => m.ExpectedReturnDate, new { @readonly = "readonly", @class = "form-control" })
         </div>
     </div>
 </div>
@@ -131,7 +136,7 @@
     </div>
     <div class="form-group col-md-6">
         <div class="col-md-10">
-            @Html.DropDownListFor(m => m.AssetTransferTeam, (IEnumerable<SelectListItem>)ViewData["Teams"], "--Select Team--", new { @class = "form-control" } )
+            @Html.DropDownListFor(m => m.AssetTransferTeam, (IEnumerable<SelectListItem>)ViewData["Teams"], "--Select Team--", new { @class = "form-control" })
         </div>
     </div>
 </div>
@@ -142,7 +147,7 @@
     </div>
     <div class="form-group col-md-6">
         <div class="col-md-10">
-            @Html.DropDownListFor(m => m.AssetTransferEmployeeName, Enumerable.Empty<SelectListItem>(), "--Select EmployeeName--", new { @class = "form-control" } )
+            @Html.DropDownListFor(m => m.AssetTransferEmployeeName, Enumerable.Empty<SelectListItem>(), "--Select EmployeeName--", new { @class = "form-control" })
         </div>
     </div>
 </div>

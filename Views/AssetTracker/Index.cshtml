@@ -19,8 +19,9 @@
     h4 {
         font-size: 2rem;
     }
+
     .btn {
-        box-shadow: 0px 0px 5px 2px #ffc107!important;
+        box-shadow: 0px 0px 5px 2px #ffc107 !important;
     }
 
         .btn:active {
@@ -67,7 +68,40 @@
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <script>
+  /*  debugger;*/
     function DisplaySendProgressMessage(ctl, msg) {
+     /*   debugger;*/
+        var team = $('#RequestRaisedTo');
+        if (team.val() == '') {
+            alert('Please select the Team.');
+            return false;
+        }
+        var assetType = $('#AssetType');
+        if (assetType.val() == 'Please select AssetType') {
+            alert('Please select the AssetType.');
+            return false;
+        }
+        var AssetName = $('#AssetName');
+        if (AssetName.val() == 'Please select AssetName') {
+            alert('Please select the AssetName.');
+            return false;
+        } 
+        var AvailableSerialNumber = $('#AvailableSerialNumber');
+        if (AvailableSerialNumber.val() == 'Please select SerialNumber') {
+            alert('Please select the SerialNumber.');
+            return false;
+        } 
+        var ExpectedReturnDate = $('#ExpectedReturnDate').val();
+        if (ExpectedReturnDate.trim() === '') {
+            alert('Please enter Date.');
+            return false;
+        } 
+        var Purpose = $('#Purpose').val();
+        if (Purpose.trim() === '') {
+            alert('Please enter Purpose.');
+            return false;
+        }
+      
         // Turn off the "Save" button and change text
         $(ctl).prop("disabled", true).text(msg);
         // Gray out background on page
@@ -79,6 +113,8 @@
         }, 1);
         $(ctl).prop("disabled", false).text(msg);
         return true;
+        this.submit();
+
     }
 
     $(function () {
@@ -238,8 +274,10 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.EditorFor(model => model.EmployeeTeam, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.EmployeeTeam, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -252,8 +290,10 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -266,8 +306,13 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.DropDownListFor(model => model.RequestRaisedTo, (IEnumerable<SelectListItem>)ViewData["Teams"], "Please select Team", new { @class = "input form-control" })
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        @Html.DropDownListFor(model => model.RequestRaisedTo, (IEnumerable<SelectListItem>)ViewData["Teams"], "Please select Team", new { required="required",@class = "input form-control" })
+                                    </div>
+                                    @*<div class="col-md-1">
+                                        @Html.ValidationMessageFor(model => model.RequestRaisedTo, "", new { @class = "text-danger" })
+                                    </div>*@
                                 </div>
                             </div>
                         </td>
@@ -280,8 +325,10 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.DropDownListFor(model => model.AssetType, Enumerable.Empty<SelectListItem>(), "Please select AssetType", new { @class = "input form-control" })
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        @Html.DropDownListFor(model => model.AssetType, Enumerable.Empty<SelectListItem>(), "Please select AssetType", new { required = "required", @class = "input form-control" })
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -294,8 +341,10 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.DropDownListFor(model => model.AssetName, Enumerable.Empty<SelectListItem>(), "Please select AssetName", new { @class = "input form-control" })
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        @Html.DropDownListFor(model => model.AssetName, Enumerable.Empty<SelectListItem>(), "Please select AssetName", new { required = "required", @class = "input form-control" })
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -308,8 +357,10 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.EditorFor(model => model.Available, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Available, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -322,8 +373,10 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.DropDownListFor(model => model.AvailableSerialNumber, Enumerable.Empty<SelectListItem>(), "Please select SerialNumber", new { @class = "input form-control" })
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        @Html.DropDownListFor(model => model.AvailableSerialNumber, Enumerable.Empty<SelectListItem>(), "Please select SerialNumber", new { @class = "input form-control" })
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -336,8 +389,10 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.EditorFor(model => model.NumberofAssetsRequired, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.NumberofAssetsRequired, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -350,8 +405,10 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.EditorFor(model => model.RequestDate, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.RequestDate, new { htmlAttributes = new { @readonly = "readonly", @class = "input form-control" } })
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -364,8 +421,10 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.EditorFor(model => model.ExpectedReturnDate, "{0:dd/MM/yyyy}", new { htmlAttributes = new { @type = "date", @class = "input form-control" } })
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ExpectedReturnDate, "{0:dd/MM/yyyy}", new { htmlAttributes = new { @type = "date", @class = "input form-control" } })
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -378,8 +437,10 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.EditorFor(model => model.Purpose, new { htmlAttributes = new { @class = "input form-control", rows = "20" } })
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Purpose, new { htmlAttributes = new { @class = "input form-control", rows = "20" } })
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -389,97 +450,14 @@
                             <div class="form-group">
                                 <div>
                                     @*<input type="submit" id="submitButton" value="Send Request" class="button btn btn-primary btn-customized mt-4" onclick="return DisplayProgressMessage(this, 'Sending...');" />*@
-                                    <button type="submit" class="button btn btn-primary btn-customized mt-4" onclick="return DisplaySendProgressMessage(this, 'Sending...');">
+                                    <button id="btnsubmit" type="submit" class="button btn btn-primary btn-customized mt-4" onclick="return DisplaySendProgressMessage(this, 'Sending...');">
                                         Send Request
                                     </button>
                                 </div>
                             </div>
                         </td>
                     </tr>
-                </table>
-                @*<div class="form-group">
-                        @Html.LabelFor(model => model.EmployeeTeam, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.EmployeeTeam, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
-                        </div>
-                    </div>*@
-
-                @*<div class="form-group">
-                        @Html.LabelFor(model => model.EmployeeName, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
-                        </div>
-                    </div>*@
-
-                @*<div class="form-group">
-                        @Html.LabelFor(model => model.RequestRaisedTo, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.RequestRaisedTo, (IEnumerable<SelectListItem>)ViewData["Teams"], "Please select Team", new { @class = "form-control" })
-                        </div>
-                    </div>*@
-
-                @*<div class="form-group">
-                        @Html.LabelFor(model => model.AssetType, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.AssetType, Enumerable.Empty<SelectListItem>(), "Please select AssetType", new { @class = "form-control" })
-                        </div>
-                    </div>*@
-
-                @*<div class="form-group">
-                        @Html.LabelFor(model => model.AssetName, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.AssetName, Enumerable.Empty<SelectListItem>(), "Please select AssetName", new { @class = "form-control" })
-                        </div>
-                    </div>*@
-
-                @*<div class="form-group">
-                        @Html.LabelFor(model => model.Available, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Available, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
-                        </div>
-                    </div>*@
-
-                @*<div class="form-group">
-                        @Html.LabelFor(model => model.AvailableSerialNumber, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.AvailableSerialNumber, Enumerable.Empty<SelectListItem>(), "Please select SerialNumber", new { @class = "form-control" })
-                        </div>
-                    </div>*@
-
-                @*<div class="form-group">
-                        @Html.LabelFor(model => model.NumberofAssetsRequired, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.NumberofAssetsRequired, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
-                        </div>
-                    </div>*@
-
-                @*<div class="form-group">
-                        @Html.LabelFor(model => model.RequestDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.RequestDate, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
-                        </div>
-                    </div>*@
-
-                @*<div class="form-group">
-                        @Html.LabelFor(model => model.ExpectedReturnDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.ExpectedReturnDate, "{0:dd/MM/yyyy}", new { htmlAttributes = new { @type = "date", @class = "form-control" } })
-                        </div>
-                    </div>*@
-
-                @*<div class="form-group">
-                        @Html.LabelFor(model => model.Purpose, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Purpose, new { htmlAttributes = new { @class = "form-control", rows = "20" } })
-                        </div>
-                    </div>*@
-
-                @*<div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" id="btnsendreq" value="Send Request" class="btn btn-primary btn-customized mt-4" />
-                        </div>
-                    </div>*@
-
+                </table>          
             </div>
         </div>
     </div>

@@ -156,10 +156,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AllocationListController.cs" />
     <Compile Include="Controllers\AssetEntryController.cs" />
+    <Compile Include="Controllers\AssetRemarksController.cs" />
     <Compile Include="Controllers\AssetTrackerController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AssetTrackingController.cs" />
     <Compile Include="Controllers\AssignAssetController.cs" />
+    <Compile Include="Controllers\EmployeeEntryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MyRequestListController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UserLoginController.cs" />
     <Compile Include="Cryptography.cs" />
@@ -168,10 +172,14 @@
     </Compile>
     <Compile Include="Models\AllocationListModel.cs" />
     <Compile Include="Models\AssetEntryModel.cs" />
+    <Compile Include="Models\AssetRemarksModel.cs" />
     <Compile Include="Models\AssetRequestModal.cs" />
+    <Compile Include="Models\AssetTrackingModel.cs" />
     <Compile Include="Models\AssignAssetApproval.cs" />
     <Compile Include="Models\DataPoint.cs" />
+    <Compile Include="Models\EmployeeEntryModel.cs" />
     <Compile Include="Models\LoginModelClass.cs" />
+    <Compile Include="Models\MyRequestListModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -2310,6 +2318,11 @@
     <Content Include="Views\AllocationList\Index.cshtml" />
     <Content Include="Views\AssetEntry\Index.cshtml" />
     <Content Include="Views\User\TransferAsset.cshtml" />
+    <Content Include="Views\AssetTracking\Index.cshtml" />
+    <Content Include="Views\MyRequestList\Index.cshtml" />
+    <Content Include="Views\AssetRemarks\Index.cshtml" />
+    <Content Include="Views\AssetRemarks\TrackNow.cshtml" />
+    <Content Include="Views\EmployeeEntry\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

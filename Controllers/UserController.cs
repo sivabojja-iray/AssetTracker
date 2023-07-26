@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
@@ -132,10 +133,9 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                     userList.HWSWName = row["HWSWName"].ToString();
                     userList.SerialNumberVersionNumber = row["SerialNumberVersionNumber"].ToString();
                     userList.AssignDate = row["AssignDate"].ToString();
-                    userList.ExpectedReturnDate = row["ExpectedReturnDate"].ToString();
-             
-                dataModels.Add(userList);
+                    userList.ExpectedReturnDate = row["ExpectedReturnDate"].ToString();              
             }
+            dataModels.Add(userList);
 
             SqlCommand cmd1 = new SqlCommand("SELECT DISTINCT Team FROM EmployeeList WHERE Team NOT IN('Support','HR')", sqlConnection);
             SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd1);
@@ -172,6 +172,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             cmd.Parameters.AddWithValue("@ToEmployeeName", userModel.AssetTransferEmployeeName);
             cmd.ExecuteNonQuery();
             sqlConnection.Close();
+            Thread.Sleep(1000);
             return RedirectToAction("Index"); 
         }
         public ActionResult SaveTransferAssetFromEmployee(int? id,Table2Model table2Model)

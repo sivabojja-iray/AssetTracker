@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -9,6 +10,8 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
     {
         public string EmployeeTeam { get; set; }
         public string EmployeeName { get; set; }
+
+        //[Required(ErrorMessage ="*")]
         public string RequestRaisedTo { get; set; }
         public string AssetType { get; set; }
         public string AssetName { get; set; }

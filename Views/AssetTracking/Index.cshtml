@@ -1,0 +1,63 @@
+﻿@model List<I_RAY_ASSET_TRACKER_MVC.Models.AssetTrackingModel>
+
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+}
+
+<style>
+    #tblAssetTrackingList th {
+        background-color: #ffc107;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#tblAssetTrackingList').DataTable({
+            "language": {
+                "zeroRecords": "No matching records found"
+            }
+        });
+    });
+</script>
+<div class="row">
+    <table id="tblAssetTrackingList" style="width:100%;margin-top:2rem" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>Assign ID</th>
+                <th>Emp ID</th>
+                <th>Employee Name</th>
+                <th>Team</th>
+                <th>Asset Belongs To</th>
+                <th>Asset Type</th>
+                <th>HWSW Name</th>
+                <th>SerialNumber</th>
+                <th>Assign Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.AssignID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmpID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Team)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

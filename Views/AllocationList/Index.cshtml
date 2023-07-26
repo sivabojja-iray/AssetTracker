@@ -17,7 +17,11 @@
 <script>
 
     $(document).ready(function () {
-        $('#tblAllocationList').DataTable();
+        $('#tblAllocationList').DataTable({
+            "language": {
+                "zeroRecords": "No matching records found"
+            }
+        });
     });
 
     @*$(document).ready(function () {

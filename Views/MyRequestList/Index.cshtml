@@ -1,0 +1,48 @@
+﻿
+@model List<I_RAY_ASSET_TRACKER_MVC.Models.MyRequestListModel>
+
+<style>
+    #tblMyRequestList th {
+        background-color: #ffc107;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#tblMyRequestList').DataTable({
+            "language": {
+                "zeroRecords": "No matching records found"
+            }
+        });
+    });
+</script>
+
+<table id="tblMyRequestList" class="display compact table table-bordered table-primary">
+    <thead>
+        <tr>
+            <th>RequestID</th>
+            <th>EmpID</th>
+            <th>EmpTeam</th>
+            <th>AssetTeam</th>
+            <th>AssetType</th>
+            <th>HWSWName</th>
+            <th>RequestDate</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.RequestID)</td>
+                <td>@Html.DisplayFor(modelItem => item.EmpID)</td>
+                <td>@Html.DisplayFor(modelItem => item.EmpTeam)</td>
+                <td>@Html.DisplayFor(modelItem => item.AssetTeam)</td>
+                <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+            </tr>
+        }
+    </tbody>
+</table>

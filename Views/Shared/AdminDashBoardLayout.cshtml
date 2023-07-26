@@ -148,7 +148,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#"
+                <a id="employeeEntryId" class="nav-link collapsed" data-toggle="modal" data-target="#EmployeeEntryModal" href="javascript:void(0);"
                    aria-expanded="true">
                     <i class="fas fa-user-plus"></i>
                     <span>Employee Entry</span>
@@ -166,7 +166,7 @@
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#"
+                <a id="myRequestListId" class="nav-link collapsed" data-toggle="modal" data-target="#myRequestListModal" href="javascript:void(0);"
                    aria-expanded="true">
                     <i class="fa fa-chart-line"></i>
                     <span>My Request-List</span>
@@ -198,7 +198,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#"
+                <a class="nav-link collapsed" href="~/AssetTracking/Index"
                    aria-expanded="true">
                     <i class="fa fa-search"></i>
                     <span>Asset Tracking</span>
@@ -514,7 +514,7 @@
                         </a>
                     </div>
 
-                    <div>
+                    <div class="row">
                         @RenderBody()
                     </div>
 
@@ -563,6 +563,47 @@
         </div>
     </div>
 
+    @*------------------Modal PopUp For Employee Entry------------------------*@
+
+    <div id="EmployeeEntryModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="EmployeeEntryModalLable" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title fs-5" id="EmployeeEntryModalLable">Employee Entry</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">                   
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*------------------Modal PopUp For My Request List------------------------*@
+    <div id="myRequestListModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="myRequestListModalLable" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title fs-5" id="myRequestListModalLable">My Request-List</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Chart-->
     <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 
@@ -594,6 +635,51 @@
         function preventBack() { window.history.forward(); }
         setTimeout("preventBack()", 0);
         window.onunload = function () { null };
+
+        $(function () {
+            $("#employeeEntryId").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/EmployeeEntry/Index",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (response) {
+                        $("#EmployeeEntryModal").find(".modal-body").html(response);
+                        $("#EmployeeEntryModal").modal('show');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+
+        $(function () {
+            $("#myRequestListId").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/MyRequestList/Index",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (response) {
+                        $("#myRequestListModal").find(".modal-body").html(response);
+                        $("#myRequestListModal").modal('show');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
