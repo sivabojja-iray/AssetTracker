@@ -162,6 +162,7 @@
     <Compile Include="Controllers\AssetTrackingController.cs" />
     <Compile Include="Controllers\AssignAssetController.cs" />
     <Compile Include="Controllers\EmployeeEntryController.cs" />
+    <Compile Include="Controllers\EmployeeListController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MyRequestListController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Models\AssignAssetApproval.cs" />
     <Compile Include="Models\DataPoint.cs" />
     <Compile Include="Models\EmployeeEntryModel.cs" />
+    <Compile Include="Models\EmployeeList.cs" />
     <Compile Include="Models\LoginModelClass.cs" />
     <Compile Include="Models\MyRequestListModel.cs" />
     <Compile Include="Models\UserModel.cs" />
@@ -2323,6 +2325,8 @@
     <Content Include="Views\AssetRemarks\Index.cshtml" />
     <Content Include="Views\AssetRemarks\TrackNow.cshtml" />
     <Content Include="Views\EmployeeEntry\Index.cshtml" />
+    <Content Include="Views\EmployeeList\Index.cshtml" />
+    <Content Include="Views\EmployeeList\EmployeeUpdate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

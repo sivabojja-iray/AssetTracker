@@ -22,25 +22,6 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         {
             return View();
         }
-        //public JsonResult CheckUsername(string username)
-        //{
-        //    bool userExists = CheckIfUserExists(username);
-        //    return Json(new { userExists = userExists });
-        //}
-        //private bool CheckIfUserExists(string username)
-        //{
-        //    SqlConnection sqlConnection = new SqlConnection(constr);
-        //    SqlCommand cmd = new SqlCommand("select EmpID from EmployeeList", sqlConnection);
-        //    List<string> existingUsernames = new List<string>();
-        //    sqlConnection.Open();
-        //    SqlDataReader sdr = cmd.ExecuteReader();
-        //    while (sdr.Read())
-        //    {
-        //        existingUsernames.Add(sdr["EmpID"].ToString());
-        //    }
-        //    sqlConnection.Close();
-        //    return existingUsernames.Contains(username);
-        //}
         public JsonResult IsUsernameOrEmailExists(string username,string email)
         {
             bool isUsernameExists = false;
