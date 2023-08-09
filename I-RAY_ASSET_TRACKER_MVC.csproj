@@ -155,6 +155,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AllocationListController.cs" />
+    <Compile Include="Controllers\AssetDeallocationController.cs" />
     <Compile Include="Controllers\AssetEntryController.cs" />
     <Compile Include="Controllers\AssetRemarksController.cs" />
     <Compile Include="Controllers\AssetTrackerController.cs" />
@@ -165,6 +166,8 @@
     <Compile Include="Controllers\EmployeeListController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MyRequestListController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\UpdateAssetController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UserLoginController.cs" />
     <Compile Include="Cryptography.cs" />
@@ -172,6 +175,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AllocationListModel.cs" />
+    <Compile Include="Models\AssetDeallocationModel.cs" />
     <Compile Include="Models\AssetEntryModel.cs" />
     <Compile Include="Models\AssetRemarksModel.cs" />
     <Compile Include="Models\AssetRequestModal.cs" />
@@ -182,6 +186,8 @@
     <Compile Include="Models\EmployeeList.cs" />
     <Compile Include="Models\LoginModelClass.cs" />
     <Compile Include="Models\MyRequestListModel.cs" />
+    <Compile Include="Models\ReportsModel.cs" />
+    <Compile Include="Models\UpdateAssetModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -2327,6 +2333,12 @@
     <Content Include="Views\EmployeeEntry\Index.cshtml" />
     <Content Include="Views\EmployeeList\Index.cshtml" />
     <Content Include="Views\EmployeeList\EmployeeUpdate.cshtml" />
+    <Content Include="Views\UpdateAsset\Index.cshtml" />
+    <Content Include="Views\UpdateAsset\_UpdateAssetPartialView.cshtml" />
+    <Content Include="Views\UpdateAsset\AssetUpdateDetails.cshtml" />
+    <Content Include="Views\AssetDeallocation\Index.cshtml" />
+    <Content Include="Views\AssetDeallocation\_SearchEmployeeIDpartialView.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

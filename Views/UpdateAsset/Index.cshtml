@@ -1,0 +1,55 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.UpdateAssetModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+}
+
+<style>
+    div#employeeDetails {
+        margin-top: 5rem;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('form').submit(function (event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: $(this).serialize(),
+                success: function (result) {
+                    $('#employeeDetails').html(result);
+                },
+                error: function () {
+                    alert('Error occurred while fetching employee details.');
+                }
+            });
+        });
+    });
+</script>
+ 
+@using (Html.BeginForm("SearchSerialNumber", "UpdateAsset", FormMethod.Post))
+{
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-4">
+                    <span>Enter Serial Number :</span>
+                </div>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(m => m.SerialNumber, new { @class = "form-control" })
+                </div>
+                <div class="col-md-4">
+                    <button id="showDataTableBtn" type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div id="employeeDetails">
+    @Html.Partial("_UpdateAssetPartialView")
+</div>

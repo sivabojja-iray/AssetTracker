@@ -1,0 +1,105 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.UpdateAssetModel
+
+<style>
+    #dataTable th {
+        background-color: #ffc107;
+    }
+
+    tr {
+        text-align: center;
+    }
+</style>
+<script>
+    $(function () {
+        $("#dataTable .updateAsset").click(function () {
+            /*  debugger;*/
+            var Team = $(this).closest("tr").find("td").eq(0).html();
+            var HWSWName = $(this).closest("tr").find("td").eq(1).html();
+            var SerialNumberVersionNumber = $(this).closest("tr").find("td").eq(2).html();
+            var AssetType = $(this).closest("tr").find("td").eq(3).html();
+            var InvoiceNo = $(this).closest("tr").find("td").eq(4).html();
+            $.ajax({
+                type: "POST",
+                url: "/UpdateAsset/AssetUpdateDetails",
+                data: {
+                    Team: Team,
+                    HWSWName: HWSWName,
+                    SerialNumberVersionNumber: SerialNumberVersionNumber,
+                    AssetType: AssetType,
+                    InvoiceNo: InvoiceNo
+                },
+                success: function (response) {
+                    /* debugger;*/
+                    $("#AssetUpdateModal").find(".modal-body").html(response);
+                    $("#AssetUpdateModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+    $(function () {
+        $("#btnupdate").click(function () {
+            alert("Asset update successfully...!!!");
+        });
+    });
+</script>
+
+@if (Model != null)
+{
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <table id="dataTable" class="display compact table table-bordered table-primary">
+                <thead>
+                    <tr>
+                        <th>Team</th>
+                        <th>HWSWName</th>
+                        <th>SerialNumber</th>
+                        <th>AssetType</th>
+                        <th>InvoiceNo</th>
+                        <th>Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Model.Team</td>
+                        <td>@Model.HWSWName</td>
+                        <td>@Model.SerialNumberVersionNumber</td>
+                        <td>@Model.AssetType</td>
+                        <td>@Model.InvoiceNo</td>
+                        <td>
+                            <a class="updateAsset btn btn-primary" data-toggle="modal" data-target="#AssetUpdateModal" href="javascript:void(0);">
+                                Update
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("SaveUpdateAssetDetails", "UpdateAsset", FormMethod.Post))
+{
+    <div id="AssetUpdateModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="AssetUpdateModalLable" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title fs-5" id="AssetUpdateModalLable">Asset update details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button id="btnupdate" type="submit" class="btnsubmit btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

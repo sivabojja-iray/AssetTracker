@@ -1,0 +1,110 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.ReportsModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+}
+
+<style>
+    table#tbleReports {
+        margin-left: 300px;
+    }
+    td {
+        padding-left: 10px;
+        padding-bottom: 10px;
+    }
+</style>
+
+<h2>Reports</h2>
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <table id="tbleReports" cellspacing="3">
+            <tr>
+                <td>
+                    <span>Employee ID :</span>
+                </td>
+                <td>
+                    @Html.TextBoxFor(m => m.EmployeeID, new { @class = "form-control" })
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Track Now</button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Historical Data</button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">AssetTransfer Record</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Asset SerialNo :</span>
+                </td>
+                <td>
+                    @Html.TextBoxFor(m => m.AssetSerialNumber, new { @class = "form-control" })
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Track Now</button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Historical Data</button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">AssetTransfer Record</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Employee Name :</span>
+                </td>
+                <td>
+                    @Html.TextBoxFor(m => m.EmployeeName, new { @class = "form-control" })
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Track Now</button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Historical Data</button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">AssetTransfer Record</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Asset Type :</span>
+                </td>
+                <td>
+                    @Html.TextBoxFor(m => m.AssetType, new { @class = "form-control" })
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Track Now</button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Historical Data</button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">AssetTransfer Record</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>HW/SW Name :</span>
+                </td>
+                <td>
+                    @Html.TextBoxFor(m => m.HWSWName, new { @class = "form-control" })
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Track Now</button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Historical Data</button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">AssetTransfer Record</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
