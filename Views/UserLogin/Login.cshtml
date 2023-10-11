@@ -1,96 +1,183 @@
 ﻿@model I_RAY_ASSET_TRACKER_MVC.Models.LoginModelClass
-@{
-    ViewBag.Title = "Login";
-    //Layout = "~/Views/Shared/_Layout.cshtml";
-}
+
+@*@{
+        ViewBag.Title = "Login";
+        //Layout = "~/Views/Shared/_Layout.cshtml";
+    }*@
 
 
 @Styles.Render("~/Content/css")
 @Scripts.Render("~/bundles/modernizr")
 
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>I-Ray-AssetTracker-Login</title>
+    <link href="~/Images/Icon/I-Ray-Logo.png" rel="shortcut icon" type="image/x-icon">
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" />
 
-<style>
-    body {
-        background: url('../images/icon/background.png') no-repeat center;
-    }
-    form {
-        margin-top: 4rem;
-    }
-</style>
+    <style>
+        body {
+            background-image: url('../images/icon/background.png');
+            background-size: cover; /* This scales the image to cover the entire background */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            background-attachment: fixed;
+            background-position: center;
+        }
 
+        form {
+            margin-top: 4rem;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var divToHide = document.getElementById('preloader');
+            var Hide = document.getElementById('login-wrap');
+            Hide.style.display = "none";
+            setTimeout(function () {
+                Hide.style.display = "block";
+                divToHide.style.display = 'none';
+            }, 8000);
+        };
+    </script>
+</head>
+<body>
+    <div id="color">
+        <div id="preloader" class="preloader"></div>
+    </div>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-    <div class="login-wrap">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="login-html animate__animated animate__zoomIn animate__delay-1s">
-            <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
-            <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
-            <div class="login-form">
-                <div class="sign-in-htm">
-                    <div class="group">
-                        @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "inputlabel label" })
-                        @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "input" } })
-                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+        <div id="login-wrap" class="login-wrap">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="login-html animate__animated animate__zoomIn animate__delay-1s">
+                <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
+                <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+                <div class="login-form">
+                    <div class="sign-in-htm">
+                        <div class="group">
+                            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "inputlabel label" })
+                            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "input" } })
+                            @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="group">
+                            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "inputlabel label" })
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "input" } })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="group">
+                            <input id="check" type="checkbox" class="inputlabel check" checked>
+                            <label for="check"><span class="icon"></span> Keep me Signed in</label>
+                        </div>
+                        <div class="group">
+                            @*<input type="submit" class="button glow-on-hover" value="Sign In">*@
+                            <button class="glow-on-hover" type="submit">Sign In</button>
+                        </div>
+                        <div class="group">
+                            <h3 class="text-danger text-center">@Html.ViewData["message"]</h3>
+                        </div>
+                        <div class="hr"></div>
+                        <div class="foot-lnk">
+                            <a id="forgotpasswordId" data-toggle="modal" data-target="#ForgotPasswordModal" href="javascript:void(0);">Forgot Password?</a>
+                        </div>
+                        <div class="logo">
+                            <img src="~/Images/Icon/I-Ray-Logo.png" />
+                        </div>
                     </div>
-                    <div class="group">
-                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "inputlabel label" })
-                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "input" } })
-                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="group">
-                        <input id="check" type="checkbox" class="inputlabel check" checked>
-                        <label for="check"><span class="icon"></span> Keep me Signed in</label>
-                    </div>
-                    <div class="group">
-                        @*<input type="submit" class="button glow-on-hover" value="Sign In">*@
-                        <button class="glow-on-hover" type="submit">Sign In</button>
-                    </div>
-                    <div class="group">
-                        <h3 class="text-danger text-center">@Html.ViewData["message"]</h3>
-                    </div>
-                    <div class="hr"></div>
-                    <div class="foot-lnk">
-                        <a href="#forgot">Forgot Password?</a>
-                    </div>
-                    <div class="logo">
-                        <img src="~/Images/Icon/I-Ray-Logo.png" />
-                    </div>
-                </div>
-                <div class="sign-up-htm">
-                    <div class="group">
-                        <label for="user" class="inputlabel label">Username</label>
-                        <input id="user" type="text" class="input">
-                    </div>
-                    <div class="group">
-                        <label for="pass" class="inputlabel label">Password</label>
-                        <input id="pass" type="password" class="input" data-type="password">
-                    </div>
-                    <div class="group">
-                        <label for="pass" class="inputlabel label">Repeat Password</label>
-                        <input id="pass" type="password" class="input" data-type="password">
-                    </div>
-                    <div class="group">
-                        <label for="pass" class="inputlabel label">Email Address</label>
-                        <input id="pass" type="text" class="input">
-                    </div>
-                    <div class="group">
-                        <input type="submit" class="button" value="Sign Up">
-                    </div>
-                    <div class="hr"></div>
-                    <div class="foot-lnk">
-                        <label for="tab-1">Already Member?</label>
+                    <div class="sign-up-htm">
+                        <div class="group">
+                            <label for="user" class="inputlabel label">Username</label>
+                            <input id="user" type="text" class="input">
+                        </div>
+                        <div class="group">
+                            <label for="pass" class="inputlabel label">Password</label>
+                            <input id="pass" type="password" class="input" data-type="password">
+                        </div>
+                        <div class="group">
+                            <label for="pass" class="inputlabel label">Repeat Password</label>
+                            <input id="pass" type="password" class="input" data-type="password">
+                        </div>
+                        <div class="group">
+                            <label for="pass" class="inputlabel label">Email Address</label>
+                            <input id="pass" type="text" class="input">
+                        </div>
+                        <div class="group">
+                            <input type="submit" class="button" value="Sign Up">
+                        </div>
+                        <div class="hr"></div>
+                        <div class="foot-lnk">
+                            <label for="tab-1">Already Member?</label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-}
+    }
+    @using (Html.BeginForm("passwordSendtoMail", "UserLogin", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div id="ForgotPasswordModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="ForgotPasswordModalLable" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <div class="pagetitle">
+                            <h1>Forgot Password</h1>
+                            <nav>
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Login</a></li>
+                                    <li class="breadcrumb-item active">Forgot Password</li>
+                                </ol>
+                            </nav>
+                        </div><!-- End Page Title -->
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script>
+
+        $(function () {
+            $("#forgotpasswordId").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/UserLogin/forgotPassword",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (response) {
+                        $("#ForgotPasswordModal").find(".modal-body").html(response);
+                        $("#ForgotPasswordModal").modal('show');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-

@@ -1,6 +1,6 @@
 ﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetRequestModal
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "AssetRequest";
     //Layout = "~/Views/Shared/DashBoardLayout.cshtml";
     if (Session["Role"].ToString() == "AssetManager")
     {
@@ -16,17 +16,17 @@
 @Scripts.Render("~/bundles/modernizr")
 
 <style>
-    h4 {
+    /* h4 {
         font-size: 2rem;
-    }
+    }*/
 
     .btn {
         box-shadow: 0px 0px 5px 2px #ffc107 !important;
     }
 
-        .btn:active {
+    /* .btn:active {
             transform: translateY(1rem);
-        }
+        }*/
 
     .submit-progress-bg {
         background-color: lightgray;
@@ -68,9 +68,9 @@
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <script>
-  /*  debugger;*/
+    /*  debugger;*/
     function DisplaySendProgressMessage(ctl, msg) {
-     /*   debugger;*/
+        /*   debugger;*/
         var team = $('#RequestRaisedTo');
         if (team.val() == '') {
             alert('Please select the Team.');
@@ -85,23 +85,23 @@
         if (AssetName.val() == 'Please select AssetName') {
             alert('Please select the AssetName.');
             return false;
-        } 
+        }
         var AvailableSerialNumber = $('#AvailableSerialNumber');
         if (AvailableSerialNumber.val() == 'Please select SerialNumber') {
             alert('Please select the SerialNumber.');
             return false;
-        } 
+        }
         var ExpectedReturnDate = $('#ExpectedReturnDate').val();
         if (ExpectedReturnDate.trim() === '') {
             alert('Please enter Date.');
             return false;
-        } 
+        }
         var Purpose = $('#Purpose').val();
         if (Purpose.trim() === '') {
             alert('Please enter Purpose.');
             return false;
         }
-      
+
         // Turn off the "Save" button and change text
         $(ctl).prop("disabled", true).text(msg);
         // Gray out background on page
@@ -114,7 +114,6 @@
         $(ctl).prop("disabled", false).text(msg);
         return true;
         this.submit();
-
     }
 
     $(function () {
@@ -250,6 +249,16 @@
     });
 </script>
 
+<div class="pagetitle">
+    <h1>Asset Request</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Asset Request</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
 @using (Html.BeginForm("SendRequest", "AssetTracker", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -262,8 +271,8 @@
     <div class="row">
         <div class="mx-auto col-10 col-md-8 col-lg-6">
             <div class="form-horizontal animate__animated animate__zoomIn animate__delay-0.8s">
-                <h4 class="text-center">Asset-Request</h4>
-                <hr />
+                @*<h4 class="text-center">Asset-Request</h4>
+                    <hr />*@
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <table align="center" width="100%">
                     <tr>
@@ -308,11 +317,11 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-10">
-                                        @Html.DropDownListFor(model => model.RequestRaisedTo, (IEnumerable<SelectListItem>)ViewData["Teams"], "Please select Team", new { required="required",@class = "input form-control" })
+                                        @Html.DropDownListFor(model => model.RequestRaisedTo, (IEnumerable<SelectListItem>)ViewData["Teams"], "Please select Team", new { required = "required", @class = "input form-control" })
                                     </div>
                                     @*<div class="col-md-1">
-                                        @Html.ValidationMessageFor(model => model.RequestRaisedTo, "", new { @class = "text-danger" })
-                                    </div>*@
+                                            @Html.ValidationMessageFor(model => model.RequestRaisedTo, "", new { @class = "text-danger" })
+                                        </div>*@
                                 </div>
                             </div>
                         </td>
@@ -457,7 +466,7 @@
                             </div>
                         </td>
                     </tr>
-                </table>          
+                </table>
             </div>
         </div>
     </div>

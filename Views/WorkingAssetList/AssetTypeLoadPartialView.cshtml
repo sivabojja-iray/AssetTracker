@@ -1,0 +1,51 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.WorkingAssetListModel
+
+<style>
+    #tblworkingAssetList th {
+        background-color: #ffc107;
+    }
+</style>
+
+
+<script>
+    $(document).ready(function () {
+        $('#tblworkingAssetList').DataTable({
+            "language": {
+                "zeroRecords": "No matching records found"
+            }
+        });
+    });
+</script>
+
+<table id="tblworkingAssetList" class="display compact table table-bordered table-primary">
+    <thead>
+        <tr>
+            <th>Sno</th>
+            <th>Team</th>
+            <th>HWSWName</th>
+            <th>HWSWDescriptionCategory</th>
+            <th>SerialNumberVersionNumber</th>
+            <th>AssetType</th>
+            <th>DateofReciept</th>
+            <th>Category</th>
+            <th>InvoiceNo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.workingAssetList)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Sno)</td>
+                <td>@Html.DisplayFor(modelItem => item.Team)</td>
+                <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                <td>@Html.DisplayFor(modelItem => item.HWSWDescriptionCategory)</td>
+                <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                <td>@Html.DisplayFor(modelItem => item.DateofReciept)</td>
+                <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                <td>@Html.DisplayFor(modelItem => item.InvoiceNo)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

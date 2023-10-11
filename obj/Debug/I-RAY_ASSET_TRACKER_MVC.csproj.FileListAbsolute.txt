@@ -148,8 +148,12 @@ C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\roslyn\VBCSCompiler.exe
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\roslyn\VBCSCompiler.exe.config
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\Antlr3.Runtime.dll
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\BouncyCastle.Crypto.dll
+C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\EPPlus.dll
+C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\EPPlus.Interfaces.dll
+C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\EPPlus.System.Drawing.dll
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\itextsharp.dll
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\Microsoft.IO.RecyclableMemoryStream.dll
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\Microsoft.Web.Infrastructure.dll
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\Newtonsoft.Json.dll
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\PagedList.dll
@@ -167,7 +171,9 @@ C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\System.Web.WebPages.Depl
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\System.Web.WebPages.dll
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\System.Web.WebPages.Razor.dll
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\WebGrease.dll
+C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\EPPlus.xml
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\itextsharp.xml
+C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\Microsoft.IO.RecyclableMemoryStream.xml
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\PagedList.xml
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\PagedList.Mvc.xml
 C:\Users\iray3\source\repos\I-RAY_ASSET_TRACKER_MVC\bin\System.Buffers.xml

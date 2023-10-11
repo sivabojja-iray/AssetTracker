@@ -27,6 +27,56 @@ body {
     font: 700 16px/18px 'Open Sans',system-ui;
 }
 
+#spinner-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /*background-color: rgba(255, 255, 255, 0.7);*/ /* Semi-transparent background overlay */
+    background-color:white;
+    z-index: 9999; /* Adjust the z-index as needed */
+}
+
+/*.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.3);
+    border-top: 4px solid #007bff;*/ /* Change the color as needed */
+    /*border-radius: 50%;
+    animation: spin 2s linear infinite;
+}*/
+
+/*@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}*/
+
+#color {
+    background-color: black;
+}
+
+#preloader {
+    background-image: url('../images/icon/i-Ray_logo.png');
+    /* background-size: cover;*/
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    height: 100%;
+    width: 100%;
+    animation: fadeInOutAnimation 1.5s infinite;
+    animation-direction: alternate-reverse;
+    animation-timing-function: ease-in-out;
+}
+
 .main {
     margin: 0;
     /* color: #1161ee;*/
@@ -57,7 +107,7 @@ a {
 }
 
     a:active {
-        transform: translateY(0.3rem);
+        /*transform: translateY(0.3rem);*/
     }
 
 p {
@@ -414,4 +464,42 @@ h4, .h4 {
         background-position: 0 0;
     }
 }
+/* Breadcrumbs */
+.breadcrumb {
+    font-size: 14px;
+    font-family: "Nunito", sans-serif;
+    color: #899bbd;
+    font-weight: 600;
+}
 
+    .breadcrumb a {
+        color: #899bbd;
+        transition: 0.3s;
+    }
+
+        .breadcrumb a:hover {
+            color: #51678f;
+        }
+
+    .breadcrumb .breadcrumb-item::before {
+        color: #899bbd;
+    }
+
+    .breadcrumb .active {
+        color: #51678f;
+        font-weight: 600;
+    }
+
+/*--------------------------------------------------------------
+    # Page Title
+    --------------------------------------------------------------*/
+.pagetitle {
+    margin-bottom: 10px;
+}
+
+    .pagetitle h1 {
+        font-size: 24px;
+        margin-bottom: 0;
+        font-weight: 600;
+        color: #012970;
+    }

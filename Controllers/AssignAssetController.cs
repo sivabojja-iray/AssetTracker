@@ -16,10 +16,10 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         // GET: AssignAsset
         public ActionResult Index(int? page)
         {
-            int pageSize = 10;
-            int pageIndex = 1;
-            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-            IPagedList<AssignAssetApproval> assignAssetApprovals = null;
+            //int pageSize = 10;
+            //int pageIndex = 1;
+            //pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            //IPagedList<AssignAssetApproval> assignAssetApprovals = null;
 
             SqlConnection sqlConnection = new SqlConnection();
             sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
@@ -29,10 +29,10 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             DataTable dt = new DataTable();
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
             sda.Fill(dt);
-            List<AssignAssetApproval> dataModels= new List<AssignAssetApproval>();
+            List<AssignAsset> dataModels= new List<AssignAsset>();
             foreach (DataRow row in dt.Rows)
             {
-                AssignAssetApproval approval = new AssignAssetApproval();
+                AssignAsset approval = new AssignAsset();
                 {
                     approval.RequestID = row["RequestID"].ToString();
                     approval.EmployeeID = row["EmpID"].ToString();
@@ -47,12 +47,34 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                 }
                 dataModels.Add(approval);
             }
-            assignAssetApprovals=dataModels.ToPagedList(pageIndex, pageSize);
+            var viewModal = new AssignAssetApproval
+            {
+                AssignAssets = dataModels
+            };
+
+            SqlCommand cmd9 = new SqlCommand("select top 4 * from Assetrequest order by RequestID desc");
+            cmd9.Connection = sqlConnection;
+            SqlDataAdapter data = new SqlDataAdapter(cmd9);
+            DataTable dataTable1 = new DataTable();
+            data.Fill(dataTable1);
+            List<adminNotification> list1 = new List<adminNotification>();
+            foreach (DataRow row in dataTable1.Rows)
+            {
+                adminNotification adminNotification = new adminNotification
+                {
+                    EmpName = row["EmployeeName"].ToString(),
+                    EmpTeam = row["EmpTeam"].ToString(),
+                    RequestDate = row["RequestDate"].ToString()
+                };
+                list1.Add(adminNotification);
+            }
+            ViewBag.MyList = list1;
+
             System.Threading.Thread.Sleep(1000);
-            return View(assignAssetApprovals);
+            return View(viewModal);
         }
 
-        public ActionResult ApprovalAssignAsset(int? id, AssignAssetApproval assetApproval)
+        public ActionResult ApprovalAssignAsset(int? id, AssignAsset assetApproval)
         {        
             SqlConnection sqlConnection = new SqlConnection();
             sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
@@ -84,6 +106,26 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                assetApproval.EmployeeName = dr1["EmployeeName"].ToString();
             }
             sqlConnection.Close();
+
+            SqlCommand cmd9 = new SqlCommand("select top 4 * from Assetrequest order by RequestID desc");
+            cmd9.Connection = sqlConnection;
+            sqlConnection.Open();
+            SqlDataAdapter data = new SqlDataAdapter(cmd9);
+            DataTable dataTable1 = new DataTable();
+            data.Fill(dataTable1);
+            List<adminNotification> list1 = new List<adminNotification>();
+            foreach (DataRow row in dataTable1.Rows)
+            {
+                adminNotification adminNotification = new adminNotification
+                {
+                    EmpName = row["EmployeeName"].ToString(),
+                    EmpTeam = row["EmpTeam"].ToString(),
+                    RequestDate = row["RequestDate"].ToString()
+                };
+                list1.Add(adminNotification);
+            }
+            ViewBag.MyList = list1;
+
             System.Threading.Thread.Sleep(1000);
             return View(assetApproval);
         }
@@ -109,7 +151,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
 
         /* This action is to send all values from form to database */
 
-        public ActionResult SaveAssignAsset(AssignAssetApproval assetApproval)
+        public ActionResult SaveAssignAsset(AssignAsset assetApproval)
         {
             System.Threading.Thread.Sleep(3000);
 

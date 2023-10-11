@@ -38,7 +38,26 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                     myRequestListModel.Quantity = row["Quantity"].ToString();
                 }
                 list.Add(myRequestListModel);
-            }          
+            }
+
+            SqlCommand cmd9 = new SqlCommand("select top 4 * from Assetrequest order by RequestID desc");
+            cmd9.Connection = con;
+            SqlDataAdapter data = new SqlDataAdapter(cmd9);
+            DataTable dataTable1 = new DataTable();
+            data.Fill(dataTable1);
+            List<adminNotification> list1 = new List<adminNotification>();
+            foreach (DataRow row in dataTable1.Rows)
+            {
+                adminNotification adminNotification = new adminNotification
+                {
+                    EmpName = row["EmployeeName"].ToString(),
+                    EmpTeam = row["EmpTeam"].ToString(),
+                    RequestDate = row["RequestDate"].ToString()
+                };
+                list1.Add(adminNotification);
+            }
+            ViewBag.MyList = list1;
+
             return PartialView("Index", list);
         }
     }

@@ -1,13 +1,19 @@
 ﻿using I_RAY_ASSET_TRACKER_MVC.Models;
+using iTextSharp.text;
 using Newtonsoft.Json;
+using PagedList;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 
 namespace I_RAY_ASSET_TRACKER_MVC.Controllers
 {
@@ -15,10 +21,14 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
     {
         string constr = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
         // GET: Admin
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
             if (Session["username"] != null)
             {
+                //int pageSize = 5;
+                //int pageIndex = 1;
+                //pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+
                 int totalAssignRequests = countRequestAssets("select count(*) from Assetrequest");
                 Session["totalAssignRequests"] = totalAssignRequests;
 
@@ -138,7 +148,78 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                 AssignAssetassetTypeFWV();
                 AssignAssetassetTypeIS();
                 AssignAssetassetTypeAutomation();
-                return View();
+
+                SqlCommand cmd7 = new SqlCommand("SELECT AssignID,EmployeeName,Assetbelongsto,AssetType,HWSWName,SerialNumberVersionNumber,AssignDate,ExpectedReturnDate FROM AssignAsset WHERE EmpID='" + Session["username"] + "'order by AssignID");
+                cmd7.Connection = sqlConnection;
+                SqlDataAdapter adp = new SqlDataAdapter(cmd7);
+                DataTable dt = new DataTable();
+                adp.Fill(dt);
+                List<AdminTable1Model> dataModels = new List<AdminTable1Model>();
+                foreach (DataRow row in dt.Rows)
+                {
+                    AdminTable1Model admin1List = new AdminTable1Model();
+                    {
+                        admin1List.AssignID = row["AssignID"].ToString();
+                        admin1List.EmployeeName = row["EmployeeName"].ToString();
+                        admin1List.Assetbelongsto = row["Assetbelongsto"].ToString();
+                        admin1List.AssetType = row["AssetType"].ToString();
+                        admin1List.HWSWName = row["HWSWName"].ToString();
+                        admin1List.SerialNumberVersionNumber = row["SerialNumberVersionNumber"].ToString();
+                        admin1List.AssignDate = row["AssignDate"].ToString();
+                        admin1List.ExpectedReturnDate = row["ExpectedReturnDate"].ToString();
+                    }
+                    dataModels.Add(admin1List);
+                }
+
+                SqlCommand cmd8 = new SqlCommand("SELECT FromEmployeeName,Assetbelongsto,AssetType,HWSWName,SerialNumberVersionNumber,AssetTransferDate,FromEmpID,ToEmpID,TeamToWhichAssetisTransfered,ToEmployeeName FROM AssetTransfer where ToEmpID='" + Session["username"] + "'");
+                cmd8.Connection = sqlConnection;
+                SqlDataAdapter ad = new SqlDataAdapter(cmd8);
+                DataTable dataTable = new DataTable();
+                ad.Fill(dataTable);
+                List<AdminTable2Model> list = new List<AdminTable2Model>();
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    AdminTable2Model admin2List = new AdminTable2Model();
+                    {
+                        admin2List.FromEmployeeName = row["FromEmployeeName"].ToString();
+                        admin2List.ToEmployeeName = row["ToEmployeeName"].ToString();
+                        admin2List.Assetbelongsto = row["Assetbelongsto"].ToString();
+                        admin2List.AssetType = row["AssetType"].ToString();
+                        admin2List.HWSWName = row["HWSWName"].ToString();
+                        admin2List.SerialNumberVersionNumber = row["SerialNumberVersionNumber"].ToString();
+                        admin2List.AssetTransferDate = row["AssetTransferDate"].ToString();
+                        admin2List.FromEmpID = row["FromEmpID"].ToString();
+                        admin2List.ToEmpID = row["ToEmpID"].ToString();
+                        admin2List.TeamToWhichAssetisTransfered = row["TeamToWhichAssetisTransfered"].ToString();
+                    }
+                    list.Add(admin2List);
+                }
+
+                SqlCommand cmd9 = new SqlCommand("select top 4 * from Assetrequest order by RequestID desc");
+                cmd9.Connection = sqlConnection;
+                SqlDataAdapter data = new SqlDataAdapter(cmd9);
+                DataTable dataTable1 = new DataTable();
+                data.Fill(dataTable1);
+                List<adminNotification> list1 = new List<adminNotification>();
+                foreach (DataRow row in dataTable1.Rows)
+                {
+                    adminNotification adminNotification = new adminNotification
+                    {
+                        EmpName = row["EmployeeName"].ToString(),
+                        EmpTeam = row["EmpTeam"].ToString(),
+                        RequestDate = row["RequestDate"].ToString()
+                    };
+                    list1.Add(adminNotification);
+                }
+                ViewBag.MyList = list1;
+
+                var viewModal = new AdminModel
+                {
+                    adminTable1Model = dataModels,
+                    adminTable2Model = list
+                };
+                Thread.Sleep(5000);
+                return View(viewModal);               
             }
             else
             {
@@ -658,6 +739,128 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             ViewBag.AssignAssetTypeAutomationDataPoints = JsonConvert.SerializeObject(AssetdataPoints);
 
             sqlConnection.Close();
+        }
+        public ActionResult TransferAsset(int? Id, AdminTable1Model userList)
+        {
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            SqlCommand cmd = new SqlCommand("select AssignID,EmployeeName,Assetbelongsto,AssetType,HWSWName,SerialNumberVersionNumber,AssignDate,ExpectedReturnDate from AssignAsset where AssignID=" + Id, sqlConnection);
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            List<AdminTable1Model> dataModels = new List<AdminTable1Model>();
+            foreach (DataRow row in dt.Rows)
+            {
+                userList.AssignID = row["AssignID"].ToString();
+                userList.EmployeeName = row["EmployeeName"].ToString();
+                userList.Assetbelongsto = row["Assetbelongsto"].ToString();
+                userList.AssetType = row["AssetType"].ToString();
+                userList.HWSWName = row["HWSWName"].ToString();
+                userList.SerialNumberVersionNumber = row["SerialNumberVersionNumber"].ToString();
+                userList.AssignDate = row["AssignDate"].ToString();
+                userList.ExpectedReturnDate = row["ExpectedReturnDate"].ToString();
+            }
+            dataModels.Add(userList);
+
+            SqlCommand cmd1 = new SqlCommand("SELECT DISTINCT Team FROM EmployeeList WHERE Team NOT IN('Support','HR')", sqlConnection);
+            SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd1);
+            DataTable data = new DataTable();
+            dataAdapter.Fill(data);
+            List<string> Teamlist = new List<string>();
+            foreach (DataRow row in data.Rows)
+            {
+                Teamlist.Add(row["Team"].ToString());
+            }
+            SelectList Teams = new SelectList(Teamlist);
+            ViewData["Teams"] = Teams;
+
+            return PartialView("AdminTransferAsset", userList);
+        }
+        public JsonResult EmployeeName(string selectedTeam)
+        {
+            List<string> EmployeeList = new List<string>();
+            EmployeeList = populateEmployeeListDropdown("SELECT DISTINCT EmpID,EmployeeName FROM EmployeeList WHERE Team='" + selectedTeam + "'");
+            return Json(EmployeeList);
+        }
+        private List<string> populateEmployeeListDropdown(string query)
+        {
+            List<string> EmployeeList = new List<string>();
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            SqlCommand cmd = new SqlCommand(query);
+            cmd.Connection = sqlConnection;
+            sqlConnection.Open();
+            SqlDataReader sdr = cmd.ExecuteReader();
+            while (sdr.Read())
+            {
+                //EmployeeList.Add(sdr["EmpID"].ToString());
+                EmployeeList.Add(sdr["EmployeeName"].ToString());
+            }
+            sqlConnection.Close();
+            return EmployeeList;
+        }
+        public ActionResult SaveTransferAsset(AdminTable1Model userModel)
+        {
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            SqlCommand cmd = new SqlCommand("INSERT INTO AssetTransfer VALUES(@FromEmployeeName,@Assetbelongsto,@AssetType,@HWSWName,@SerialNumberVersionNumber,@AssetTransferDate,@FromEmpID,@ToEmpID,@TeamToWhichAssetisTransfered,@ToEmployeeName)", sqlConnection);
+            cmd.CommandType = CommandType.Text;
+            SqlCommand command = new SqlCommand("select EmpID from EmployeeList where EmployeeName='" + userModel.AssetTransferEmployeeName + "'", sqlConnection);
+            command.CommandType = CommandType.Text;
+            sqlConnection.Open();
+            int i = Convert.ToInt32(command.ExecuteScalar());
+            cmd.Parameters.AddWithValue("@FromEmployeeName", userModel.EmployeeName);
+            cmd.Parameters.AddWithValue("@Assetbelongsto", userModel.Assetbelongsto);
+            cmd.Parameters.AddWithValue("@AssetType", userModel.AssetType);
+            cmd.Parameters.AddWithValue("@HWSWName", userModel.HWSWName);
+            cmd.Parameters.AddWithValue("@SerialNumberVersionNumber", userModel.SerialNumberVersionNumber);
+            cmd.Parameters.AddWithValue("@AssetTransferDate", DateTime.Now.ToString());
+            cmd.Parameters.AddWithValue("@FromEmpID", Session["username"]);
+            cmd.Parameters.AddWithValue("@ToEmpID", i);
+            cmd.Parameters.AddWithValue("@TeamToWhichAssetisTransfered", userModel.AssetTransferTeam);
+            cmd.Parameters.AddWithValue("@ToEmployeeName", userModel.AssetTransferEmployeeName);
+            cmd.ExecuteNonQuery();
+            sqlConnection.Close();
+            Thread.Sleep(1000);
+            return RedirectToAction("Index");
+        }
+        public ActionResult SaveTransferAssetFromEmployee(int? id, AdminTable2Model table2Model)
+        {
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            SqlCommand cmd = new SqlCommand("select ToEmpID,ToEmployeeName,TeamToWhichAssetisTransfered,SerialNumberVersionNumber from AssetTransfer where FromEmpID='" + id + "'", sqlConnection);
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            table2Model.ToEmpID = dt.Rows[0][0].ToString();
+            table2Model.ToEmployeeName = dt.Rows[0][1].ToString();
+            table2Model.TeamToWhichAssetisTransfered = dt.Rows[0][2].ToString();
+            table2Model.SerialNumberVersionNumber = dt.Rows[0][3].ToString();
+            SqlCommand command = new SqlCommand("UPDATE AssignAsset SET EmpID='" + table2Model.ToEmpID + "',EmployeeName='" + table2Model.ToEmployeeName + "',Team='" + table2Model.TeamToWhichAssetisTransfered + "' where EmpID='" + id + "' and SerialNumberVersionNumber='" + table2Model.SerialNumberVersionNumber + "'", sqlConnection);
+            sqlConnection.Open();
+            command.CommandType = CommandType.Text;
+            command.ExecuteNonQuery();
+            sqlConnection.Close();
+
+            SqlCommand sql = new SqlCommand("DELETE FROM AssetTransfer WHERE SerialNumberVersionNumber='" + table2Model.SerialNumberVersionNumber + "' and FromEmpID='" + id + "'", sqlConnection);
+            sqlConnection.Open();
+            sql.CommandType = CommandType.Text;
+            sql.ExecuteNonQuery();
+            sqlConnection.Close();
+
+            return RedirectToAction("Index");
+        }
+        public ActionResult RejectTransferAssetFromEmployee(int? id, AdminTable2Model table2Model)
+        {
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            SqlCommand cmd = new SqlCommand("select SerialNumberVersionNumber from AssetTransfer where FromEmpID='" + id + "'", sqlConnection);
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            table2Model.SerialNumberVersionNumber = dt.Rows[0][0].ToString();
+
+            SqlCommand sql = new SqlCommand("DELETE FROM AssetTransfer WHERE SerialNumberVersionNumber='" + table2Model.SerialNumberVersionNumber + "' and FromEmpID='" + id + "'", sqlConnection);
+            sqlConnection.Open();
+            sql.CommandType = CommandType.Text;
+            sql.ExecuteNonQuery();
+            sqlConnection.Close();
+            return RedirectToAction("Index");
         }
     }
 }

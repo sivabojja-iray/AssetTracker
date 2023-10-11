@@ -8,12 +8,16 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.Configuration;
+using System.Drawing;
+using System.Net.Mail;
 
 namespace I_RAY_ASSET_TRACKER_MVC.Controllers
 {
     public class UserLoginController : Controller
     {
         string constr = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
+        string myregisteredpwd;
+        string mymail;
         // GET: UserLogin
         public ActionResult Login()
         {
@@ -53,6 +57,10 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                 string m = (string)(cmd4.ExecuteScalar());
                 Session["Role"] = m;
 
+                SqlCommand cmd5 = new SqlCommand("select EmployeeName from EmployeeList where EmpID='" + lc.UserName + "'", sqlConnection);
+                string n = (string)(cmd5.ExecuteScalar());
+                Session["EmployeeName"] = n;
+
                 if (i > 0)
                 {
                     return Redirect("~/User/Index");
@@ -75,9 +83,52 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                 }
                 sqlConnection.Close();
             }
-
-            return View(lc);
-          
+            return View(lc);          
+        }
+        public ActionResult forgotPassword()
+        {
+            return PartialView("forgotPassword");  
+        }
+        public JsonResult passwordSendtoMail(LoginModelClass loginModelClass)
+        {
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            SqlCommand cmd = new SqlCommand("select count(*) from EmployeeRegistration1 where  UserName='" + loginModelClass.EmployeeID + "' ", sqlConnection);
+            sqlConnection.Open();
+            int i = Convert.ToInt32(cmd.ExecuteScalar());
+            sqlConnection.Close();
+            if (i > 0)
+            {
+                sqlConnection.Open();
+                SqlCommand cmd1 = new SqlCommand("select Mail from EmployeeList where EmpID=" + loginModelClass.EmployeeID + "", sqlConnection);
+                SqlDataReader dr2 = cmd1.ExecuteReader();
+                if (dr2.Read())
+                {
+                    mymail = dr2["Mail"].ToString();
+                    Session["Mymail"] = mymail;
+                }
+                sqlConnection.Close();
+                sqlConnection.Open();
+                SqlCommand cmd2 = new SqlCommand("select Decryptpwd from EmployeeRegistration1 where UserName=" + loginModelClass.EmployeeID + "", sqlConnection);
+                SqlDataReader dr3 = cmd2.ExecuteReader();
+                if (dr3.Read())
+                {
+                    myregisteredpwd = dr3["Decryptpwd"].ToString();
+                }
+                sqlConnection.Close();
+                if (myregisteredpwd != null)
+                {
+                    MailMessage mail = new MailMessage("assettracker@i-raysolutions.com", Session["Mymail"].ToString(), "AssetTracker Password", "Your Registered Password : " + myregisteredpwd + "");
+                    mail.Priority = MailPriority.High;
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.Send(mail);
+                    ViewBag.PasswordSenttoMail = "Password Sent to your Mail";
+                }
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Please Register...";
+            }
+            return Json(loginModelClass);
         }
     }
 }

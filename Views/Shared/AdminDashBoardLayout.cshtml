@@ -10,6 +10,7 @@
 
     <title>@ViewBag.Title</title>
 
+    <link href="~/Images/Icon/I-Ray-Logo.png" rel="shortcut icon" type="image/x-icon">
     <!-- Custom fonts for this template-->
     <link href="~/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -71,31 +72,45 @@
             .assign-progress i {
                 margin-right: 0.5em;
             }
+
+        span.employeename {
+            color: #ffc107;
+            margin-right: 10px;
+        }
     </style>
 
     <script src="~/Scripts/jquery-3.4.1.min.js"></script>
     <script>
-        function DisplayLoadMessage(ctl, msg) {
-            // Turn off the "Save" button and change text
-            $(ctl).prop("disabled", true).text(msg);
-            // Gray out background on page
-            $("body").addClass("assign-progress-bg");
+        $(document).ready(function () {
+            // Hide the spinner overlay when the page is fully loaded
+            $("#spinner-overlay").delay(3000).fadeOut("slow");
+        });
 
-            // Wrap in setTimeout so the UI can update the spinners
-            setTimeout(function () {
-                $(".assign-progress").removeClass("visually-hidden");
-            }, 1);
-            $(ctl).prop("disabled", false).text(msg);
-            return true;
-        }
+        //function DisplayLoadMessage(ctl, msg) {
+        //    // Turn off the "Save" button and change text
+        //    $(ctl).prop("disabled", true).text(msg);
+        //    // Gray out background on page
+        //    $("body").addClass("assign-progress-bg");
+
+        //    // Wrap in setTimeout so the UI can update the spinners
+        //    setTimeout(function () {
+        //        $(".assign-progress").removeClass("visually-hidden");
+        //    }, 1);
+        //    $(ctl).prop("disabled", false).text(msg);
+        //    return true;
+        //}
     </script>
 </head>
 <body id="page-top">
 
-    <div class="assign-progress visually-hidden">
+    <div id="spinner-overlay">
+        <img height="200" width="200" src="~/Images/Icon/lodinggif.gif" alt="Loading..." />
+    </div>
+
+    @*<div class="assign-progress visually-hidden">
         <i class="fa fa-2x fa-cog fa-spin fa-fw"></i>
         <label>Please wait while loding the data...</label>
-    </div>
+    </div>*@
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -132,7 +147,7 @@
             </div>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" onclick="return DisplayLoadMessage(this, 'Asset Entry...');" href="~/AssetEntry/Index"
+                <a id="linkId" class="nav-link collapsed" onclick="return DisplayLoadMessage(this, 'Asset Entry...');" href="~/AssetEntry/Index"
                    aria-expanded="true">
                     <i class="fas fa-plus-circle"></i>
                     <span>Asset Entry</span>
@@ -140,7 +155,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#"
+                <a class="nav-link collapsed" href="~/WorkingAssetList/Index"
                    aria-expanded="true">
                     <i class="fa fa-window-restore"></i>
                     <span>Working Asset-List</span>
@@ -182,10 +197,10 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#"
+                <a class="nav-link collapsed" href="~/AttendanceList/Index"
                    aria-expanded="true">
                     <i class="fa fa-chart-line"></i>
-                    <span>Attendence-List</span>
+                    <span>Attendance-List</span>
                 </a>
             </li>
 
@@ -214,7 +229,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" onclick="return DisplayLoadMessage(this, 'Allocation list...');" href="~/AllocationList/Index"
+                <a class="nav-link collapsed" href="~/AllocationList/Index"
                    aria-expanded="true">
                     <i class="fa fa-list-alt"></i>
                     <span>Allocation List</span>
@@ -246,7 +261,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#"
+                <a class="nav-link collapsed" href="~/NotWorkingAssetList/Index"
                    aria-expanded="true">
                     <i class="fa fa-hand-holding"></i>
                     <span>Not Working Asset List</span>
@@ -254,7 +269,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#"
+                <a id="assetClearanceLetterId" class="nav-link collapsed" data-toggle="modal" data-target="#AssetClearanceLetterModal" href="javascript:void(0);"
                    aria-expanded="true">
                     <i class="fa fa-file"></i>
                     <span>Asset Clearance Letter</span>
@@ -264,12 +279,15 @@
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
-                Assets Review
-            </div>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="~/AuditReport/Index"
+                   aria-expanded="true">
+                    <span>Assets Review</span>
+                </a>
+            </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#"
+                <a class="nav-link collapsed" href="~/AssetsReviewReports/Index"
                    aria-expanded="true">
                     <i class="fa fa-file"></i>
                     <span>Assets Review Reports</span>
@@ -355,40 +373,47 @@
                                 <h6 class="dropdown-header">
                                     Alerts Center
                                 </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
+                                @foreach (var item in ViewBag.MyList)
+                                {
+                                    <a class="dropdown-item d-flex align-items-center" href="~/AssignAsset/Index">
+                                        <div class="mr-3">
+                                            @*<div class="icon-circle bg-primary">
+                                                    <i class="fas fa-file-alt text-white"></i>
+                                                </div>*@
+                                            <div class="icon-circle bg-warning">
+                                                <i class="fas fa-exclamation-triangle text-white"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 12, 2019</div>
-                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-success">
-                                            <i class="fas fa-donate text-white"></i>
+                                        <div>
+                                            <div class="small text-gray-500">@item.RequestDate</div>
+                                            <span class="font-weight-bold">The employee @item.EmpName from the @item.EmpTeam team has requested an asset.!</span>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 7, 2019</div>
-                                        $290.29 has been deposited into your account!
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-warning">
-                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                    </a>
+                                }
+
+                                @*<a class="dropdown-item d-flex align-items-center" href="#">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-success">
+                                                <i class="fas fa-donate text-white"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 2, 2019</div>
-                                        Spending Alert: We've noticed unusually high spending for your account.
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                        <div>
+                                            <div class="small text-gray-500">December 7, 2019</div>
+                                            $290.29 has been deposited into your account!
+                                        </div>
+                                    </a>
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-warning">
+                                                <i class="fas fa-exclamation-triangle text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500">December 2, 2019</div>
+                                            Spending Alert: We've noticed unusually high spending for your account.
+                                        </div>
+                                    </a>*@
+                                <a class="dropdown-item text-center small text-gray-500" href="~/AssignAsset/Index">Show All Alerts</a>
                             </div>
                         </li>
 
@@ -472,7 +497,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Session["username"]</span>
+                                <span class="employeename">@Session["EmployeeName"]</span>
                                 <img class="img-profile rounded-circle"
                                      src="~/Content/img/undraw_profile.svg">
                             </a>
@@ -507,12 +532,12 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">@*Dashboard*@</h1>
+                    <!--<div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">-->@*Dashboard*@<!--</h1>
                         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                             <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
                         </a>
-                    </div>
+                    </div>-->
 
                     <div class="row">
                         @RenderBody()
@@ -569,27 +594,15 @@
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <h5 class="modal-title fs-5" id="EmployeeEntryModalLable">Employee Entry</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                </div>
-                <div class="modal-footer">                   
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    @*------------------Modal PopUp For My Request List------------------------*@
-    <div id="myRequestListModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="myRequestListModalLable" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    <h5 class="modal-title fs-5" id="myRequestListModalLable">My Request-List</h5>
+                    <div class="pagetitle">
+                        <h1>Employee Entry</h1>
+                        <nav>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active">Employee Entry</li>
+                            </ol>
+                        </nav>
+                    </div><!-- End Page Title -->
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -603,6 +616,60 @@
         </div>
     </div>
 
+
+    @*------------------Modal PopUp For My Request List------------------------*@
+    <div id="myRequestListModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="myRequestListModalLable" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div class="pagetitle">
+                        <h1>My Request-List</h1>
+                        <nav>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active">My Request-List</li>
+                            </ol>
+                        </nav>
+                    </div><!-- End Page Title -->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*------------------Modal PopUp For Asset Clearance Letter------------------------*@
+    <div id="AssetClearanceLetterModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="AssetClearanceLetterModalLable" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div class="pagetitle">
+                        <h1>Asset Clearance Letter - NOC</h1>
+                        <nav>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active">Asset Clearance Letter - NOC</li>
+                            </ol>
+                        </nav>
+                    </div><!-- End Page Title -->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Chart-->
     <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
@@ -667,6 +734,27 @@
                     success: function (response) {
                         $("#myRequestListModal").find(".modal-body").html(response);
                         $("#myRequestListModal").modal('show');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+
+        $(function () {
+            $("#assetClearanceLetterId").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/AssetClearanceLetter/Index",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (response) {
+                        $("#AssetClearanceLetterModal").find(".modal-body").html(response);
+                        $("#AssetClearanceLetterModal").modal('show');
                     },
                     failure: function (response) {
                         alert(response.responseText);

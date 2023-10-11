@@ -1,0 +1,103 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetsReviewReportsModel
+
+<style>
+    #tblReviewReport th {
+        background-color: #ffc107;
+    }
+
+    tr {
+        text-align: center;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        var dataTable = $('#tblReviewReport').DataTable({
+            'columnDefs': [{
+                'targets': 12,
+                'searchable': false,
+                'orderable': false,
+                'className': 'dt-body-center',
+                'render': function (data, type, full, meta) {
+                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+                }
+            }],
+        });
+    });
+
+    $(document).on('click', '.editLink', function (e) {
+        var table = $('#tblReviewReport').DataTable();
+        var data = table.row($(this).parents('tr')).data();
+        // If checkbox is checked
+        if (table.$('input[type="checkbox"]').is(":checked")) {
+            $.ajax({
+                url: "/AssetsReviewReports/ReportToQMS", // Replace with your controller and action method
+                data: {
+                    AssignID: data[0],
+                    EmpID: data[1],
+                    EmployeeName: data[2],
+                    Team: data[3],
+                    AssetType: data[4],
+                    HWSWName: data[5],
+                    SerialNumber: data[6],
+                    Assetbelongsto: data[7],
+                    ReviewBy: data[9],
+                    ReviewDate: data[10],
+                    Remarks: data[11],
+                },
+                success: function (result) {
+                    alert("Report sent Sucessful..."); // Load the content into the container
+                }
+            });
+        }
+        else {
+            alert('Please check the Report to QMS CheckBox.');
+        }
+    });
+</script>
+<div class="row">
+    <table id="tblReviewReport" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>Assign ID</th>
+                <th>Emp ID</th>
+                <th>Employee Name</th>
+                <th>Team</th>
+                <th>Asset Type</th>
+                <th>HWSW Name</th>
+                <th>SerialNumber</th>
+                <th>Asset Belongs To</th>
+                <th>Asset Image</th>
+                <th>Review By</th>
+                <th>Review Date</th>
+                <th>Remarks</th>
+                <th>Report To QMS</th>
+                <th>Evidences</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.assetReviewReportLists)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.AssignID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmpID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Team)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetImage)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ReviewBy)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ReviewDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Remarks)</td>
+                    <td></td>
+                    <td>
+                        <a class="editLink button btn btn-primary">
+                            Evidences
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

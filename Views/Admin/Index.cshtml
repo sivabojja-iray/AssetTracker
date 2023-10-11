@@ -1,6 +1,9 @@
-﻿
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AdminModel
+
+@using PagedList.Mvc
+
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Admin";
     Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
 }
 
@@ -13,6 +16,103 @@
     .text-xs {
         font-size: .85rem;
     }
+
+    h4 {
+        text-align: center;
+        font-size: 2rem;
+        padding-top: 2rem;
+    }
+
+    #tblAdminAssetsHaveList th {
+        background-color: #ffc107;
+    }
+
+  /*  table#tblAdminAssetsHaveList {
+        width: auto;
+        margin-left: 8rem;
+    }*/
+
+    #tblAdminTransferList th {
+        background-color: #ffc107;
+    }
+
+   /* table#tblAdminTransferList {
+        width: auto;
+        margin-left: 1rem;
+    }*/
+
+    tr {
+        text-align: center;
+    }
+
+    /*.pagination {
+        margin-block-start: revert;
+        margin-left: 13rem;*/
+        /*  margin-top: 1rem;*/
+    /*}
+
+    .pagination-container {
+        margin: auto;
+    }
+
+    .ul.pagination {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+    }
+
+    ul.pagination li {
+        display: inline;
+    }
+
+        ul.pagination li a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+        }
+
+            ul.pagination li a.active {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            ul.pagination li a:hover:not(.active) {
+                background-color: #ddd;
+            }*/
+
+    .transfer-progress {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        height: 6em;
+        padding-top: 2.3em;
+        z-index: 1;
+        /* The following properties are the ones most likely to change */
+        width: 20em;
+        /* Set 'margin-left' to a negative number that is 1/2 of 'width' */
+        margin-left: -10em;
+        padding-left: 2.1em;
+        background-color: #1161ee;
+        color: #fff;
+        -webkit-border-radius: 0.4em;
+        -moz-border-radius: 0.4em;
+        border-radius: 0.4em;
+        box-shadow: 0px 0px 10px 2px #ffc107;
+        -webkit-box-shadow: 0px 0px 10px 2px #ffc107;
+        -moz-box-shadow: 0px 0px 10px 2px #ffc107;
+    }
+    /* Changing style for spinner */
+    .transfer-progress {
+        padding-top: 2em;
+        width: 34em;
+        margin-left: -11.5em; /* Set to a negative number that is 1/2 of the width */
+    }
+
+        .transfer-progress i {
+            margin-right: 0.5em;
+        }
 </style>
 
 <script>
@@ -209,9 +309,99 @@ chart.render();
             }
             chart.render();
         }
-}
+    }
 
+    $(document).ready(function () {
+        $('#tblAdminAssetsHaveList').DataTable();
+        $('#tblAdminTransferList').DataTable();
+    });
+
+    $(document).on('click', '.AdminTransferAsset', function (e) {
+        e.preventDefault();
+        var table = $('#tblAdminAssetsHaveList').DataTable();
+        var data = table.row($(this).parents('tr')).data();
+        $.ajax({
+            url: "/Admin/TransferAsset", // Replace with your controller and action method
+            data: {
+                Id: data[0]
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (response) {
+                $("#AdminpartialModal").find(".modal-body").html(response);
+                $("#AdminpartialModal").modal('show');
+            },
+             failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    });
+
+    //$(function () {
+    //    $("#tblAdminAssetsHaveList .AdminTransferAsset").click(function () {
+    //          /*debugger;*/
+    //        var Id = $(this).closest("tr").find("td").eq(0).html();
+    //        $.ajax({
+    //            type: "POST",
+    //            url: "/Admin/TransferAsset",
+    //            data: '{Id: "' + Id + '" }',
+    //            contentType: "application/json; charset=utf-8",
+    //            dataType: "html",
+    //            success: function (response) {
+    //               /* *//* debugger;*/
+    //                $("#AdminpartialModal").find(".modal-body").html(response);
+    //                $("#AdminpartialModal").modal('show');
+    //            },
+    //            failure: function (response) {
+    //                alert(response.responseText);
+    //            },
+    //            error: function (response) {
+    //                alert(response.responseText);
+    //            }
+    //        });
+    //    });
+    //});
+
+    function DisplaySendProgressMessage(ctl, msg) {
+        /* debugger;*/
+        var AssetTransferTeam = $('#AssetTransferTeam');
+        if (AssetTransferTeam.val() == '') {
+            alert('Please select the Team.');
+            return false;
+        }
+        var AssetTransferEmployeeName = $('#AssetTransferEmployeeName');
+        if (AssetTransferEmployeeName.val() == '--Select EmployeeName--') {
+            alert('Please select the EmployeeName.');
+            return false;
+        }
+
+        // Turn off the "Save" button and change text
+        $(ctl).prop("disabled", true).text(msg);
+        // Gray out background on page
+        $("body").addClass("transfer-progress-bg");
+
+        // Wrap in setTimeout so the UI can update the spinners
+        setTimeout(function () {
+            $(".transfer-progress").removeClass("visually-hidden");
+        }, 1);
+        $(ctl).prop("disabled", false).text(msg);
+        return true;
+        this.submit();
+    }
 </script>
+
+<div class="pagetitle">
+    <h1>Dashboard</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
 
 <div class="row">
     <!-- Total Assets Card Example -->
@@ -325,5 +515,126 @@ chart.render();
     </div>
 </div>
 
+<div class="row">
+    <h4>What I Have ?</h4>
+</div>
 
+<div class="row">
+    <table id="tblAdminAssetsHaveList" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>Assign ID</th>
+                <th>Employee Name</th>
+                <th>Asset Belongs To</th>
+                <th>Asset Type</th>
+                <th>HWSW Name</th>
+                <th>SerialNumber</th>
+                <th>Assign Date</th>
+                <th>Return Date</th>
+                <th>Tranfer</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.adminTable1Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.AssignID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ExpectedReturnDate)</td>
+                    <td>
+                        <a class="AdminTransferAsset button btn btn-primary" data-toggle="modal" data-target="#AdminpartialModal" href="javascript:void(0);">
+                            Transfer
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@*<div class="pagination">
+        Page @(Model.adminTable1Model.PageCount < Model.adminTable1Model.PageNumber ? 0 : Model.adminTable1Model.PageNumber)
+        of @Model.adminTable1Model.PageCount @Html.PagedListPager(Model.adminTable1Model, page => Url.Action("Index", new { page }))
+    </div>*@
 
+<div class="row">
+    <h4>Asset Transfred To?</h4>
+</div>
+
+<div class="row">
+    <table id="tblAdminTransferList" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>From_EmpID</th>
+                <th>From EmployeeName</th>
+                <th>Asset Belongs To</th>
+                <th>AssetType</th>
+                <th>HWSW Name</th>
+                <th>SerialNumber</th>
+                <th>Asset TransferDate</th>
+                <th>To_EmpID</th>
+                <th>Team To Which Asset is Transfered</th>
+                <th>ToEmployeeName</th>
+                <th>Approve</th>
+                <th>Reject</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.adminTable2Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.FromEmpID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.FromEmployeeName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetTransferDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ToEmpID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.TeamToWhichAssetisTransfered)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ToEmployeeName)</td>
+                    <td>
+                        <a id="btnApprove" class="button btn btn-success" href="@Url.Action("SaveTransferAssetFromEmployee", "Admin", new { id = item.FromEmpID})">
+                            Approve
+                        </a>
+                    </td>
+                    <td>
+                        <a class="button btn btn-danger" href="@Url.Action("RejectTransferAssetFromEmployee", "Admin", new { id = item.FromEmpID})">
+                            Reject
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@*<div class="pagination">
+        Page @(Model.adminTable2Model.PageCount < Model.adminTable2Model.PageNumber ? 0 : Model.adminTable2Model.PageNumber)
+        of @Model.adminTable2Model.PageCount @Html.PagedListPager(Model.adminTable2Model, page => Url.Action("Index", new { page }))
+    </div>*@
+@using (Html.BeginForm("SaveTransferAsset", "Admin", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div id="AdminpartialModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="partialModalLable" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title fs-5" id="partialModalLable">Asset Transfer to Employee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="return DisplaySendProgressMessage(this, 'Transfer...');" class="btn btn-primary">Transfer Asset</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

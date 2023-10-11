@@ -1,0 +1,192 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.NotWorkingAssetListModel
+
+@{
+    ViewBag.Title = "NotWorkingAssetList";
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+}
+
+<style>
+    /* h4 {
+        font-size: 2rem;
+    }*/
+
+    .row {
+        margin-top: 2rem;
+    }
+
+    #ClientID {
+        color: red;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        // Attach an event listener to the dropdown change event
+        $("#AssetBelongsTo").on("change", function () {
+            var assetBelongsToselected = $(this).val();
+            var partialContainerView = $('#partialContainerView'); // Get the target container
+
+            // Use AJAX to load the partial view content into the container
+            $.ajax({
+                url: "/NotWorkingAssetList/TeamListPartialView", // Replace with your controller and action method
+                data: {
+                    assetBelongsToselected: assetBelongsToselected
+                },
+                success: function (result) {
+                    partialContainerView.html(result); // Load the content into the container
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        // Attach an event listener to the dropdown change event
+        $("#NotWorkingAssetID").click(function () {
+            var assetSerialNo = $("#SerialNumber").val();
+            var partialContainerView = $('#partialContainerView'); // Get the target container
+
+            // Use AJAX to load the partial view content into the container
+            $.ajax({
+                url: "/NotWorkingAssetList/ReportNotWorkingAssetListWithSerialNo", // Replace with your controller and action method
+                data: {
+                    assetSerialNo: assetSerialNo
+                },
+                success: function (result) {
+                    partialContainerView.html(result); // Load the content into the container
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#ClientID").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/NotWorkingAssetList/ReturnAssetsToClient",
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#ClientReturnedAssetModal").find(".modal-body").html(response);
+                    $("#ClientReturnedAssetModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+    function DisplayProgressMessage() {
+        var AssetBelongsTo = $('#AssetBelongsTo');
+        if (AssetBelongsTo.val() == '') {
+            alert('Please Select the Team.');
+            return false;
+        }
+        return true;
+        this.submit();
+    }
+    function ValidationMessage() {
+        var SerialNumber = $('#SerialNumber');
+        if (SerialNumber.val() == '') {
+            alert('Please Enter the SerialNumber.');
+            return false;
+        }
+        return true;
+        this.submit();
+    }
+</script>
+
+<div class="pagetitle">
+    <h1>Not Working Asset List</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Not Working Asset List</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+<div class="row justify-content-end">
+    <a id="ClientID" class="text-right" data-toggle="modal" data-target="#ClientReturnedAssetModal" href="javascript:void(0);">Returned Assets to Client Click here?</a>
+</div>
+@using (Html.BeginForm("PDFReportNotWorkingAssetList", "NotWorkingAssetList", FormMethod.Post))
+{
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-2">
+            <span>Asset belongs to ? : </span>
+        </div>
+        <div class="col-md-2">
+            @Html.DropDownListFor(m => m.AssetBelongsTo, new SelectList(new[] { "FSW", "SV" }), "--Select Assets Belongs To--", new { @class = "form-control" })
+        </div>
+        <div class="col-md-1">
+            <button type="submit" name="submitButton" onclick="return DisplayProgressMessage();" value="PdfReport" class="button btn btn-primary">
+                <i class="fas fa-fw fa-file-pdf"></i>
+                <span>PDF</span>
+            </button>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" name="submitButton" onclick="return DisplayProgressMessage();" value="ExcelReport" class="button btn btn-primary">
+                <i class="fas fa-fw fa-file-excel"></i>
+                <span>EXCEL</span>
+            </button>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("ReportNotWorkingListWithSerialNumber", "NotWorkingAssetList", FormMethod.Post))
+{
+    <div class="row">
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-2">
+            <span>Get Not Working Assets : </span>
+        </div>
+        <div class="col-md-2">
+            @Html.TextBoxFor(m => m.SerialNumber, new { @class = "form-control" })
+        </div>
+        <div class="col-md-2">
+            <button id="NotWorkingAssetID" type="button" class="button btn btn-primary">Get NotWorking Assets</button>
+        </div>
+        <div class="col-md-1">
+            <button type="submit" name="submitButton" onclick="return ValidationMessage();" value="PdfReport" class="button btn btn-primary">
+                <i class="fas fa-fw fa-file-pdf"></i>
+                <span>PDF</span>
+            </button>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" name="submitButton" onclick="return ValidationMessage();" value="ExcelReport" class="button btn btn-primary">
+                <i class="fas fa-fw fa-file-excel"></i>
+                <span>EXCEL</span>
+            </button>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div id="partialContainerView">
+
+    </div>
+</div>
+
+<div id="ClientReturnedAssetModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="ClientReturnedAssetModalLable" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title fs-5" id="ClientReturnedAssetModal">Returned Assets to Client</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+

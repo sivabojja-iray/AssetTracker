@@ -1,7 +1,7 @@
 ﻿@model List<I_RAY_ASSET_TRACKER_MVC.Models.AssetTrackingModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "AssetTracking";
     //Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
     if (Session["Role"].ToString() == "AssetManager")
     {
@@ -28,6 +28,17 @@
         });
     });
 </script>
+
+<div class="pagetitle">
+    <h1>Asset Tracking</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Asset Tracking</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
 <div class="row">
     <table id="tblAssetTrackingList" style="width:100%;margin-top:2rem" class="display compact table table-bordered table-primary">
         <thead>

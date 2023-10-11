@@ -1,6 +1,6 @@
 ﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetRemarksModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "AssetRemarks";
     Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
 }
 <style>
@@ -14,10 +14,10 @@
 </style>
 
 <script>
-   /* debugger;*/
+    /* debugger;*/
     $(function () {
         $("#tracknowId").click(function () {
-             /* debugger;*/
+            /* debugger;*/
             var SerailNo = $("#SerialNumberVersionNumber").val();
             $.ajax({
                 type: "POST",
@@ -26,7 +26,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "html",
                 success: function (response) {
-                     /*debugger;*/
+                    /*debugger;*/
                     $("#tracknowDataModal").find(".modal-body").html(response);
                     $("#tracknowDataModal").modal('show');
                 },
@@ -40,6 +40,16 @@
         });
     });
 </script>
+
+<div class="pagetitle">
+    <h1>Asset Remarks</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Asset Remarks</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
 
 <div class="col-md-8">
     <div class="row">

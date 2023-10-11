@@ -1,0 +1,76 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AttendanceListModel
+
+<style>
+    #tblAttendanceList th {
+        background-color: #ffc107;
+    }
+
+    tr {
+        text-align: center;
+    }
+
+    #scrollable-content {
+        overflow: auto;
+        height: 600px;
+        /* border: 1px solid #ccc;*/
+        padding: 10px;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('#tblAttendanceList').DataTable({
+        });
+    });
+</script>
+
+<div id="scrollable-content" class="row">
+    <table id="tblAttendanceList" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>              
+                <th>Employee Code</th>
+                <th>Present Days</th>
+                <th>Absent Days</th>
+                <th>Normal Working Hours</th>
+                <th>OT Hours</th>
+                <th>OT Days</th>
+                <th>CL</th>
+                <th>PL</th>
+                <th>SL</th>
+                <th>Total Leave</th>
+                <th>Late Coming Days</th>
+                <th>Late Coming Hours</th>
+                <th>Early Going Days</th>
+                <th>Early Going Hours</th>
+                <th>Weekly Off</th>
+                <th>Weekly Off Present</th>
+                <th>Holiday</th>
+                <th>Holiday Present</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.displayEmployeeAttendenceLists)
+            {
+                <tr>                  
+                    <td>@item.EmployeeCode</td>
+                    <td>@item.PresentDays</td>
+                    <td>@item.AbsentDays</td>
+                    <td>@item.NormalWorkingHours</td>
+                    <td>@item.OTHours</td>
+                    <td>@item.OTDays</td>
+                    <td>@item.CL</td>
+                    <td>@item.PL</td>
+                    <td>@item.SL</td>
+                    <td>@item.TotalLeave</td>
+                    <td>@item.LateComingDays</td>
+                    <td>@item.LateComingHours</td>
+                    <td>@item.EarlyGoingDays</td>
+                    <td>@item.EarlyGoingHours</td>
+                    <td>@item.WeeklyOff</td>
+                    <td>@item.WeeklyOffPresent</td>
+                    <td>@item.Holiday</td>
+                    <td>@item.HolidayPresent</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

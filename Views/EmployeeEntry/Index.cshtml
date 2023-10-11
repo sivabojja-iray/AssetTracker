@@ -4,6 +4,10 @@
     select#Team, select#Role {
         text-align: center;
     }
+
+    #tempEmpId {
+        color: red;
+    }
 </style>
 
 <script>
@@ -20,8 +24,8 @@
         var role = $('#Role');
 
             // Check if the username and email are not empty
-            if (username.trim() === '' || email.trim() === '') {
-                alert('Please enter both EmployeeID and email.');
+            if (username.trim() === '') {
+                alert('Please enter EmployeeID.');
                 return false;
          }
          if (firstname.trim() === '') {
@@ -48,7 +52,10 @@
             alert('Please select the Role.');
             return flase;
         }
-
+        if (email.trim() === '') {
+            alert('Please enter Email.');
+            return false;
+        }
 
             // Make an AJAX request to check if the username and email exist
             $.ajax({
@@ -71,7 +78,14 @@
                     alert('Error occurred while checking username and email availability.');
                 }
             });
-     }
+    }
+
+    $(document).ready(function () {
+        $('#tempEmpId').click(function (event) {
+            event.preventDefault();
+            $("#tempEmployeeID").load("/EmployeeEntry/ChangeTempEmployeeID");
+        });
+    });
 </script>
 
 <form id="registerForm" method="post" action="@Url.Action("RegisterEmployee", "EmployeeEntry")">
@@ -173,4 +187,10 @@
     <div class="form-group col-md-6">
         <button id="btnsubmit" type="submit" onclick="registerUser()" class="btn btn-primary">Submit</button>
     </div>
+</div>
+<div class="row">
+    <a id="tempEmpId" href="#">To Tranfer Data from Temp EmpID to Permanent EmpID?Click here</a>
+</div>
+<div id="tempEmployeeID">
+
 </div>

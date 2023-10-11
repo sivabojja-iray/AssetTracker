@@ -48,16 +48,29 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus, Version=6.2.9.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.6.2.9\lib\net462\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=6.1.1.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.Interfaces.6.1.1\lib\net462\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.System.Drawing, Version=6.1.1.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.System.Drawing.6.1.1\lib\net462\EPPlus.System.Drawing.dll</HintPath>
+    </Reference>
     <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.IO.RecyclableMemoryStream.1.4.1\lib\net46\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
     </Reference>
     <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -83,6 +96,8 @@
       <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -155,40 +170,55 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AllocationListController.cs" />
+    <Compile Include="Controllers\AssetClearanceLetterController.cs" />
     <Compile Include="Controllers\AssetDeallocationController.cs" />
     <Compile Include="Controllers\AssetEntryController.cs" />
     <Compile Include="Controllers\AssetRemarksController.cs" />
+    <Compile Include="Controllers\AssetsReviewReportsController.cs" />
     <Compile Include="Controllers\AssetTrackerController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AssetTrackingController.cs" />
     <Compile Include="Controllers\AssignAssetController.cs" />
+    <Compile Include="Controllers\AttendanceListController.cs" />
+    <Compile Include="Controllers\AuditReportController.cs" />
+    <Compile Include="Controllers\DeallocationController.cs" />
+    <Compile Include="Controllers\EmployeeAttendanceController.cs" />
     <Compile Include="Controllers\EmployeeEntryController.cs" />
     <Compile Include="Controllers\EmployeeListController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MyRequestListController.cs" />
+    <Compile Include="Controllers\NotWorkingAssetListController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\UpdateAssetController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UserLoginController.cs" />
+    <Compile Include="Controllers\WorkingAssetListController.cs" />
     <Compile Include="Cryptography.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AdminModel.cs" />
     <Compile Include="Models\AllocationListModel.cs" />
+    <Compile Include="Models\AssetClearanceLetterModel.cs" />
     <Compile Include="Models\AssetDeallocationModel.cs" />
     <Compile Include="Models\AssetEntryModel.cs" />
     <Compile Include="Models\AssetRemarksModel.cs" />
     <Compile Include="Models\AssetRequestModal.cs" />
+    <Compile Include="Models\AssetsReviewReportsModel.cs" />
     <Compile Include="Models\AssetTrackingModel.cs" />
     <Compile Include="Models\AssignAssetApproval.cs" />
+    <Compile Include="Models\AttendanceListModel.cs" />
+    <Compile Include="Models\AuditModel.cs" />
     <Compile Include="Models\DataPoint.cs" />
     <Compile Include="Models\EmployeeEntryModel.cs" />
     <Compile Include="Models\EmployeeList.cs" />
     <Compile Include="Models\LoginModelClass.cs" />
     <Compile Include="Models\MyRequestListModel.cs" />
+    <Compile Include="Models\NotWorkingAssetListModel.cs" />
     <Compile Include="Models\ReportsModel.cs" />
     <Compile Include="Models\UpdateAssetModel.cs" />
     <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\WorkingAssetListModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2056,6 +2086,10 @@
     <Content Include="Images\Icon\close-button.jpg" />
     <Content Include="Images\Icon\I-Ray-Logo.png" />
     <Content Include="Images\Icon\i-Ray_logo.png" />
+    <Content Include="Images\Icon\loading-62.gif" />
+    <Content Include="Images\Icon\lodinggif.gif" />
+    <Content Include="Images\Icon\logo_irayit.jpg" />
+    <Content Include="Images\Icon\preloader.gif" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -2339,6 +2373,35 @@
     <Content Include="Views\AssetDeallocation\Index.cshtml" />
     <Content Include="Views\AssetDeallocation\_SearchEmployeeIDpartialView.cshtml" />
     <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\Reports\SeachEmployeeIDTrackNow.cshtml" />
+    <Content Include="Views\Reports\SeachSerialNumberTrackNow.cshtml" />
+    <Content Include="Views\Reports\SearchEmployeeNameTrackNow.cshtml" />
+    <Content Include="Views\Reports\SearchAssetTypeTrackNow.cshtml" />
+    <Content Include="Views\Reports\SearchHWSWNameTrackNow.cshtml" />
+    <Content Include="Views\EmployeeEntry\ChangeTempEmployeeID.cshtml" />
+    <Content Include="Views\AssetClearanceLetter\Index.cshtml" />
+    <Content Include="Views\WorkingAssetList\Index.cshtml" />
+    <Content Include="Views\WorkingAssetList\LoadPartialView.cshtml" />
+    <Content Include="Views\WorkingAssetList\AssetBelongsLoadPartialView.cshtml" />
+    <Content Include="Views\WorkingAssetList\AssetTypeLoadPartialView.cshtml" />
+    <Content Include="Views\WorkingAssetList\SearchSerialNoInvoiceNo.cshtml" />
+    <Content Include="Views\Deallocation\Index.cshtml" />
+    <Content Include="Views\NotWorkingAssetList\Index.cshtml" />
+    <Content Include="Views\NotWorkingAssetList\TeamListPartialView.cshtml" />
+    <Content Include="Views\NotWorkingAssetList\ReturnAssetsToClient.cshtml" />
+    <Content Include="Views\AssetsReviewReports\Index.cshtml" />
+    <Content Include="Views\AssetsReviewReports\AssetsReviewReportsTeamList.cshtml" />
+    <Content Include="Views\NotWorkingAssetList\AssetsToClientPartialView.cshtml" />
+    <Content Include="Views\Admin\AdminTransferAsset.cshtml" />
+    <Content Include="Views\AssetsReviewReports\PartialAssetReviewView.cshtml" />
+    <Content Include="Views\AssetsReviewReports\AssetTrackNowFromTeam.cshtml" />
+    <Content Include="Views\AuditReport\Index.cshtml" />
+    <Content Include="Views\AuditReport\AssetReviewFromEmployeeID.cshtml" />
+    <Content Include="Views\AuditReport\EditFileAuditReport.cshtml" />
+    <Content Include="Views\AttendanceList\Index.cshtml" />
+    <Content Include="Views\AttendanceList\AttendanceListPartialView.cshtml" />
+    <Content Include="Views\EmployeeAttendance\Index.cshtml" />
+    <Content Include="Views\UserLogin\forgotPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

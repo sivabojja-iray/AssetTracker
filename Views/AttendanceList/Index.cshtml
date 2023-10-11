@@ -1,0 +1,88 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AttendanceListModel
+
+@{
+    ViewBag.Title = "AttendanceList";
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+}
+
+<style>
+    /* h4 {
+        font-size: 2rem;
+    }*/
+
+    .row {
+        margin-top: 1rem;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $("#fileUploadForm").submit(function (e) {
+            e.preventDefault();
+            var AttendanceListpartialView = $('#AttendanceListpartialView');
+            var formData = new FormData(this);
+            $.ajax({
+                type: "POST",
+                url: $(this).attr("action"),
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    AttendanceListpartialView.html(response);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+    function DisplayProgressMessage(ctl, msg) {
+        var fileupload = $('#fileupload');
+        if (fileupload.val() == '') {
+            alert('Please select the File.');
+            return false;
+        }
+        return true;
+        this.submit();
+    }
+</script>
+
+@*<div class="row">
+        <h4 class="text-center">Attendance-List</h4>
+    </div>*@
+<div class="pagetitle">
+    <h1>Attendance-List</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Attendance-List</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<form id="fileUploadForm" action="@Url.Action("UploadAttendanceExcelFile", "AttendanceList")" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="form-group col-md-4">
+            <div class="col-md-12">
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <div class="col-md-12">
+                @Html.TextBoxFor(m => m.fileupload, new { type = "file", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <div class="col-md-12">
+                <button id="fileUploadExcel" type="submit" onclick="return DisplayProgressMessage(this, 'Uploading...');" class="btnsubmit btn btn-primary">Upload</button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="row">
+    <div id="AttendanceListpartialView">
+
+    </div>
+</div>

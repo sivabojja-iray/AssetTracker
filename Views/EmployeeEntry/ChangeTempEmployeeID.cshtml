@@ -1,0 +1,68 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.EmployeeEntryModel
+
+<style>
+    #ChangeEmployeeId {
+        margin-top: 2rem;
+    }
+</style>
+<script>
+    function EmployeeIDChange() {
+        var OldEmployeeID = $('#OldEmployeeID').val();
+        var NewEmployeeID = $('#NewEmployeeID').val();
+        if (OldEmployeeID.trim() === '') {
+            alert('Please enter Old EmployeeID.');
+            return false;
+        }
+        if (NewEmployeeID.trim() === '') {
+            alert('Please enter New EmployeeID.');
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("EmployeeIDChange", "EmployeeEntry")',
+            data: { OldEmployeeID: OldEmployeeID, NewEmployeeID: NewEmployeeID },
+            success: function (response) {
+                alert("Employee ID Changed...");
+                $('#OldEmployeeID').val('');
+                $('#NewEmployeeID').val('');
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    }
+</script>
+
+<div id="ChangeEmployeeId" class="row">
+    <div class="form-group col-md-4 ml-auto">
+        @Html.Label("Enter Old Employee ID : ")
+    </div>
+    <div class="form-group col-md-6">
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.OldEmployeeID, new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+        @Html.Label("Enter New Employee ID : ")
+    </div>
+    <div class="form-group col-md-6">
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewEmployeeID, new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="form-group col-md-4 ml-auto">
+
+    </div>
+    <div class="form-group col-md-6">
+        <button type="submit" onclick="EmployeeIDChange()" class="btn btn-primary">Change</button>
+    </div>
+</div>

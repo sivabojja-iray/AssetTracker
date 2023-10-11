@@ -1,9 +1,9 @@
 ﻿@model I_RAY_ASSET_TRACKER_MVC.Models.UserModel
 
-@using PagedList.Mvc
+@*@using PagedList.Mvc*@
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "UserDashBoard";
     Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
 }
 
@@ -32,58 +32,9 @@
         font-size: .85rem;
     }
 
-    table#tblUserAssetsHaveList {
-        width: auto;
-        margin-left: 12rem;
-    }
-
     tr {
         text-align: center;
     }
-
-    table#table1 {
-        width: auto;
-        margin-left: 1rem;
-    }
-
-    /*  Pagination for List of Assets User Details */
-
-    .pagination {
-        margin-block-start: revert;
-        margin-left: 13rem;
-        /*  margin-top: 1rem;*/
-    }
-
-    .pagination-container {
-        margin: auto;
-    }
-
-    .ul.pagination {
-        display: inline-block;
-        padding: 0;
-        margin: 0;
-    }
-
-    ul.pagination li {
-        display: inline;
-    }
-
-        ul.pagination li a {
-            color: black;
-            float: left;
-            padding: 8px 16px;
-            text-decoration: none;
-            transition: background-color .3s;
-        }
-
-            ul.pagination li a.active {
-                background-color: #4CAF50;
-                color: white;
-            }
-
-            ul.pagination li a:hover:not(.active) {
-                background-color: #ddd;
-            }
 
     h4 {
         text-align: center;
@@ -130,35 +81,55 @@
 </style>
 
 <script>
-    /*  debugger;*/
-    $(function () {
-        $("#tblUserAssetsHaveList .TransferAsset").click(function () {
-            /*  debugger;*/
-            var Id = $(this).closest("tr").find("td").eq(0).html();
-            $.ajax({
-                type: "POST",
-                url: "/User/TransferAsset",
-                data: '{Id: "' + Id + '" }',
-                contentType: "application/json; charset=utf-8",
-                dataType: "html",
-                success: function (response) {
-                    /* debugger;*/
-                    $("#partialModal").find(".modal-body").html(response);
-                    $("#partialModal").modal('show');
-                },
-                failure: function (response) {
-                    alert(response.responseText);
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                }
-            });
+    $(document).ready(function () {
+         $('#tblUserAssetsHaveList').DataTable();
+        $('#table1').DataTable();
+    });
+
+    $(document).on('click', '.TransferAsset', function (e) {
+        e.preventDefault();
+        var table = $('#tblUserAssetsHaveList').DataTable();
+        var data = table.row($(this).parents('tr')).data();
+        $.ajax({
+            url: "/User/TransferAsset", // Replace with your controller and action method
+            data: {
+                Id: data[0]
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (response) {
+                $("#partialModal").find(".modal-body").html(response);
+                $("#partialModal").modal('show');
+            }
         });
     });
 
+    //$(function () {
+    //    $("#tblUserAssetsHaveList .TransferAsset").click(function () {
+    //        var Id = $(this).closest("tr").find("td").eq(0).html();
+    //        $.ajax({
+    //            type: "POST",
+    //            url: "/User/TransferAsset",
+    //            data: '{Id: "' + Id + '" }',
+    //            contentType: "application/json; charset=utf-8",
+    //            dataType: "html",
+    //            success: function (response) {
+    //                $("#partialModal").find(".modal-body").html(response);
+    //                $("#partialModal").modal('show');
+    //            },
+    //            failure: function (response) {
+    //                alert(response.responseText);
+    //            },
+    //            error: function (response) {
+    //                alert(response.responseText);
+    //            }
+    //        });
+    //    });
+    //});
+
     /* debugger;*/
     function DisplaySendProgressMessage(ctl, msg) {
-         /* debugger;*/
+        /* debugger;*/
         var AssetTransferTeam = $('#AssetTransferTeam');
         if (AssetTransferTeam.val() == '') {
             alert('Please select the Team.');
@@ -184,6 +155,16 @@
         this.submit();
     }
 </script>
+
+<div class="pagetitle">
+    <h1>DashBoard</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">DashBoard</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
 
 <div class="row">
     <!-- Total Assets Card Example -->
@@ -214,14 +195,14 @@
     <table id="tblUserAssetsHaveList" class="display compact table table-bordered table-primary">
         <thead>
             <tr>
-                <th>AssignID</th>
-                <th>EmployeeName</th>
-                <th>AssetBelongsTo</th>
-                <th>AssetType</th>
-                <th>HWSWName</th>
+                <th>Assign ID</th>
+                <th>Employee Name</th>
+                <th>Asset Belongs To</th>
+                <th>Asset Type</th>
+                <th>HWSW Name</th>
                 <th>SerialNumber</th>
-                <th>AssignDate</th>
-                <th>ReturnDate</th>
+                <th>Assign Date</th>
+                <th>Return Date</th>
                 <th>Tranfer</th>
             </tr>
         </thead>
@@ -258,10 +239,10 @@
         </tbody>
     </table>
 </div>
-<div class="pagination">
-    Page @(Model.Table1Data.PageCount < Model.Table1Data.PageNumber ? 0 : Model.Table1Data.PageNumber)
-    of @Model.Table1Data.PageCount @Html.PagedListPager(Model.Table1Data, page => Url.Action("Index", new { page }))
-</div>
+@*<div class="pagination">
+        Page @(Model.Table1Data.PageCount < Model.Table1Data.PageNumber ? 0 : Model.Table1Data.PageNumber)
+        of @Model.Table1Data.PageCount @Html.PagedListPager(Model.Table1Data, page => Url.Action("Index", new { page }))
+    </div>*@
 
 <div class="row">
     <h4>Asset Transfred To?</h4>
@@ -286,49 +267,38 @@
             </tr>
         </thead>
         <tbody>
-            @if (Model.Table2Data.Count == 0)
+            @foreach (var item in Model.Table2Data)
             {
                 <tr>
-                    <td colspan="12">
-                        No Matching Records Found
+                    <td>@Html.DisplayFor(modelItem => item.FromEmpID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.FromEmployeeName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetTransferDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ToEmpID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.TeamToWhichAssetisTransfered)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ToEmployeeName)</td>
+                    <td>
+                        <a id="btnApprove" class="button btn btn-success" href="@Url.Action("SaveTransferAssetFromEmployee", "User", new { id = item.FromEmpID})">
+                            Approve
+                        </a>
+                    </td>
+                    <td>
+                        <a class="button btn btn-danger" href="@Url.Action("RejectTransferAssetFromEmployee", "User", new { id = item.FromEmpID})">
+                            Reject
+                        </a>
                     </td>
                 </tr>
-            }
-            else
-            {
-                foreach (var item in Model.Table2Data)
-                {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.FromEmpID)</td>
-                        <td>@Html.DisplayFor(modelItem => item.FromEmployeeName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
-                        <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
-                        <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
-                        <td>@Html.DisplayFor(modelItem => item.AssetTransferDate)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ToEmpID)</td>
-                        <td>@Html.DisplayFor(modelItem => item.TeamToWhichAssetisTransfered)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ToEmployeeName)</td>
-                        <td>
-                            <a id="btnApprove" class="button btn btn-success" href="@Url.Action("SaveTransferAssetFromEmployee", "User", new { id = item.FromEmpID})">
-                                Approve
-                            </a>
-                        </td>
-                        <td>
-                            <a class="button btn btn-danger" href="@Url.Action("RejectTransferAssetFromEmployee", "User", new { id = item.FromEmpID})">
-                                Reject
-                            </a>
-                        </td>
-                    </tr>
-                }
             }
         </tbody>
     </table>
 </div>
-<div class="pagination">
-    Page @(Model.Table2Data.PageCount < Model.Table2Data.PageNumber ? 0 : Model.Table2Data.PageNumber)
-    of @Model.Table2Data.PageCount @Html.PagedListPager(Model.Table2Data, page => Url.Action("Index", new { page }))
-</div>
+@*<div class="pagination">
+        Page @(Model.Table2Data.PageCount < Model.Table2Data.PageNumber ? 0 : Model.Table2Data.PageNumber)
+        of @Model.Table2Data.PageCount @Html.PagedListPager(Model.Table2Data, page => Url.Action("Index", new { page }))
+    </div>*@
 
 
 @using (Html.BeginForm("SaveTransferAsset", "User", FormMethod.Post))

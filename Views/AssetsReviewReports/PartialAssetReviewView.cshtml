@@ -1,0 +1,159 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetsReviewReportsModel
+
+@{
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+}
+
+<style>
+    h4 {
+        font-size: 2rem;
+    }
+
+    .row {
+        margin-top: 1rem;
+    }
+</style>
+<script>
+    $(function () {
+        $("#TeamAssetReviewId").click(function () {
+            var Team = $('#AssetBelongsto').val();
+            if (Team.trim() === '') {
+                alert('Please select the Team...');
+                return false;
+            }
+            $.ajax({
+                type: "POST",
+                url: "/AssetsReviewReports/AssetTrackNowFromTeam",
+                data: {
+                    Team: Team
+                },
+                success: function (response) {
+                    $("#assetReviewModal").find(".modal-body").html(response);
+                    $("#assetReviewModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+
+        $("#EmployeeIDAssetReviewId").click(function () {
+            var EmployeeID = $('#EmployeeID').val();
+            if (EmployeeID.trim() === '') {
+                alert('Please Enter the EmployeeID...');
+                return false;
+            }
+            $.ajax({
+                type: "POST",
+                url: "/AssetsReviewReports/AssetTrackNowFromEmployeeID",
+                data: {
+                    EmployeeID: EmployeeID
+                },
+                success: function (response) {
+                    $("#assetReviewModal").find(".modal-body").html(response);
+                    $("#assetReviewModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+
+    function DisplayProgressMessage() {
+        var AssetBelongsto = $('#AssetBelongsto');
+        if (AssetBelongsto.val() == '') {
+            alert('Please select the Team.');
+            return false;
+        }
+        return true;
+        this.submit();
+    }
+    function ValidationMessage() {
+        var EmployeeID = $('#EmployeeID');
+        if (EmployeeID.val() == '') {
+            alert('Please Enter the EmployeeID.');
+            return false;
+        }
+        return true;
+        this.submit();
+    }
+</script>
+
+<div class="row">
+    <h4 class="text-center">Assets Review-Reports</h4>
+</div>
+
+@using (Html.BeginForm("TeamReviewReportPDF", "AssetsReviewReports", FormMethod.Post))
+{
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-2">
+            <span>Asset Belongs to?</span>
+        </div>
+        <div class="col-md-2">
+            @Html.DropDownListFor(m => m.AssetBelongsto, new SelectList(new[] { "FSW", "SV" }), "--Select Team--", new { @class = "form-control" })
+        </div>
+        <div class="col-md-2">
+            <button id="TeamAssetReviewId" type="button" data-toggle="modal" data-target="#assetReviewModal" class="button btn btn-primary">
+                Assets Review
+            </button>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" onclick="return DisplayProgressMessage();" class="button btn btn-primary">
+                <i class="fas fa-fw fa-file-pdf"></i>
+                <span>PDF</span>
+            </button>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("EmployeeIDReviewReportPDF", "AssetsReviewReports", FormMethod.Post))
+{
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-2">
+            <span>EmployeeID :</span>
+        </div>
+        <div class="col-md-2">
+            @Html.TextBoxFor(m => m.EmployeeID, new { @class = "form-control" })
+        </div>
+        <div class="col-md-2">
+            <button id="EmployeeIDAssetReviewId" data-toggle="modal" data-target="#assetReviewModal" type="button" class="button btn btn-primary">
+                Assets Review
+            </button>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" onclick="return ValidationMessage();" class="button btn btn-primary">
+                <i class="fas fa-fw fa-file-pdf"></i>
+                <span>PDF</span>
+            </button>
+        </div>
+    </div>
+}
+<div id="assetReviewModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="assetReviewModalLable" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title fs-5" id="assetReviewModalLable">Assets Review-Reports</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

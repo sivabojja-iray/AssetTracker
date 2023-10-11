@@ -1,110 +1,376 @@
 ﻿@model I_RAY_ASSET_TRACKER_MVC.Models.ReportsModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Reports";
     Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
 }
 
 <style>
-    table#tbleReports {
-        margin-left: 300px;
+    /* h2 {
+        font-size: 2rem;
+    }*/
+
+    .row {
+        margin-top: 2rem;
     }
+    /* table#tblEmployeeID{
+        margin-left:200px;
+    }*/
+
     td {
         padding-left: 10px;
         padding-bottom: 10px;
     }
 </style>
 
-<h2>Reports</h2>
-<div class="row justify-content-center">
-    <div class="col-md-12">
-        <table id="tbleReports" cellspacing="3">
-            <tr>
-                <td>
-                    <span>Employee ID :</span>
-                </td>
-                <td>
-                    @Html.TextBoxFor(m => m.EmployeeID, new { @class = "form-control" })
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">Track Now</button>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">Historical Data</button>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">AssetTransfer Record</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span>Asset SerialNo :</span>
-                </td>
-                <td>
-                    @Html.TextBoxFor(m => m.AssetSerialNumber, new { @class = "form-control" })
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">Track Now</button>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">Historical Data</button>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">AssetTransfer Record</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span>Employee Name :</span>
-                </td>
-                <td>
-                    @Html.TextBoxFor(m => m.EmployeeName, new { @class = "form-control" })
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">Track Now</button>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">Historical Data</button>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">AssetTransfer Record</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span>Asset Type :</span>
-                </td>
-                <td>
-                    @Html.TextBoxFor(m => m.AssetType, new { @class = "form-control" })
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">Track Now</button>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">Historical Data</button>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">AssetTransfer Record</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span>HW/SW Name :</span>
-                </td>
-                <td>
-                    @Html.TextBoxFor(m => m.HWSWName, new { @class = "form-control" })
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">Track Now</button>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">Historical Data</button>
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary">AssetTransfer Record</button>
-                </td>
-            </tr>
-        </table>
+<script>
+    $(function () {
+        $("#tblEmployeeID .EmployeeIDbtnTrackNow").click(function () {
+            var EmployeeID = $('#EmployeeID').val();
+            if (EmployeeID.trim() === '') {
+                alert('Please enter EmployeeID.');
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/Reports/SeachEmployeeIDTrackNow",
+                data: { EmployeeID: EmployeeID },
+                success: function (response) {
+                    $("#SampleModal").find(".modal-body").html(response);
+                    $("#SampleModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#tblAssetSerialNumber .SerialNobtnTrackNow").click(function () {
+            var SerialNumber = $('#AssetSerialNumber').val();
+            if (SerialNumber.trim() === '') {
+                alert('Please enter Asset SerialNumber.');
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/Reports/SeachSerialNumberTrackNow",
+                data: { SerialNumber: SerialNumber },
+                success: function (response) {
+                    $("#SampleModal").find(".modal-body").html(response);
+                    $("#SampleModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#tblEmployeeName .EmployeeNamebtnTrackNow").click(function () {
+            var EmployeeName = $('#EmployeeName').val();
+            if (EmployeeName.trim() === '') {
+                alert('Please enter EmployeeName.');
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/Reports/SearchEmployeeNameTrackNow",
+                data: { EmployeeName: EmployeeName },
+                success: function (response) {
+                    $("#SampleModal").find(".modal-body").html(response);
+                    $("#SampleModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#tblAssetType .AssetTypebtnTrackNow").click(function () {
+            var AssetType = $('#AssetType').val();
+            if (AssetType.trim() === '') {
+                alert('Please enter AssetType.');
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/Reports/SearchAssetTypeTrackNow",
+                data: { AssetType: AssetType },
+                success: function (response) {
+                    $("#SampleModal").find(".modal-body").html(response);
+                    $("#SampleModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#tblHWSWName .HWSWNamebtnTrackNow").click(function () {
+            var HWSWName = $('#HWSWName').val();
+            if (HWSWName.trim() === '') {
+                alert('Please enter HWSWName.');
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/Reports/SearchHWSWNameTrackNow",
+                data: { HWSWName: HWSWName },
+                success: function (response) {
+                    $("#SampleModal").find(".modal-body").html(response);
+                    $("#SampleModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+<div class="pagetitle">
+    <h1>Reports</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Reports</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+@using (Html.BeginForm("EmployeeIDPDFReport", "Reports", FormMethod.Post))
+{
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <table id="tblEmployeeID" cellspacing="3">
+                <tr>
+                    <td>
+                        <span>Employee ID :</span>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.EmployeeID, new { @class = "form-control" })
+                    </td>
+                    <td>
+                        <button type="button" data-toggle="modal" data-target="#SampleModal" class="EmployeeIDbtnTrackNow btn btn-primary">Track Now</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="HistoricalDataPDF" class="btn btn-primary">Historical Data</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="AssetTransferRecordPDF" class="btn btn-primary">AssetTransfer Record</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="PDFReport" class="btn btn-primary">
+                            <i class="fas fa-fw fa-file-pdf"></i>
+                            <span>PDF</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="ExcelReport" class="btn btn-primary">
+                            <i class="fas fa-fw fa-file-excel"></i>
+                            <span>EXCEL</span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("AssetSerialNumberPDFReport", "Reports", FormMethod.Post))
+{
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <table id="tblAssetSerialNumber" cellspacing="3">
+                <tr>
+                    <td>
+                        <span>Asset SerialNo :</span>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.AssetSerialNumber, new { @class = "form-control" })
+                    </td>
+                    <td>
+                        <button type="button" data-toggle="modal" data-target="#SampleModal" class="SerialNobtnTrackNow btn btn-primary">Track Now</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="HistoricalDataPDF" class="btn btn-primary">Historical Data</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="AssetTransferRecordPDF" class="btn btn-primary">AssetTransfer Record</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="PDFReport" class="btn btn-primary">
+                            <i class="fas fa-fw fa-file-pdf"></i>
+                            <span>PDF</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="ExcelReport" class="btn btn-primary">
+                            <i class="fas fa-fw fa-file-excel"></i>
+                            <span>EXCEL</span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+}
+@using (Html.BeginForm("EmployeeNamePDFReport", "Reports", FormMethod.Post))
+{
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <table id="tblEmployeeName" cellspacing="3">
+                <tr>
+                    <td>
+                        <span>Employee Name :</span>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.EmployeeName, new { @class = "form-control" })
+                    </td>
+                    <td>
+                        <button type="button" data-toggle="modal" data-target="#SampleModal" class="EmployeeNamebtnTrackNow btn btn-primary">Track Now</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="HistoricalDataPDF" class="btn btn-primary">Historical Data</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="AssetTransferRecordPDF" class="btn btn-primary">AssetTransfer Record</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="PDFReport" class="btn btn-primary">
+                            <i class="fas fa-fw fa-file-pdf"></i>
+                            <span>PDF</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="ExcelReport" class="btn btn-primary">
+                            <i class="fas fa-fw fa-file-excel"></i>
+                            <span>EXCEL</span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("AssetTypePDFReport", "Reports", FormMethod.Post))
+{
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <table id="tblAssetType" cellspacing="3">
+                <tr>
+                    <td>
+                        <span>Asset Type :</span>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.AssetType, new { @class = "form-control" })
+                    </td>
+                    <td>
+                        <button type="button" data-toggle="modal" data-target="#SampleModal" class="AssetTypebtnTrackNow btn btn-primary">Track Now</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="HistoricalDataPDF" class="btn btn-primary">Historical Data</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="AssetTransferRecordPDF" class="btn btn-primary">AssetTransfer Record</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="PDFReport" class="btn btn-primary">
+                            <i class="fas fa-fw fa-file-pdf"></i>
+                            <span>PDF</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="ExcelReport" class="btn btn-primary">
+                            <i class="fas fa-fw fa-file-excel"></i>
+                            <span>EXCEL</span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("HWSWNamePDFReport", "Reports", FormMethod.Post))
+{
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <table id="tblHWSWName" cellspacing="3">
+                <tr>
+                    <td>
+                        <span>HW/SW Name :</span>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.HWSWName, new { @class = "form-control" })
+                    </td>
+                    <td>
+                        <button type="button" data-toggle="modal" data-target="#SampleModal" class="HWSWNamebtnTrackNow btn btn-primary">Track Now</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="HistoricalDataPDF" class="btn btn-primary">Historical Data</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="AssetTransferRecordPDF" class="btn btn-primary">AssetTransfer Record</button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="PDFReport" class="btn btn-primary">
+                            <i class="fas fa-fw fa-file-pdf"></i>
+                            <span>PDF</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="submit" name="submitButton" value="ExcelReport" class="btn btn-primary">
+                            <i class="fas fa-fw fa-file-excel"></i>
+                            <span>EXCEL</span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+
+<div id="SampleModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="SampleModalLable" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title fs-5" id="SampleModalLable">Reports</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
-

@@ -19,7 +19,8 @@
                     $('#AssetTransferEmployeeName').append("<option>--Select EmployeeName--</option>");
                     for (var i = 0; i < assetRequestModal.length; i++) {
                         /* debugger;  */
-                        $('#AssetTransferEmployeeName').append("<option>" + assetRequestModal[i] + "</option>");
+                        var newOption = $("<option></option>").attr("value", assetRequestModal[i]).text(assetRequestModal[i]);
+                        $('#AssetTransferEmployeeName').append(newOption);
                     }
                     $('#AssetTransferEmployeeName').prop("disabled", false);
                 };

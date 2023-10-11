@@ -25,14 +25,28 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         {
             List<AllocationListModel> list = allocationLists("select EmpID,EmployeeName,Team,AssetType,HWSWName,SerialNumberVersionNumber,AssignDate,ExpectedReturnDate,Assetbelongsto,InvoiceNo from AssignAsset order by EmpID");
             System.Threading.Thread.Sleep(500);
+            SqlConnection sqlConnection = new SqlConnection();
+            sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
+            SqlCommand cmd9 = new SqlCommand("select top 4 * from Assetrequest order by RequestID desc");
+            cmd9.Connection = sqlConnection;
+            SqlDataAdapter data = new SqlDataAdapter(cmd9);
+            DataTable dataTable1 = new DataTable();
+            data.Fill(dataTable1);
+            List<adminNotification> list1 = new List<adminNotification>();
+            foreach (DataRow row in dataTable1.Rows)
+            {
+                adminNotification adminNotification = new adminNotification
+                {
+                    EmpName = row["EmployeeName"].ToString(),
+                    EmpTeam = row["EmpTeam"].ToString(),
+                    RequestDate = row["RequestDate"].ToString()
+                };
+                list1.Add(adminNotification);
+            }
+            ViewBag.MyList = list1;
+
             return View(list);
         }
-        //public JsonResult getAllocationList()
-        //{
-        //    List<AllocationListModel> list = allocationLists("select EmpID,EmployeeName,Team,AssetType,HWSWName,SerialNumberVersionNumber,AssignDate,ExpectedReturnDate,Assetbelongsto,InvoiceNo from AssignAsset order by EmpID");
-        //    var data = list;
-        //    return Json(list, JsonRequestBehavior.AllowGet);
-        //}
         private static List<AllocationListModel> allocationLists(string query)
         {
             SqlConnection sqlConnection = new SqlConnection();
@@ -103,6 +117,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                     GridView gridview = new GridView();
                     gridview.DataSource = data;
                     gridview.DataBind();
+                    gridview.HeaderStyle.ForeColor = System.Drawing.ColorTranslator.FromHtml("#E8B72A");
                     gridview.RenderControl(hw);
 
                     StringReader sr=new StringReader(sw.ToString());

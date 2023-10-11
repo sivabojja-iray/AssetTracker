@@ -15,5 +15,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
         public string Role { get; set; }
         public string Mail { get; set; }
         public string ContactNumber { get; set; }
+        public bool OldEmployeeID { get; set; }
+        public bool NewEmployeeID { get; set; }
     }
 }

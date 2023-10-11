@@ -1,0 +1,39 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetClearanceLetterModel
+
+@{
+    ViewBag.Title = "AssetClearanceLetter";
+}
+
+<style>
+    .row {
+        margin-bottom: 1rem;
+    }
+</style>
+<script>
+    function DisplayProgressMessage() {
+        var EmployeeID = $('#EmployeeID');
+        if (EmployeeID.val() == '') {
+            alert('Please Enter the EmployeeID.');
+            return false;
+        }
+        return true;
+        this.submit();
+    }
+</script>
+
+@using (Html.BeginForm("AssetClearanceLetterPDF", "AssetClearanceLetter", FormMethod.Post))
+{
+    <div class="row">
+        <div class="col-md-4">
+            <span>Employee ID : </span>
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.EmployeeID, new { @class = "form-control" })
+        </div>
+        <div class="col-md-4">
+            <button type="submit" onclick="return DisplayProgressMessage();" class="btn btn-primary">Asset Clearance</button>
+        </div>
+    </div>
+}
+
+

@@ -9,6 +9,7 @@
     <meta name="author" content="">
 
     <title>@ViewBag.Title</title>
+    <link href="~/Images/Icon/I-Ray-Logo.png" rel="shortcut icon" type="image/x-icon">
 
     <!-- Custom fonts for this template-->
     <link href="~/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -71,27 +72,40 @@
             .submit-progress i {
                 margin-right: 0.5em;
             }
+
+        span.employeename {
+            color: #ffc107;
+            margin-right: 10px;
+        }
     </style>
 
     <script src="~/Scripts/jquery-3.4.1.min.js"></script>
     <script>
-        function DisplayProgressMessage(ctl, msg) {
-            // Turn off the "Save" button and change text
-            $(ctl).prop("disabled", true).text(msg);
-            // Gray out background on page
-            $("body").addClass("submit-progress-bg");
+        $(document).ready(function () {
+            // Hide the spinner overlay when the page is fully loaded
+            $("#spinner-overlay").delay(3000).fadeOut("slow");
+        });
 
-            // Wrap in setTimeout so the UI can update the spinners
-            setTimeout(function () {
-                $(".submit-progress").removeClass("visually-hidden");
-            }, 1);
-            $(ctl).prop("disabled", false).text(msg);
-            return true;
-        }
+        //function DisplayProgressMessage(ctl, msg) {
+        //    // Turn off the "Save" button and change text
+        //    $(ctl).prop("disabled", true).text(msg);
+        //    // Gray out background on page
+        //    $("body").addClass("submit-progress-bg");
+
+        //    // Wrap in setTimeout so the UI can update the spinners
+        //    setTimeout(function () {
+        //        $(".submit-progress").removeClass("visually-hidden");
+        //    }, 1);
+        //    $(ctl).prop("disabled", false).text(msg);
+        //    return true;
+        //}
     </script>
 
 </head>
 <body id="page-top">
+    <div id="spinner-overlay">
+        <img height="300" width="300" src="~/Images/Icon/loading-62.gif" alt="Loading..." />
+    </div>
 
     <div class="submit-progress visually-hidden">
         <i class="fa fa-2x fa-spinner fa-spin"></i>
@@ -168,7 +182,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#"
+                <a class="nav-link collapsed" href="~/EmployeeAttendance/Index"
                    aria-expanded="true">
                     <i class="fa fa-calendar"></i>
                     <span>Attendence</span>
@@ -176,7 +190,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#"
+                <a class="nav-link collapsed" href="~/Deallocation/Index"
                    aria-expanded="true">
                     <i class="fa fa-deaf"></i>
                     <span>Deallocation</span>
@@ -379,7 +393,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Session["username"]</span>
+                                <span class="employeename">@Session["EmployeeName"]</span>
                                 <img class="img-profile rounded-circle"
                                      src="~/Content/img/undraw_profile.svg">
                             </a>
@@ -414,12 +428,12 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">@*Dashboard*@</h1>
+                    <!--<div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">-->@*Dashboard*@<!--</h1>
                         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                             <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
                         </a>
-                    </div>
+                    </div>-->
 
                     <div class="row">
                         @RenderBody()
@@ -474,7 +488,15 @@
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <h5 class="modal-title fs-5" id="myrequestListLable">My Request-List</h5>
+                    <div class="pagetitle">
+                        <h1>My Request-List</h1>
+                        <nav>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active">My Request-List</li>
+                            </ol>
+                        </nav>
+                    </div><!-- End Page Title -->
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -521,11 +543,11 @@
         $(function () {
             $("#myRequestListId").click(function () {
                 /*  debugger;*/
-               /* var Id = $(this).closest("tr").find("td").eq(0).html();*/
+                /* var Id = $(this).closest("tr").find("td").eq(0).html();*/
                 $.ajax({
                     type: "POST",
                     url: "/MyRequestList/Index",
-                  /*  data: '{Id: "' + Id + '" }',*/
+                    /*  data: '{Id: "' + Id + '" }',*/
                     contentType: "application/json; charset=utf-8",
                     dataType: "html",
                     success: function (response) {

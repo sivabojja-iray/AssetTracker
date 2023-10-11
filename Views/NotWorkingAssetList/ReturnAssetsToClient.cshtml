@@ -1,0 +1,66 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.NotWorkingAssetListModel
+
+<script>
+    $(document).ready(function () {
+        // Attach an event listener to the dropdown change event
+        $("#AssetName").on("change", function () {
+            var assetBelongsToselected = $(this).val();
+            var partialContainerView = $('#partialView'); // Get the target container
+
+            // Use AJAX to load the partial view content into the container
+            $.ajax({
+                url: "/NotWorkingAssetList/ReturnedAssetstoClientPartialView", // Replace with your controller and action method
+                data: {
+                    assetBelongsToselected: assetBelongsToselected
+                },
+                success: function (result) {
+                    partialContainerView.html(result); // Load the content into the container
+                }
+            });
+        });
+    });
+    function DisplayProgressMessage() {
+        var AssetName = $('#AssetName');
+        if (AssetName.val() == '') {
+            alert('Please Select the Team.');
+            return false;
+        }
+        return true;
+        this.submit();
+    }
+</script>
+
+@using (Html.BeginForm("ReportReturnedAssetstoClientList", "NotWorkingAssetList", FormMethod.Post))
+{
+    <div class="row">
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-2">
+            <span>
+                Asset Belongs to? :
+            </span>
+        </div>
+        <div class="col-md-3">
+            @Html.DropDownListFor(m => m.AssetName, new SelectList(new[] { "FSW", "SV" }), "--Select Assets Belongs To--", new { @class = "form-control" })
+        </div>
+        <div class="col-md-2">
+            <button type="submit" name="submitButton" onclick="return DisplayProgressMessage();" value="PdfReport" class="button btn btn-primary">
+                <i class="fas fa-fw fa-file-pdf"></i>
+                <span>PDF</span>
+            </button>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" name="submitButton" onclick="return DisplayProgressMessage();" value="ExcelReport" class="button btn btn-primary">
+                <i class="fas fa-fw fa-file-excel"></i>
+                <span>EXCEL</span>
+            </button>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div id="partialView">
+
+    </div>
+</div>

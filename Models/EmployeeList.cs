@@ -8,7 +8,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
 {
     public class EmployeeList
     {
-        public IPagedList<PagedListEmployee> PagedListEmployee { get; set; }
+        public List<PagedListEmployee> PagedListEmployee { get; set; }
     }
     public class PagedListEmployee 
     {

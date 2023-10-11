@@ -2,6 +2,7 @@
 using Org.BouncyCastle.Crypto.Tls;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -14,9 +15,28 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
 {
     public class AssetEntryController : Controller
     {
+        string constr = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
         // GET: AssetEntry
         public ActionResult Index()
         {
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            SqlCommand cmd9 = new SqlCommand("select top 4 * from Assetrequest order by RequestID desc");
+            cmd9.Connection = sqlConnection;
+            SqlDataAdapter data = new SqlDataAdapter(cmd9);
+            DataTable dataTable1 = new DataTable();
+            data.Fill(dataTable1);
+            List<adminNotification> list1 = new List<adminNotification>();
+            foreach (DataRow row in dataTable1.Rows)
+            {
+                adminNotification adminNotification = new adminNotification
+                {
+                    EmpName = row["EmployeeName"].ToString(),
+                    EmpTeam = row["EmpTeam"].ToString(),
+                    RequestDate = row["RequestDate"].ToString()
+                };
+                list1.Add(adminNotification);
+            }
+            ViewBag.MyList = list1;
             System.Threading.Thread.Sleep(3000);
             return View();
         }
@@ -73,6 +93,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             //{
             //    return RedirectToAction("Index");
             //}
+            TempData["SuccessMessage"] = "Assert Inserted successfully";
             return RedirectToAction("Index");
         }
     }

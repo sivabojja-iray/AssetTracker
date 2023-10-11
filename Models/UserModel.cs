@@ -8,12 +8,15 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
 {
     public class UserModel
     {
-        public IPagedList<Table1Model> Table1Data { get; set; }
-        public IPagedList<Table2Model> Table2Data { get; set; }
+        public List<Table1Model> Table1Data { get; set; }
+        public List<Table2Model> Table2Data { get; set; }
     }
     public class Table1Model
     {
         public string AssignID { get; set; }
+        public string EmpID { get; set; }
+        public string Team { get; set; }
+        public string InvoiceNo { get; set; }
         public string EmployeeName { get; set; }
         public string Assetbelongsto { get; set; }
         public string AssetType { get; set; }

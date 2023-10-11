@@ -1,0 +1,52 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.ReportsModel
+
+<style>
+    #tblSearchEmployeeIDTrackNow th {
+        background-color: #ffc107;
+    }
+</style>
+
+
+<script>
+    $(document).ready(function () {
+        $('#tblSearchEmployeeIDTrackNow').DataTable({
+            "language": {
+                "zeroRecords": "No matching records found"
+            }
+        });
+    });
+</script>
+
+<table id="tblSearchEmployeeIDTrackNow" class="display compact table table-bordered table-primary">
+    <thead>
+        <tr>
+            <th>AssignID</th>
+            <th>EmpID</th>
+            <th>EmployeeName</th>
+            <th>Team</th>
+            <th>Assetbelongsto</th>
+            <th>AssetType</th>
+            <th>HWSWName</th>
+            <th>SerialNumber</th>
+            <th>AssignDate</th>
+            <th>ExpectedReturnDate</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.searchData)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.AssignID)</td>
+                <td>@Html.DisplayFor(modelItem => item.EmployeeID)</td>
+                <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Team)</td>
+                <td>@Html.DisplayFor(modelItem => item.AssetBelongsTo)</td>
+                <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.ExpectedDate)</td>
+            </tr>
+        }
+    </tbody>
+</table>

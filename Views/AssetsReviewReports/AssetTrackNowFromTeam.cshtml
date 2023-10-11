@@ -1,0 +1,58 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetsReviewReportsModel
+
+<style>
+    #tblTeamReviewReport th {
+        background-color: #ffc107;
+    }
+
+    tr {
+        text-align: center;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('#tblTeamReviewReport').DataTable({
+            "language": {
+                "zeroRecords": "No matching records found"
+            }
+        });
+    });
+</script>
+
+<div class="row">
+    <table id="tblTeamReviewReport" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>Emp ID</th>
+                <th>Employee Name</th>
+                <th>Team</th>
+                <th>Asset Type</th>
+                <th>HWSW Name</th>
+                <th>SerialNumber</th>
+                <th>Asset Image</th>
+                <th>Asset Belongs To</th>
+                <th>Review By</th>
+                <th>Review Date</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.assetTrackNowFromTeam)
+            {
+                <tr>
+                    <td>@item.EmpID</td>
+                    <td>@item.EmployeeName</td>
+                    <td>@item.Team</td>
+                    <td>@item.AssetType</td>
+                    <td>@item.HWSWName</td>
+                    <td>@item.SerialNumberVersionNumber</td>
+                    <td><img src="@item.AssetImage" width="100" alt="" /></td>
+                    <td>@item.Assetbelongsto</td>
+                    <td>@item.ReviewBy</td>
+                    <td>@item.ReviewDate</td>
+                    <td>@item.Remarks</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

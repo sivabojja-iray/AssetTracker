@@ -1,7 +1,7 @@
 ﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetDeallocationModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "AssetDeallocation";
     Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
 }
 
@@ -32,6 +32,16 @@
 
 </script>
 
+<div class="pagetitle">
+    <h1>AssetDeallocation</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">AssetDeallocation</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
 @using (Html.BeginForm("SearchEmployeeID", "AssetDeallocation", FormMethod.Post))
 {
     <div class="row justify-content-center">
@@ -50,24 +60,6 @@
         </div>
     </div>
 }
-@*@using (Html.BeginForm("SearchEmployeeName", "AssetDeallocation", FormMethod.Post))
-{
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="row">
-                <div class="col-md-4">
-                    <span>Employee Name :</span>
-                </div>
-                <div class="col-md-4">
-                    @Html.TextBoxFor(m => m.EmployeeName, new { @class = "form-control" })
-                </div>
-                <div class="col-md-4">
-                    <button id="" type="submit" class="btn btn-primary">GO</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}*@
 
 <div id="SearchEmployeeID">
     @Html.Partial("_SearchEmployeeIDpartialView")

@@ -1,6 +1,6 @@
 ﻿@model List<I_RAY_ASSET_TRACKER_MVC.Models.AllocationListModel>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "AssetAllocationList";
     Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
 }
 
@@ -53,6 +53,16 @@
         });
     });*@
 </script>
+
+<div class="pagetitle">
+    <h1>AllocationList</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">AllocationList</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
 
 <div align="center">
     <a id="btnExport" class="button btn btn-primary" href="@Url.Action("ExportToExcel", "AllocationList")">

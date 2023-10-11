@@ -1,15 +1,16 @@
-﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssignAssetApproval
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssignAsset
+
 @{
     ViewBag.Title = "Index";
-    //Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
-    if (Session["Role"].ToString() == "AssetManager")
-    {
-        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
-    }
-    else if (Session["Role"].ToString() == "User")
-    {
-        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
-    }
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    //if (Session["Role"].ToString() == "AssetManager")
+    //{
+    //    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    //}
+    //else if (Session["Role"].ToString() == "User")
+    //{
+    //    Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    //}
 }
 
 
@@ -17,15 +18,18 @@
 @Scripts.Render("~/bundles/modernizr")
 
 <style>
-    h4{
-        font-size:2rem;
+    h4 {
+        font-size: 2rem;
     }
+
     .btn {
         box-shadow: 0px 0px 5px 2px #ffc107 !important;
     }
-        .btn:active {
+
+       /* .btn:active {
             transform: translateY(1rem);
-        }
+        }*/
+
     .submit-progress-bg {
         background-color: lightgray;
         opacity: 0.8;
@@ -67,6 +71,12 @@
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <script>
     $(function () {
+         $('#redirectButton').click(function () {
+            window.location.href = '@Url.Action("Index", "AssignAsset")';
+        });
+    })
+
+    $(function () {
         $('#DailyAllocation').click(function () {
             $('#PermanentAllocation').prop("checked", false);
         })
@@ -76,23 +86,30 @@
     })
 
     function DisplayProgressMessage(ctl, msg) {
-        // Turn off the "Save" button and change text
-        $(ctl).prop("disabled", true).text(msg);
-        // Gray out background on page
-        $("body").addClass("submit-progress-bg");
-
-        // Wrap in setTimeout so the UI can update the spinners
-        setTimeout(function () {
-            $(".submit-progress").removeClass("visually-hidden");
-        }, 1);
-        $(ctl).prop("disabled", false).text(msg);
+        var DailyAllocation = document.getElementById("DailyAllocation").checked;
+        var PermanentAllocation = document.getElementById("PermanentAllocation").checked;
+        var ReturnDate = $('#ReturnDate');
+        var Comments = $('#Comments');
+        if ((DailyAllocation == "") && (PermanentAllocation == "")) {
+            alert("Choose Allocation Type.");
+            return false;
+        }
+        if (ReturnDate.val() == '') {
+            alert('Please select the Return Date.');
+            return false;
+        }
+        if (Comments.val() == '') {
+            alert('Please Enter the Comments.');
+            return false;
+        }
         return true;
+        this.submit();
     }
 </script>
 
 @*<div class="text-center">
-    <h4>Assign-Asset</h4>
-</div>*@
+        <h4>Assign-Asset</h4>
+    </div>*@
 
 @using (Html.BeginForm("SaveAssignAsset", "AssignAsset", FormMethod.Post))
 {
@@ -294,6 +311,7 @@
                                     <button type="submit" class="button btn btn-primary btn-customized mt-4" onclick="return DisplayProgressMessage(this, 'Assing...');">
                                         Assign Asset
                                     </button>
+                                    <button id="redirectButton" type="button" class="button btn btn-secondary btn-customized mt-4">Close</button>
                                 </div>
                             </div>
                         </td>

@@ -20,14 +20,10 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         string constr = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
        
         // GET: User
-        public ActionResult Index(int? page)
+        public ActionResult Index()
         {
             if (Session["username"] != null)
-            {
-                int pageSize = 5;
-                int pageIndex = 1;
-                pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-
+            {            
                 SqlConnection con = new SqlConnection(constr);
                 SqlCommand cmd = new SqlCommand("SELECT COUNT(AssetType) FROM AssignAsset where EmpID='" + Session["username"] + "'");
                 cmd.Connection = con;
@@ -83,8 +79,8 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
 
                 var viewModal = new UserModel
                 {
-                    Table1Data=dataModels.ToPagedList(pageIndex, pageSize),
-                    Table2Data=list.ToPagedList(pageIndex,pageSize)
+                    Table1Data=dataModels,
+                    Table2Data=list
                 };
                 con.Close();
                 return View(viewModal);

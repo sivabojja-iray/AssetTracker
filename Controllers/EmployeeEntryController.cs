@@ -20,6 +20,24 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         // GET: EmployeeEntry
         public ActionResult Index()
         {
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            SqlCommand cmd9 = new SqlCommand("select top 4 * from Assetrequest order by RequestID desc");
+            cmd9.Connection = sqlConnection;
+            SqlDataAdapter data = new SqlDataAdapter(cmd9);
+            DataTable dataTable1 = new DataTable();
+            data.Fill(dataTable1);
+            List<adminNotification> list1 = new List<adminNotification>();
+            foreach (DataRow row in dataTable1.Rows)
+            {
+                adminNotification adminNotification = new adminNotification
+                {
+                    EmpName = row["EmployeeName"].ToString(),
+                    EmpTeam = row["EmpTeam"].ToString(),
+                    RequestDate = row["RequestDate"].ToString()
+                };
+                list1.Add(adminNotification);
+            }
+            ViewBag.MyList = list1;
             return View();
         }
         public JsonResult IsUsernameOrEmailExists(string username,string email)
@@ -65,6 +83,42 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                 //smtp.Send(mail);
             }
             return RedirectToAction("Index", "Admin");
+        }
+        public ActionResult ChangeTempEmployeeID()
+        {
+            return PartialView("ChangeTempEmployeeID");
+        }
+        public ActionResult EmployeeIDChange(string OldEmployeeID,string NewEmployeeID)
+        {
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            sqlConnection.Open();
+            SqlCommand cmd = new SqlCommand("UPDATE EmployeeList SET EmpID = @EmpIDNew WHERE EmpID = @EmpIDOld; ", sqlConnection);
+            cmd.Parameters.AddWithValue("@EmpIDNew", NewEmployeeID);
+            cmd.Parameters.AddWithValue("@EmpIDOld", OldEmployeeID);
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
+            SqlCommand cmd2 = new SqlCommand("UPDATE EmployeeRegistration1 SET UserName = @UserNameNew WHERE UserName = @UserNameOld; ", sqlConnection);
+            cmd2.Parameters.AddWithValue("@UserNameNew", NewEmployeeID);
+            cmd2.Parameters.AddWithValue("@UserNameOld", OldEmployeeID);
+            cmd2.ExecuteNonQuery();
+            cmd2.Dispose();
+            SqlCommand cmd3 = new SqlCommand("UPDATE AssignAsset SET EmpID = @EmpIDNew WHERE EmpID = @EmpIDOld; ", sqlConnection);
+            cmd3.Parameters.AddWithValue("@EmpIDNew", NewEmployeeID);
+            cmd3.Parameters.AddWithValue("@EmpIDOld", OldEmployeeID);
+            cmd3.ExecuteNonQuery();
+            cmd3.Dispose();
+            SqlCommand cmd4 = new SqlCommand("UPDATE AssignAsset1 SET EmpID = @EmpIDNew WHERE EmpID = @EmpIDOld; ", sqlConnection);
+            cmd4.Parameters.AddWithValue("@EmpIDNew", NewEmployeeID);
+            cmd4.Parameters.AddWithValue("@EmpIDOld", OldEmployeeID);
+            cmd4.ExecuteNonQuery();
+            cmd4.Dispose();
+            SqlCommand cmd5 = new SqlCommand("UPDATE tblAuditDocs2 SET EmpID = @EmpIDNew WHERE EmpID = @EmpIDOld; ", sqlConnection);
+            cmd5.Parameters.AddWithValue("@EmpIDNew", NewEmployeeID);
+            cmd5.Parameters.AddWithValue("@EmpIDOld", OldEmployeeID);
+            cmd5.ExecuteNonQuery();
+            cmd5.Dispose();
+            sqlConnection.Close();
+            return RedirectToAction("Index");
         }
     }
 }

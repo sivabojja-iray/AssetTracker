@@ -1,0 +1,46 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.NotWorkingAssetListModel
+
+<style>
+    #tblNotworkingAssetList th {
+        background-color: #ffc107;
+    }
+</style>
+
+
+<script>
+    $(document).ready(function () {
+        $('#tblNotworkingAssetList').DataTable({
+            "language": {
+                "zeroRecords": "No matching records found"
+            }
+        });
+    });
+</script>
+
+<table id="tblNotworkingAssetList" class="display compact table table-bordered table-primary">
+    <thead>
+        <tr>
+            <th>Team</th>
+            <th>HWSWName</th>
+            <th>SerialNumberVersionNumber</th>
+            <th>AssetType</th>
+            <th>DateofReciept</th>
+            <th>Category</th>
+            <th>AssetRemarks</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.notWorkingAssetList)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Team)</td>
+                <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                <td>@Html.DisplayFor(modelItem => item.DateofReciept)</td>
+                <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                <td>@Html.DisplayFor(modelItem => item.AssetRemarks)</td>
+            </tr>
+        }
+    </tbody>
+</table>

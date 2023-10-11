@@ -7,9 +7,13 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
 {
     public class AssignAssetApproval
     {
+        public List<AssignAsset> AssignAssets { get; set; }
+    }
+    public class AssignAsset
+    {
         public string AllocationType { get; set; }
         public bool DailyAllocation { get; set; }
-        public bool PermanentAllocation { get;set; }
+        public bool PermanentAllocation { get; set; }
         //public bool Allocation { get; set; }
         public string RequestID { get; set; }
         public string EmployeeID { get; set; }

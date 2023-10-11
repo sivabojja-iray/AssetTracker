@@ -15,44 +15,79 @@
 </style>
 
 <script>
-    $(function () {
-        $("#dataTable .DeallocateAsset").click(function () {
-            var EmployeeID = $(this).closest("tr").find("td").eq(0).html();
-            var EmployeeName = $(this).closest("tr").find("td").eq(1).html();
-            var Team = $(this).closest("tr").find("td").eq(2).html();
-            var AssetType = $(this).closest("tr").find("td").eq(3).html();
-            var HWSWName = $(this).closest("tr").find("td").eq(4).html();
-            var SerialNumberVersionNumber = $(this).closest("tr").find("td").eq(5).html();
-            var AssignDate = $(this).closest("tr").find("td").eq(6).html();
-            var Assetbelongsto = $(this).closest("tr").find("td").eq(7).html();
-            var InvoiceNo = $(this).closest("tr").find("td").eq(8).html();
-            $.ajax({
-                type: "POST",
-                url: "/AssetDeallocation/AssetDeallocateDetails",
-                data: {
-                    EmployeeID: EmployeeID,
-                    EmployeeName: EmployeeName,
-                    Team: Team,
-                    AssetType: AssetType,
-                    HWSWName: HWSWName,
-                    SerialNumberVersionNumber: SerialNumberVersionNumber,
-                    AssignDate: AssignDate,
-                    Assetbelongsto: Assetbelongsto,
-                    InvoiceNo: InvoiceNo
-                },
-                success: function (response) {
-                    alert("Your asset was successfully relocated.");
-                    window.location.href = '/AssetDeallocation/Index';
-                },
-                failure: function (response) {
-                    alert(response.responseText);
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                }
-            });
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
         });
     });
+
+    $(document).on('click', '.DeallocateAsset', function (e) {
+        e.preventDefault();
+        var table = $('#dataTable').DataTable();
+        var data = table.row($(this).parents('tr')).data();
+        $.ajax({
+            url: "/AssetDeallocation/AssetDeallocateDetails", // Replace with your controller and action method
+            data: {
+                EmployeeID: data[0],
+                EmployeeName: data[1],
+                Team: data[2],
+                AssetType: data[3],
+                HWSWName: data[4],
+                SerialNumberVersionNumber: data[5],
+                AssignDate: data[6],
+                Assetbelongsto: data[7],
+                InvoiceNo: data[8]
+            },
+            success: function (response) {
+                alert("Your asset was successfully relocated.");
+                window.location.href = '/AssetDeallocation/Index';
+            },
+             failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    });
+
+    //$(function () {
+    //    $("#dataTable .DeallocateAsset").click(function () {
+    //        var EmployeeID = $(this).closest("tr").find("td").eq(0).html();
+    //        var EmployeeName = $(this).closest("tr").find("td").eq(1).html();
+    //        var Team = $(this).closest("tr").find("td").eq(2).html();
+    //        var AssetType = $(this).closest("tr").find("td").eq(3).html();
+    //        var HWSWName = $(this).closest("tr").find("td").eq(4).html();
+    //        var SerialNumberVersionNumber = $(this).closest("tr").find("td").eq(5).html();
+    //        var AssignDate = $(this).closest("tr").find("td").eq(6).html();
+    //        var Assetbelongsto = $(this).closest("tr").find("td").eq(7).html();
+    //        var InvoiceNo = $(this).closest("tr").find("td").eq(8).html();
+    //        $.ajax({
+    //            type: "POST",
+    //            url: "/AssetDeallocation/AssetDeallocateDetails",
+    //            data: {
+    //                EmployeeID: EmployeeID,
+    //                EmployeeName: EmployeeName,
+    //                Team: Team,
+    //                AssetType: AssetType,
+    //                HWSWName: HWSWName,
+    //                SerialNumberVersionNumber: SerialNumberVersionNumber,
+    //                AssignDate: AssignDate,
+    //                Assetbelongsto: Assetbelongsto,
+    //                InvoiceNo: InvoiceNo
+    //            },
+    //            success: function (response) {
+    //                alert("Your asset was successfully relocated.");
+    //                window.location.href = '/AssetDeallocation/Index';
+    //            },
+    //            failure: function (response) {
+    //                alert(response.responseText);
+    //            },
+    //            error: function (response) {
+    //                alert(response.responseText);
+    //            }
+    //        });
+    //    });
+    //});
 
 </script>
 

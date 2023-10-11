@@ -1,0 +1,118 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AuditModel
+
+<style>
+    #tblAuditReviewReport th {
+        background-color: #ffc107;
+    }
+
+    tr {
+        text-align: center;
+    }
+
+    #scrollable-content {
+        overflow: auto;
+        height: 600px;
+        /* border: 1px solid #ccc;*/
+        padding: 10px;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('#tblAuditReviewReport').DataTable({
+        });
+    });
+
+    //function checkedOnClick(el) {
+    //    // Select all checkboxes by class
+    //    var checkboxesList = document.getElementsByClassName("checkoption");
+    //    for (var i = 0; i < checkboxesList.length; i++) {
+    //        checkboxesList.item(i).checked = false; // Uncheck all checkboxes
+    //    }
+    //    el.checked = true; // Checked clicked checkbox
+    //}
+
+    $(document).on('click', '.uploadphoto', function (e) {
+        e.preventDefault();
+        var table = $('#tblAuditReviewReport').DataTable();
+        var data = table.row($(this).parents('tr')).data();
+        $.ajax({
+            url: "/AuditReport/EditFileAuditReport", // Replace with your controller and action method
+            data: {
+                AssignID: data[0],
+                EmpID: data[1],
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (response) {
+                $("#fileuploadAuditReportModel").find(".modal-body").html(response);
+                $("#fileuploadAuditReportModel").modal('show');
+            }
+        });
+    });
+</script>
+
+<div id="scrollable-content" class="row">
+    <table id="tblAuditReviewReport" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>Assign ID</th>
+                <th>Emp ID</th>
+                <th>Employee Name</th>
+                <th>Team</th>
+                <th>Asset Belongs to</th>
+                <th>Asset Type</th>
+                <th>HWSW Name</th>
+                <th>SerialNumber VersionNumber</th>
+                <th>Assign Date</th>
+                <th>Expected Return Date</th>
+                <th>Asset Image</th>
+                <th>Upload</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.auditReviewLists)
+            {
+                <tr>
+                    <td>@item.AssignID</td>
+                    <td>@item.EmpID</td>
+                    <td>@item.EmployeeName</td>
+                    <td>@item.Team</td>
+                    <td>@item.Assetbelongsto</td>
+                    <td>@item.AssetType</td>
+                    <td>@item.HWSWName</td>
+                    <td>@item.SerialNumberVersionNumber</td>
+                    <td>@item.AssignDate</td>
+                    <td>@item.ExpectedReturnDate</td>
+                    <td><img src="@item.AssetImage" width="100" alt="" /></td>
+                    <td>
+                        <a class="uploadphoto button btn btn-primary" data-toggle="modal" data-target="#fileuploadAuditReportModel" href="javascript:void(0);">
+                            Upload
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@using (Html.BeginForm("UploadFileAuditReport", "AuditReport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div id="fileuploadAuditReportModel" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="fileuploadAuditReportModelLable" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title fs-5" id="fileuploadAuditReportModelLable">File Upload Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button id="btnuploadfile" type="submit" class="btnsubmit btn btn-primary">Upload</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

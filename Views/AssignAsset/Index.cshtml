@@ -1,10 +1,7 @@
-﻿
-@using PagedList.Mvc
-@model  PagedList.IPagedList<I_RAY_ASSET_TRACKER_MVC.Models.AssignAssetApproval>
-
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssignAssetApproval
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "AssignAsset";
     //Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
     if (Session["Role"].ToString() == "AssetManager")
     {
@@ -21,17 +18,17 @@
 
 
 <style>
-    h4 {
+    /* h4 {
         font-size: 2rem;
-    }
+    }*/
 
     .btn {
         box-shadow: 0px 0px 5px 2px #ffc107 !important;
     }
 
-        .btn:active {
+    /*.btn:active {
             transform: translateY(0.3rem);
-        }
+        }*/
 
     #tblAssignAsset th {
         background-color: #ffc107;
@@ -117,7 +114,7 @@
 
     /*  Pagination for List of Asset Request Details */
 
-    .pagination {
+    /* .pagination {
         margin-block-start: revert;
         margin-left: 3rem;
         margin-top: 1rem;
@@ -152,125 +149,83 @@
 
             ul.pagination li a:hover:not(.active) {
                 background-color: #ddd;
-            }
+            }*/
 </style>
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <script>
-    function DisplayProgressMessageApproveAsset(ctl, msg) {
-        // Turn off the "Save" button and change text
-        $(ctl).prop("disabled", true).text(msg);
-        // Gray out background on page
-        $("body").addClass("approve-progress-bg");
+    $(document).ready(function () {
+        $('#tblAssignAsset').DataTable({
+        });
+    });
 
-        // Wrap in setTimeout so the UI can update the spinners
-        setTimeout(function () {
-            $(".approve-progress").removeClass("visually-hidden");
-        }, 1);
-        $(ctl).prop("disabled", false).text(msg);
-        return true;
-    }
-
-    function DisplayProgressMessageRejectAsset(ctl, msg) {
-        // Turn off the "Save" button and change text
-        $(ctl).prop("disabled", true).text(msg);
-        // Gray out background on page
-        $("body").addClass("reject-progress-bg");
-
-        // Wrap in setTimeout so the UI can update the spinners
-        setTimeout(function () {
-            $(".reject-progress").removeClass("visually-hidden");
-        }, 1);
-        $(ctl).prop("disabled", false).text(msg);
-        return true;
-    }
 </script>
 
-<div class="text-center">
-    <h4>Assign-Asset</h4>
-</div>
+<div class="pagetitle">
+    <h1>Assign Asset</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Assign Asset</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-
-    <div class="approve-progress visually-hidden">
-        <i class="fa fa-2x fa-spinner fa-spin"></i>
-        <label>Please wait while Approving the Asset...</label>
-    </div>
-
-    <div class="reject-progress visually-hidden">
-        <i class="fa fa-2x fa-spinner fa-spin"></i>
-        <label>Please wait while Rejecting the Asset...</label>
-    </div>
-
-    <div class="row">
-        <table id="tblAssignAsset" class="table table-bordered table-primary animate__animated animate__zoomIn animate__delay-0.8s">
-            <thead>
+<div class="row">
+    <table id="tblAssignAsset" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>Request ID</th>
+                <th>EmpID</th>
+                <th>Emp Name</th>
+                <th>EmpTeam</th>
+                <th>Asset Request To?</th>
+                <th>AssetType</th>
+                <th>HW/SWName</th>
+                <th>RequestDate</th>
+                <th>Quantity</th>
+                <th>SerialNumber/ VersionNumber</th>
+                <th>Approve</th>
+                <th>Reject</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.AssignAssets.Count == 0)
+            {
                 <tr>
-                    <th>RequestID</th>
-                    <th>EmpID</th>
-                    <th>EmpName</th>
-                    <th>EmpTeam</th>
-                    <th>AssetRequestTo?</th>
-                    <th>AssetType</th>
-                    <th>HW/SWName</th>
-                    <th>RequestDate</th>
-                    <th>Quantity</th>
-                    <th>SerialNumber/VersionNumber</th>
-                    <th>Approve</th>
-                    <th>Reject</th>
+                    <td colspan="12">
+                        No Matching Records Found
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @if (Model.Count == 0)
+            }
+            else
+            {
+                foreach (var item in Model.AssignAssets)
                 {
                     <tr>
-                        <td colspan="12">
-                            No Matching Records Found
+                        <td>@Html.DisplayFor(modelItem => item.RequestID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EmployeeID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EmployeeTeam)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                        <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                        <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                        <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
+                        <td>
+                            <a id="btnApprove" class="button btn btn-success" href="@Url.Action("ApprovalAssignAsset", "AssignAsset", new { id = item.RequestID})">
+                                Approve
+                            </a>
+                        </td>
+                        <td>
+                            <a class="button btn btn-danger" href="@Url.Action("RejectAssignAsset", "AssignAsset", new { id = item.RequestID})">
+                                Reject
+                            </a>
                         </td>
                     </tr>
                 }
-                else
-                {
-                    foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@Html.DisplayFor(modelItem => item.RequestID)</td>
-                            <td>@Html.DisplayFor(modelItem => item.EmployeeID)</td>
-                            <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
-                            <td>@Html.DisplayFor(modelItem => item.EmployeeTeam)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
-                            <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
-                            <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
-                            <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
-                            <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
-                            <td>
-                                <a id="btnApprove" class="button btn btn-success" onclick="return DisplayProgressMessageApproveAsset(this, 'Approving...');" href="@Url.Action("ApprovalAssignAsset", "AssignAsset", new { id = item.RequestID})">
-                                    Approve
-                                </a>
-                            </td>
-                            <td>
-                                <a class="button btn btn-danger" onclick="return DisplayProgressMessageRejectAsset(this, 'Rejecting...');" href="@Url.Action("RejectAssignAsset", "AssignAsset", new { id = item.RequestID})">
-                                    Reject
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </div>
-
-    <div class="pagination">
-        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
-        of @Model.PageCount   @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
-    </div>
-</body>
-</html>
+            }
+        </tbody>
+    </table>
+</div>

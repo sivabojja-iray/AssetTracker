@@ -3,23 +3,23 @@
 @using PagedList.Mvc
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "EmployeeList";
     Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
 }
 
 <style>
-    h4 {
+    /* h4 {
         text-align: center;
         font-size: 2rem;
         padding-top: 3rem;
-    }
+    }*/
     /*  Pagination for List of Assets User Details */
 
-    .pagination {
+    /*.pagination {
         margin-block-start: revert;
-        margin-left: 13rem;
-        /*  margin-top: 1rem;*/
-    }
+        margin-left: 13rem;*/
+    /*  margin-top: 1rem;*/
+    /*}
 
     .pagination-container {
         margin: auto;
@@ -50,7 +50,7 @@
 
             ul.pagination li a:hover:not(.active) {
                 background-color: #ddd;
-            }
+            }*/
 
     tr {
         text-align: center;
@@ -69,35 +69,28 @@
     }
 </style>
 <script>
-    $(function () {
-        $("#tblEmplyeeList .selectemployee").click(function () {
-            /*  debugger;*/
-            var Id = $(this).closest("tr").find("td").eq(1).html();
-            $.ajax({
-                type: "POST",
-                url: "/EmployeeList/EmployeeUpdate",
-                data: '{Id: "' + Id + '" }',
-                contentType: "application/json; charset=utf-8",
-                dataType: "html",
-                success: function (response) {
-                    /* debugger;*/
-                    $("#employeeUpdateModal").find(".modal-body").html(response);
-                    $("#employeeUpdateModal").modal('show');
-                },
-                failure: function (response) {
-                    alert(response.responseText);
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                }
-            });
+    $(document).on('click', '.selectemployee', function (e) {
+        e.preventDefault();
+        var table = $('#tblEmplyeeList').DataTable();
+        var data = table.row($(this).parents('tr')).data();
+        $.ajax({
+            url: "/EmployeeList/EmployeeUpdate", // Replace with your controller and action method
+            data: {
+                Id: data[1]
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (response) {
+                $("#employeeUpdateModal").find(".modal-body").html(response);
+                $("#employeeUpdateModal").modal('show');
+            }
         });
     });
 
-   /* debugger;*/
+    /* debugger;*/
     $(function () {
         $(".btnsubmit").click(function () {
-             /* debugger;*/
+            /* debugger;*/
             var EmpID = $("#EmpID").val();
             var FirstName = $("#FirstName").val();
             var MiddleName = $("#MiddleName").val();
@@ -136,10 +129,21 @@
             });
         });
     });
+
+    $(document).ready(function () {
+        $('#tblEmplyeeList').DataTable({
+        });
+    });
 </script>
-<div class="row">
-    <h4>Employee-List</h4>
-</div>
+<div class="pagetitle">
+    <h1>Employee-List</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Employee-List</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
 
 <div id="employeeListID" class="row">
     <table id="tblEmplyeeList" class="display compact table table-bordered table-primary">
@@ -198,10 +202,6 @@
             }
         </tbody>
     </table>
-</div>
-<div class="pagination">
-    Page @(Model.PagedListEmployee.PageCount < Model.PagedListEmployee.PageNumber ? 0 : Model.PagedListEmployee.PageNumber)
-    of @Model.PagedListEmployee.PageCount @Html.PagedListPager(Model.PagedListEmployee, page => Url.Action("Index", new { page }))
 </div>
 
 <div id="employeeUpdateModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="employeeUpdateModalLable" aria-hidden="true">

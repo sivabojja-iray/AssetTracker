@@ -1,0 +1,72 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetsReviewReportsModel
+
+@{
+    ViewBag.Title = "AssetReviewReports";
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+}
+
+<style>
+   /* h4 {
+        font-size: 2rem;
+    }*/
+
+    .row {
+        margin-top: 1rem;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        // Attach an event listener to the dropdown change event
+        $("#EmployeeTeam").on("change", function () {
+            var EmployeeTeam = $(this).val();
+            var partialContainerView = $('#AssetsReviewReportspartialView'); // Get the target container
+
+            // Use AJAX to load the partial view content into the container
+            $.ajax({
+                url: "/AssetsReviewReports/AssetsReviewReportsTeamList", // Replace with your controller and action method
+                data: {
+                    EmployeeTeam: EmployeeTeam
+                },
+                success: function (result) {
+                    partialContainerView.html(result); // Load the content into the container
+                }
+            });
+        });
+    });
+
+</script>
+<div class="pagetitle">
+    <h1>Assets Review Reports</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Assets Review Reports</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+<div class="row">
+    <div class="col-md-9">
+
+    </div>
+    <div class="col-md-3">
+        <a id="btnApprove" class="button btn btn-primary" href="@Url.Action("PartialAssetReviewView", "AssetsReviewReports")">
+            Review Reports
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+
+    </div>
+    <div class="col-md-3">
+        <span>Employee Team : </span>
+    </div>
+    <div class="col-md-3">
+        @Html.DropDownListFor(m => m.EmployeeTeam, new SelectList(new[] { "FSW", "SV" }), "--Select Team--", new { @class = "form-control" })
+    </div>
+</div>
+<div class="row">
+    <div id="AssetsReviewReportspartialView">
+
+    </div>
+</div>
