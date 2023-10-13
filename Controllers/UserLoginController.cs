@@ -89,17 +89,17 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         {
             return PartialView("forgotPassword");  
         }
-        public JsonResult passwordSendtoMail(LoginModelClass loginModelClass)
+        public JsonResult passwordSendtoMail(string EmployeeID)
         {
             SqlConnection sqlConnection = new SqlConnection(constr);
-            SqlCommand cmd = new SqlCommand("select count(*) from EmployeeRegistration1 where  UserName='" + loginModelClass.EmployeeID + "' ", sqlConnection);
+            SqlCommand cmd = new SqlCommand("select count(*) from EmployeeRegistration1 where  UserName='" + EmployeeID + "' ", sqlConnection);
             sqlConnection.Open();
             int i = Convert.ToInt32(cmd.ExecuteScalar());
             sqlConnection.Close();
             if (i > 0)
             {
                 sqlConnection.Open();
-                SqlCommand cmd1 = new SqlCommand("select Mail from EmployeeList where EmpID=" + loginModelClass.EmployeeID + "", sqlConnection);
+                SqlCommand cmd1 = new SqlCommand("select Mail from EmployeeList where EmpID=" + EmployeeID + "", sqlConnection);
                 SqlDataReader dr2 = cmd1.ExecuteReader();
                 if (dr2.Read())
                 {
@@ -108,7 +108,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                 }
                 sqlConnection.Close();
                 sqlConnection.Open();
-                SqlCommand cmd2 = new SqlCommand("select Decryptpwd from EmployeeRegistration1 where UserName=" + loginModelClass.EmployeeID + "", sqlConnection);
+                SqlCommand cmd2 = new SqlCommand("select Decryptpwd from EmployeeRegistration1 where UserName=" + EmployeeID + "", sqlConnection);
                 SqlDataReader dr3 = cmd2.ExecuteReader();
                 if (dr3.Read())
                 {
@@ -121,14 +121,36 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                     mail.Priority = MailPriority.High;
                     SmtpClient smtp = new SmtpClient();
                     smtp.Send(mail);
-                    ViewBag.PasswordSenttoMail = "Password Sent to your Mail";
+                    ViewBag.ErrorMessage = "Password Sent to your Mail";
                 }
             }
             else
             {
                 ViewBag.ErrorMessage = "Please Register...";
             }
-            return Json(loginModelClass);
+            return Json(ViewBag.ErrorMessage,JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ChangeEmployeeID(string newValue) 
+        {
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            SqlCommand cmd = new SqlCommand("select Role from EmployeeList where EmpID=@EmpID", sqlConnection);
+            cmd.CommandType = CommandType.Text;
+            sqlConnection.Open();
+            cmd.Parameters.AddWithValue("@EmpID", newValue);
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.Read())
+            {
+                if (!string.IsNullOrEmpty(Convert.ToString(dr["Role"])))
+                    ViewBag.Role = Convert.ToString(dr["Role"]);
+                else
+                    ViewBag.Role = "Employee";
+            }
+            else
+            {
+                ViewBag.Role = "User Not Exit";
+            }
+            sqlConnection.Close();
+            return Json(ViewBag.Role,JsonRequestBehavior.AllowGet); 
         }
     }
 }

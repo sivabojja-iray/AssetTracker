@@ -11,7 +11,7 @@
 </style>
 <script>
     function DisplayProgressMessage() {
-        var EmployeeID = $('#EmployeeID');
+        var EmployeeID = $('#EmpID');
         if (EmployeeID.val() == '') {
             alert('Please Enter the EmployeeID.');
             return false;
@@ -28,7 +28,7 @@
             <span>Employee ID : </span>
         </div>
         <div class="col-md-4">
-            @Html.TextBoxFor(m => m.EmployeeID, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.EmpID, new { @class = "form-control" })
         </div>
         <div class="col-md-4">
             <button type="submit" onclick="return DisplayProgressMessage();" class="btn btn-primary">Asset Clearance</button>

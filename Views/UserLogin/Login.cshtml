@@ -56,7 +56,7 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="login-html animate__animated animate__zoomIn animate__delay-1s">
                 <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
-                <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+                <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Register</label>
                 <div class="login-form">
                     <div class="sign-in-htm">
                         <div class="group">
@@ -75,7 +75,7 @@
                         </div>
                         <div class="group">
                             @*<input type="submit" class="button glow-on-hover" value="Sign In">*@
-                            <button class="glow-on-hover" type="submit">Sign In</button>
+                            <button class="glow-on-hover" type="submit">Register</button>
                         </div>
                         <div class="group">
                             <h3 class="text-danger text-center">@Html.ViewData["message"]</h3>
@@ -90,23 +90,34 @@
                     </div>
                     <div class="sign-up-htm">
                         <div class="group">
-                            <label for="user" class="inputlabel label">Username</label>
-                            <input id="user" type="text" class="input">
+                           <div class="row">
+                               <div class="col-md-6">
+                                   @Html.LabelFor(model => model.EmployeeID, htmlAttributes: new { @class = "inputlabel label" })
+                                   @Html.EditorFor(model => model.EmployeeID, new { htmlAttributes = new { @class = "input" } })
+                                   @Html.ValidationMessageFor(model => model.EmployeeID, "", new { @class = "text-danger" })
+                               </div>
+                               <div class="col-md-6">
+                                   <button type="button" id="btnEmpId" class="btn btn-warning">click me</button>
+                               </div>
+                           </div>                        
                         </div>
                         <div class="group">
-                            <label for="pass" class="inputlabel label">Password</label>
-                            <input id="pass" type="password" class="input" data-type="password">
+                            @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "inputlabel label" })
+                            @Html.EditorFor(model => model.Role, new { htmlAttributes = new { @readonly = "readonly", @class = "input" } })
+                            @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
                         </div>
                         <div class="group">
-                            <label for="pass" class="inputlabel label">Repeat Password</label>
-                            <input id="pass" type="password" class="input" data-type="password">
+                            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "inputlabel label" })
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "input" } })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                         </div>
                         <div class="group">
-                            <label for="pass" class="inputlabel label">Email Address</label>
-                            <input id="pass" type="text" class="input">
+                            @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "inputlabel label" })
+                            @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "input" } })
+                            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
                         </div>
                         <div class="group">
-                            <input type="submit" class="button" value="Sign Up">
+                            <input type="submit" class="button" value="Register">
                         </div>
                         <div class="hr"></div>
                         <div class="foot-lnk">
@@ -117,36 +128,34 @@
             </div>
         </div>
     }
-    @using (Html.BeginForm("passwordSendtoMail", "UserLogin", FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        <div id="ForgotPasswordModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="ForgotPasswordModalLable" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header text-center">
-                        <div class="pagetitle">
-                            <h1>Forgot Password</h1>
-                            <nav>
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#">Login</a></li>
-                                    <li class="breadcrumb-item active">Forgot Password</li>
-                                </ol>
-                            </nav>
-                        </div><!-- End Page Title -->
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
+
+    <div id="ForgotPasswordModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="ForgotPasswordModalLable" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div class="pagetitle">
+                        <h1>Forgot Password</h1>
+                        <nav>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Login</a></li>
+                                <li class="breadcrumb-item active">Forgot Password</li>
+                            </ol>
+                        </nav>
+                    </div><!-- End Page Title -->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button id="btnpasswordsubmit" type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-    }
+    </div>
+
     <!-- Bootstrap core JavaScript-->
     <script src="~/Content/vendor/jquery/jquery.min.js"></script>
     <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -171,6 +180,45 @@
                     },
                     error: function (response) {
                         alert(response.responseText);
+                    }
+                });
+            });
+        });
+
+        $(function () {
+            $("#btnpasswordsubmit").click(function () {
+                var EmployeeID = $("#EmployeeID").val();
+                $.ajax({
+                    type: "POST",
+                    url: "/UserLogin/passwordSendtoMail",
+                    data: {
+                        EmployeeID: EmployeeID
+                    },
+                    success: function (response) {
+                        alert(response);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+
+        $(function () {
+            $("#btnEmpId").click(function () {
+                var newValue = $("#EmployeeID").val();
+                $.ajax({
+                    url: '/UserLogin/ChangeEmployeeID',
+                    type: 'POST',
+                    data: { newValue: newValue },
+                    success: function (response) {
+                        $("#Role").val(response);
+                    },
+                    error: function () {
+                        // Handle errors
                     }
                 });
             });

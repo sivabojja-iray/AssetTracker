@@ -7,6 +7,6 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
 {
     public class AssetClearanceLetterModel
     {
-        public string EmployeeID { get; set; }
+        public string EmpID { get; set; }
     }
 }

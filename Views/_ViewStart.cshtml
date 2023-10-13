@@ -3,14 +3,62 @@
     dynamic Layout;
     switch (CurrentName)
     {
+        case "UserLogin":
+            Layout = null;
+            break;
         case "User":
             Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
             break;
-        case "UserLogin":
+        case "Admin":
             Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
             break;
-        default:
-            Layout = "~/Views/Shared/_Layout.cshtml";
+        case "AllocationList":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "AssetDeallocation":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "AssetEntry":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "AssetRemarks":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "AssetsReviewReports":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "AssetTracker":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "AssignAsset":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "AttendanceList":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "AuditReport":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "Deallocation":
+            Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+            break;
+        case "EmployeeAttendance":
+            Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+            break;
+        case "EmployeeList":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "NotWorkingAssetList":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "Reports":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "UpdateAsset":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+            break;
+        case "WorkingAssetList":
+            Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
             break;
     }
 }

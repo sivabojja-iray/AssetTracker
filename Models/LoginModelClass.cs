@@ -13,5 +13,8 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
         public string Password { get; set; }
         public string EmployeeID { get; set; }
         public string Email { get; set; }
+        public string Role { get; set; }
+        [DataType(DataType.Password)]
+        public string ConfirmPassword { get; set; }
     }
 }

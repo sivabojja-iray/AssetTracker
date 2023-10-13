@@ -46,7 +46,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             cmdd.CommandType = CommandType.Text;
             cmdd.Connection = con;
             con.Open();
-            cmdd.Parameters.AddWithValue("@EmpID", assetClearanceLetterModel.EmployeeID);
+            cmdd.Parameters.AddWithValue("@EmpID", assetClearanceLetterModel.EmpID);
             SqlDataReader dr = cmdd.ExecuteReader();
             if (dr.Read())
             {
@@ -90,7 +90,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                 document.Add(para0);
                 Paragraph para18 = new Paragraph("\n");
                 document.Add(para18);
-                Paragraph para = new Paragraph("This letter to inform you that, Mr/Mrs. " + EmployeeName + ",  with Employee ID :" + assetClearanceLetterModel.EmployeeID + " has completed their tenure at I-Ray IT SOLUTIONS. I am pleased to confirm that " + EmployeeName + "has returned all company assets in their possession.");
+                Paragraph para = new Paragraph("This letter to inform you that, Mr/Mrs. " + EmployeeName + ",  with Employee ID :" + assetClearanceLetterModel.EmpID + " has completed their tenure at I-Ray IT SOLUTIONS. I am pleased to confirm that " + EmployeeName + "has returned all company assets in their possession.");
                 document.Add(para);
                 Paragraph para10 = new Paragraph("\n");
                 document.Add(para10);

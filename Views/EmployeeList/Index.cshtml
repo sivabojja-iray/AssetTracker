@@ -164,41 +164,30 @@
             </tr>
         </thead>
         <tbody>
-            @if (Model.PagedListEmployee.Count == 0)
+            @foreach (var item in Model.PagedListEmployee)
             {
                 <tr>
-                    <td colspan="9">
-                        No Matching Records Found
+                    <td>@Html.DisplayFor(modelItem => item.Sno)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmpID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.MiddleName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.LastName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Team)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Role)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Mail)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ContactNumber)</td>
+                    <td>
+                        <a class="selectemployee button btn btn-primary" data-toggle="modal" data-target="#employeeUpdateModal" href="javascript:void(0);">
+                            Select
+                        </a>
+                    </td>
+                    <td>
+                        <a class="button btn btn-danger" href="javascript:void(0);">
+                            Delete
+                        </a>
                     </td>
                 </tr>
-            }
-            else
-            {
-                foreach (var item in Model.PagedListEmployee)
-                {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Sno)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EmpID)</td>
-                        <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.MiddleName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.LastName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Team)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Role)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Mail)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ContactNumber)</td>
-                        <td>
-                            <a class="selectemployee button btn btn-primary" data-toggle="modal" data-target="#employeeUpdateModal" href="javascript:void(0);">
-                                Select
-                            </a>
-                        </td>
-                        <td>
-                            <a class="button btn btn-danger" href="javascript:void(0);">
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
-                }
             }
         </tbody>
     </table>

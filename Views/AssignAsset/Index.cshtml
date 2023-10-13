@@ -2,15 +2,15 @@
 
 @{
     ViewBag.Title = "AssignAsset";
-    //Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
-    if (Session["Role"].ToString() == "AssetManager")
-    {
-        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
-    }
-    else if (Session["Role"].ToString() == "User")
-    {
-        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
-    }
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    //if (Session["Role"].ToString() == "AssetManager")
+    //{
+    //    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    //}
+    //else if (Session["Role"].ToString() == "User")
+    //{
+    //    Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    //}
 }
 
 @Styles.Render("~/Content/css")
@@ -190,41 +190,30 @@
             </tr>
         </thead>
         <tbody>
-            @if (Model.AssignAssets.Count == 0)
+            @foreach (var item in Model.AssignAssets)
             {
                 <tr>
-                    <td colspan="12">
-                        No Matching Records Found
+                    <td>@Html.DisplayFor(modelItem => item.RequestID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmployeeID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmployeeTeam)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
+                    <td>
+                        <a id="btnApprove" class="button btn btn-success" href="@Url.Action("ApprovalAssignAsset", "AssignAsset", new { id = item.RequestID})">
+                            Approve
+                        </a>
+                    </td>
+                    <td>
+                        <a class="button btn btn-danger" href="@Url.Action("RejectAssignAsset", "AssignAsset", new { id = item.RequestID})">
+                            Reject
+                        </a>
                     </td>
                 </tr>
-            }
-            else
-            {
-                foreach (var item in Model.AssignAssets)
-                {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.RequestID)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EmployeeID)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EmployeeTeam)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Assetbelongsto)</td>
-                        <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
-                        <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
-                        <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
-                        <td>
-                            <a id="btnApprove" class="button btn btn-success" href="@Url.Action("ApprovalAssignAsset", "AssignAsset", new { id = item.RequestID})">
-                                Approve
-                            </a>
-                        </td>
-                        <td>
-                            <a class="button btn btn-danger" href="@Url.Action("RejectAssignAsset", "AssignAsset", new { id = item.RequestID})">
-                                Reject
-                            </a>
-                        </td>
-                    </tr>
-                }
             }
         </tbody>
     </table>
