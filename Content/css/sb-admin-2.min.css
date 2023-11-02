@@ -9956,7 +9956,8 @@ a:focus {
 
         #wrapper #content-wrapper #content {
             flex: 1 0 auto;
-            background: rgba(244, 237, 15, 0.08);
+            /* background: rgba(244, 237, 15, 0.08);*/
+            background: #f6f9ff;
         }
 
 .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl {
@@ -10478,6 +10479,10 @@ a:focus {
         position: relative
     }
 
+        .sidebar .nav-item:hover {
+            background: rgba(255,255,255,.1);
+            border-radius:20px;
+        }
         .sidebar .nav-item:last-child {
             margin-bottom: 1rem
         }
@@ -10865,11 +10870,11 @@ a:focus {
     }
 
     .sidebar-dark .nav-item .nav-link:active, .sidebar-dark .nav-item .nav-link:focus, .sidebar-dark .nav-item .nav-link:hover {
-        color: #fff
+        color: #ffc107;
     }
 
         .sidebar-dark .nav-item .nav-link:active i, .sidebar-dark .nav-item .nav-link:focus i, .sidebar-dark .nav-item .nav-link:hover i {
-            color: #fff
+            color: #ffc107;
         }
 
     .sidebar-dark .nav-item .nav-link[data-toggle=collapse]::after {

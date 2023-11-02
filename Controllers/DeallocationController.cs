@@ -109,18 +109,19 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                     con.Close();
                 }
             }
-            //MailMessage mailMessage = new MailMessage();
-            //mailMessage.From = new MailAddress(m);
-            //mailMessage.To.Add(new MailAddress(r));
-            //mailMessage.Subject = "Asset Deallocation Request";
-            //mailMessage.IsBodyHtml = true;
-            //mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" + "<tr>" + "<th> EmpID </th>" + "<th> EmployeeName </th>" + "<th> Team </th>" + "<th> Assetbelongsto </th>" + "<th> AssetType </th>" + "<th> HWSWName </th>" + "<th> SerialNumberVersionNumber </th>" +
-            //    "<th> InvoiceNo </th>" + "<th> AssignDate </th>" + "<th> ExpectedReturnDate </th>" + "</tr>" + "<tr>" + "<td>" + Session["username"] + "</td>" + "<td>" + EmployeeName + "</td>" + "<td>" + Team + "</td>" + "<td>" + Assetbelongsto + "</td>" + "<td>" + AssetType + "</td>" + 
-            //    "<td>" + HWSWName + "</td>" + "<td>" + SerialNumberVersionNumber + "</td>" + "<td>" + InvoiceNo + "</td>" + "<td>" + AssignDate + "</td>" + "<td>" + ReturnDate + "</tr>" + "</table>";
-            //SmtpClient smtpClient = new SmtpClient();
-            //smtpClient.Send(mailMessage);
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress(m);
+            mailMessage.To.Add(new MailAddress(r));
+            mailMessage.Subject = "Asset Deallocation Request";
+            mailMessage.IsBodyHtml = true;
+            mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" + "<tr>" + "<th> EmpID </th>" + "<th> EmployeeName </th>" + "<th> Team </th>" + "<th> Assetbelongsto </th>" + "<th> AssetType </th>" + "<th> HWSWName </th>" + "<th> SerialNumberVersionNumber </th>" +
+                "<th> InvoiceNo </th>" + "<th> AssignDate </th>" + "<th> ExpectedReturnDate </th>" + "</tr>" + "<tr>" + "<td>" + Session["username"] + "</td>" + "<td>" + EmployeeName + "</td>" + "<td>" + Team + "</td>" + "<td>" + Assetbelongsto + "</td>" + "<td>" + AssetType + "</td>" +
+                "<td>" + HWSWName + "</td>" + "<td>" + SerialNumberVersionNumber + "</td>" + "<td>" + InvoiceNo + "</td>" + "<td>" + AssignDate + "</td>" + "<td>" + ReturnDate + "</tr>" + "</table>";
+            SmtpClient smtpClient = new SmtpClient();
+            smtpClient.Send(mailMessage);
             con.Close();
-            return RedirectToAction("Index");
+            ViewBag.DeallocationRequestMessage = "The deallocate request was successfully sent..";
+            return Json(ViewBag.DeallocationRequestMessage,JsonRequestBehavior.AllowGet);
         }
     }
 }

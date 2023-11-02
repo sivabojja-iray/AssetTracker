@@ -2,6 +2,9 @@
 
 @{
     ViewBag.Title = "AssetClearanceLetter";
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    //var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
 }
 
 <style>
@@ -10,30 +13,57 @@
     }
 </style>
 <script>
-    function DisplayProgressMessage() {
-        var EmployeeID = $('#EmpID');
-        if (EmployeeID.val() == '') {
-            alert('Please Enter the EmployeeID.');
-            return false;
-        }
-        return true;
-        this.submit();
-    }
-</script>
+    $(function () {
+        $("#dismissBtn").click(function () {
+            // Hide the error message div
+            $("#errorMessage").fadeOut();
+        });
+    });
 
-@using (Html.BeginForm("AssetClearanceLetterPDF", "AssetClearanceLetter", FormMethod.Post))
+    $(function () {
+        $("#AssetClearanceLetterID").click(function () {
+            var EmpID = $('#EmpID').val();
+            if (EmpID == '') {
+                alert('Please Enter the EmployeeID.');
+                return false;
+            }
+            return true;
+            this.submit();
+        });
+    });
+</script>
+<div class="pagetitle">
+    <h1>Asset Clearance Letter - NOC</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Asset Clearance Letter - NOC</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+@using (Html.BeginForm())
 {
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-2">
             <span>Employee ID : </span>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
             @Html.TextBoxFor(m => m.EmpID, new { @class = "form-control" })
         </div>
-        <div class="col-md-4">
-            <button type="submit" onclick="return DisplayProgressMessage();" class="btn btn-primary">Asset Clearance</button>
+        <div class="col-md-2">
+            <button type="submit" id="AssetClearanceLetterID" class="btn btn-primary">Asset Clearance</button>
         </div>
     </div>
 }
-
-
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div id="errorMessage" class="alert alert-danger">
+        @errorMessage<button id="dismissBtn" type="button" class="close">
+            <span>&times;</span>
+        </button>
+    </div>
+}

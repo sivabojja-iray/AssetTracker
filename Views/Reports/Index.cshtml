@@ -21,6 +21,9 @@
         padding-left: 10px;
         padding-bottom: 10px;
     }
+    table{
+        width:100%;
+    }
 </style>
 
 <script>
@@ -153,6 +156,74 @@
             });
         });
     });
+   
+    $(document).ready(function () {
+        $("#EmployeeName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Reports/AutoCompleteEmployeeNameTextBox',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { term: request.term },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1 // Adjust as needed
+        });
+    });
+
+    $(document).ready(function () {
+        $("#EmployeeID").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Reports/AutoCompleteEmployeeIDTextBox',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { term: request.term },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1 // Adjust as needed
+        });
+    });
+
+    $(document).ready(function () {
+        $("#AssetType").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Reports/AutoCompleteAssetTypeTextBox',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { term: request.term },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1 // Adjust as needed
+        });
+    });
+
+    $(document).ready(function () {
+        $("#HWSWName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Reports/AutoCompleteHWSWNameTextBox',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { term: request.term },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1 // Adjust as needed
+        });
+    });
 </script>
 
 <div class="pagetitle">
@@ -171,7 +242,7 @@
         <div class="col-md-10">
             <table id="tblEmployeeID" cellspacing="3">
                 <tr>
-                    <td>
+                    <td width="15%">
                         <span>Employee ID :</span>
                     </td>
                     <td>
@@ -209,7 +280,7 @@
         <div class="col-md-10">
             <table id="tblAssetSerialNumber" cellspacing="3">
                 <tr>
-                    <td>
+                    <td width="15%">
                         <span>Asset SerialNo :</span>
                     </td>
                     <td>
@@ -248,7 +319,7 @@
         <div class="col-md-10">
             <table id="tblEmployeeName" cellspacing="3">
                 <tr>
-                    <td>
+                    <td width="15%">
                         <span>Employee Name :</span>
                     </td>
                     <td>
@@ -286,7 +357,7 @@
         <div class="col-md-10">
             <table id="tblAssetType" cellspacing="3">
                 <tr>
-                    <td>
+                    <td width="15%">
                         <span>Asset Type :</span>
                     </td>
                     <td>
@@ -324,7 +395,7 @@
         <div class="col-md-10">
             <table id="tblHWSWName" cellspacing="3">
                 <tr>
-                    <td>
+                    <td width="15%">
                         <span>HW/SW Name :</span>
                     </td>
                     <td>

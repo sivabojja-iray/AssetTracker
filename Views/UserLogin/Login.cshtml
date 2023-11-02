@@ -30,6 +30,9 @@
         form {
             margin-top: 4rem;
         }
+        button#btnEmpId {
+            margin-top: 35px;
+        }
     </style>
     <script>
         window.onload = function () {
@@ -75,7 +78,7 @@
                         </div>
                         <div class="group">
                             @*<input type="submit" class="button glow-on-hover" value="Sign In">*@
-                            <button class="glow-on-hover" type="submit">Register</button>
+                            <button class="glow-on-hover" name="submitButton" value="Login" type="submit">Sign In</button>
                         </div>
                         <div class="group">
                             <h3 class="text-danger text-center">@Html.ViewData["message"]</h3>
@@ -90,34 +93,33 @@
                     </div>
                     <div class="sign-up-htm">
                         <div class="group">
-                           <div class="row">
-                               <div class="col-md-6">
-                                   @Html.LabelFor(model => model.EmployeeID, htmlAttributes: new { @class = "inputlabel label" })
-                                   @Html.EditorFor(model => model.EmployeeID, new { htmlAttributes = new { @class = "input" } })
-                                   @Html.ValidationMessageFor(model => model.EmployeeID, "", new { @class = "text-danger" })
-                               </div>
-                               <div class="col-md-6">
-                                   <button type="button" id="btnEmpId" class="btn btn-warning">click me</button>
-                               </div>
-                           </div>                        
+                            <div class="row">
+                                <div class="col-md-6">
+                                    @Html.LabelFor(model => model.EmployeeID, htmlAttributes: new { @class = "inputlabel label" })
+                                    @Html.EditorFor(model => model.EmployeeID, new { htmlAttributes = new { @class = "input" } })
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" id="btnEmpId" class="btn btn-warning">click me</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="group">
                             @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "inputlabel label" })
                             @Html.EditorFor(model => model.Role, new { htmlAttributes = new { @readonly = "readonly", @class = "input" } })
-                            @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
                         </div>
                         <div class="group">
                             @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "inputlabel label" })
-                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "input" } })
-                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => model.RegisterPassword, new { htmlAttributes = new { @class = "input" } })
                         </div>
                         <div class="group">
                             @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "inputlabel label" })
                             @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "input" } })
-                            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
                         </div>
                         <div class="group">
-                            <input type="submit" class="button" value="Register">
+                            <input type="submit" id="btnRegisterId" name="submitButton" class="button" value="Register">
+                        </div>
+                        <div class="group">
+                            <h4 class="text-danger text-center">@Html.ViewData["RegisterMessage"]</h4>
                         </div>
                         <div class="hr"></div>
                         <div class="foot-lnk">
@@ -187,12 +189,16 @@
 
         $(function () {
             $("#btnpasswordsubmit").click(function () {
-                var EmployeeID = $("#EmployeeID").val();
+                var PasswordEmployeeID = $("#PasswordEmployeeID").val();
+                if (PasswordEmployeeID == '') {
+                    alert('Please Enter the EmployeeID.');
+                    return false;
+                }
                 $.ajax({
                     type: "POST",
                     url: "/UserLogin/passwordSendtoMail",
                     data: {
-                        EmployeeID: EmployeeID
+                        PasswordEmployeeID: PasswordEmployeeID
                     },
                     success: function (response) {
                         alert(response);
@@ -210,6 +216,10 @@
         $(function () {
             $("#btnEmpId").click(function () {
                 var newValue = $("#EmployeeID").val();
+                if (newValue == '') {
+                    alert('Please Enter the EmployeeID.');
+                    return false;
+                }
                 $.ajax({
                     url: '/UserLogin/ChangeEmployeeID',
                     type: 'POST',
@@ -221,6 +231,33 @@
                         // Handle errors
                     }
                 });
+            });
+        });
+
+        $(function () {
+            $("#btnRegisterId").click(function () {
+                var EmployeeID = $("#EmployeeID").val();
+                var Role = $("#Role").val();
+                var RegisterPassword = $("#RegisterPassword").val();
+                var ConfirmPassword = $("#ConfirmPassword").val();
+                if (EmployeeID == '') {
+                    alert('Please Enter the EmployeeID.');
+                    return false;
+                }
+                if (Role == '') {
+                    alert('Please Enter the Role.');
+                    return false;
+                }
+                if (RegisterPassword == '') {
+                    alert('Please Enter the Password.');
+                    return false;
+                }
+                if (ConfirmPassword == '') {
+                    alert('Please Enter the ConfirmPassword.');
+                    return false;
+                }
+                return true;
+                this.submit();
             });
         });
     </script>

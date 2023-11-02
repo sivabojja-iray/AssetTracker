@@ -15,8 +15,6 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         // GET: AssetTracker
         public ActionResult Index(AssetRequestModal asset)
         {
-            System.Threading.Thread.Sleep(2000);
-
             SqlConnection sqlConnection = new SqlConnection();
             sqlConnection.ConnectionString = @"Data Source=.\sqlexpress;Initial Catalog=AssetManagement;Integrated Security=True";
             SqlCommand cmd = new SqlCommand("select Team,EmployeeName from EmployeeList where EmpID=" + Session["username"] + "");

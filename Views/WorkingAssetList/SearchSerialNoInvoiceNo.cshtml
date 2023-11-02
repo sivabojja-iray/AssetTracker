@@ -12,6 +12,69 @@
         $('#tblSearchworkingAssetList').DataTable({
             "language": {
                 "zeroRecords": "No matching records found"
+            },
+            'columnDefs': [{
+                'targets': 9,
+                'className': 'dt-body-center',
+                'render': function (data, type, full, meta) {
+                    return '<input type="checkbox" id="chkUnUsed" value="' + $('<div/>').text(data).html() + '">';
+                }
+            },
+                {
+                    'targets': 10,
+                    'className': 'dt-body-center',
+                    'render': function (data, type, full, meta) {
+                        return '<input type="checkbox" id="chkIsReturn" value="' + $('<div/>').text(data).html() + '">';
+                    }
+                },
+                {
+                    'targets': 11,
+                    'className': 'dt-body-center',
+                    'render': function (data, type, full, meta) {
+                        return '<input type="textarea" id="AssetRemarksTextarea" value="' + $('<div/>').text(data).html() + '">';
+                    }
+                }
+            ],
+        });
+    });
+
+    $(document).ready(function () {
+        var dataTable = $('#tblSearchworkingAssetList').DataTable();
+        // Handle checkbox clicks
+        $('#tblSearchworkingAssetList tbody').on('click', 'input[type="checkbox"]', function () {
+            var checkboxesInRow = $(this).closest('tr').find('input[type="checkbox"]');
+            var isChecked = $(this).prop('checked');
+            // Uncheck checkboxes in other rows
+            dataTable.rows().nodes().to$().find('input[type="checkbox"]').prop('checked', false);
+            // Check the clicked checkbox and others in the same row
+            checkboxesInRow.prop('checked', isChecked);
+        });
+    });
+
+    $(document).ready(function () {
+        $('#tblSearchworkingAssetList tbody').on('click', '#btnAssetUpdate', function () {
+            var table = $('#tblSearchworkingAssetList').DataTable();
+            var data = table.row($(this).parents('tr')).data();
+            var UnUsed = $(this).closest('tr').find('input#chkUnUsed');
+            var IsReturn = $(this).closest('tr').find('input#chkIsReturn');
+            var Textarea = $(this).closest('tr').find('input#AssetRemarksTextarea');
+            if (UnUsed.prop('checked') && IsReturn.prop('checked') && Textarea.val() != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/WorkingAssetList/UpdateAssetWorking", // Replace with your controller and action method
+                    data: {
+                        HWSWName: data[2],
+                        SerialNumber: data[4],
+                        AssetRemarks: Textarea.val()
+                    },
+                    success: function (response) {
+                        alert(response);
+                        window.location.href = '/WorkingAssetList/Index';
+                    }
+                });
+            }
+            else {
+                alert("Please check the Unused checkbox and the IsReturn checkbox and enter the asset remarks.")
             }
         });
     });
@@ -22,13 +85,17 @@
         <tr>
             <th>Sno</th>
             <th>Team</th>
-            <th>HWSWName</th>
-            <th>HWSWDescriptionCategory</th>
-            <th>SerialNumberVersionNumber</th>
-            <th>AssetType</th>
-            <th>DateofReciept</th>
+            <th>HWSW Name</th>
+            <th>HWSW Description Category</th>
+            <th>SerialNumber VersionNumber</th>
+            <th>Asset Type</th>
+            <th>Dateof Reciept</th>
             <th>Category</th>
-            <th>InvoiceNo</th>
+            <th>Invoice No</th>
+            <th>UnUsed</th>
+            <th>IsReturn</th>
+            <th>Asset Remarks</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -44,6 +111,15 @@
                 <td>@Html.DisplayFor(modelItem => item.DateofReciept)</td>
                 <td>@Html.DisplayFor(modelItem => item.Category)</td>
                 <td>@Html.DisplayFor(modelItem => item.InvoiceNo)</td>
+                <td></td>
+                <td></td>
+                <td>
+                </td>
+                <td>
+                    <button type="button" id="btnAssetUpdate" class="btn btn-primary">
+                        Update
+                    </button>
+                </td>
             </tr>
         }
     </tbody>

@@ -1,0 +1,124 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.WorkingAssetListModel
+
+<style>
+    #tblSearchHWSWworkingAssetList th {
+        background-color: #ffc107;
+    }
+</style>
+
+
+<script>
+    $(document).ready(function () {
+        $('#tblSearchHWSWworkingAssetList').DataTable({
+            "language": {
+                "zeroRecords": "No matching records found"
+            },
+            'columnDefs': [{
+                'targets': 9,
+                'className': 'dt-body-center',
+                'render': function (data, type, full, meta) {
+                    return '<input type="checkbox" id="HWSWNamechkUnUsed" value="' + $('<div/>').text(data).html() + '">';
+                }
+            },
+                {
+                    'targets': 10,
+                    'className': 'dt-body-center',
+                    'render': function (data, type, full, meta) {
+                        return '<input type="checkbox" id="HWSWNamechkIsReturn" value="' + $('<div/>').text(data).html() + '">';
+                    }
+                },
+                {
+                    'targets': 11,
+                    'className': 'dt-body-center',
+                    'render': function (data, type, full, meta) {
+                        return '<input type="textarea" id="HWSWNameAssetRemarksTextarea" value="' + $('<div/>').text(data).html() + '">';
+                    }
+                },
+            ],
+        });
+    });
+
+    $(document).ready(function () {
+        var dataTable = $('#tblSearchHWSWworkingAssetList').DataTable();
+        // Handle checkbox clicks
+        $('#tblSearchHWSWworkingAssetList tbody').on('click', 'input[type="checkbox"]', function () {
+            var checkboxesInRow = $(this).closest('tr').find('input[type="checkbox"]');
+            var isChecked = $(this).prop('checked');
+            // Uncheck checkboxes in other rows
+            dataTable.rows().nodes().to$().find('input[type="checkbox"]').prop('checked', false);
+            // Check the clicked checkbox and others in the same row
+            checkboxesInRow.prop('checked', isChecked);
+        });
+    });
+   
+    $(document).ready(function () {      
+        $('#tblSearchHWSWworkingAssetList tbody').on('click', '.rowButton', function () {
+            var table = $('#tblSearchHWSWworkingAssetList').DataTable();
+            var data = table.row($(this).parents('tr')).data();
+            var checkboxUnUsed = $(this).closest('tr').find('input#HWSWNamechkUnUsed');
+            var checkboxIsReturn = $(this).closest('tr').find('input#HWSWNamechkIsReturn');
+            var RemarksTextarea = $(this).closest('tr').find('input#HWSWNameAssetRemarksTextarea');
+            if (checkboxUnUsed.prop('checked') && checkboxIsReturn.prop('checked') && RemarksTextarea.val() != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/WorkingAssetList/UpdateAssetWorking", // Replace with your controller and action method
+                    data: {
+                        HWSWName: data[2],
+                        SerialNumber: data[4],
+                        AssetRemarks: RemarksTextarea.val()
+                    },
+                    success: function (response) {
+                        alert(response);
+                        window.location.href = '/WorkingAssetList/Index';
+                    }
+                });
+            }
+            else {
+                alert("Please check the Unused checkbox and the IsReturn checkbox and enter the asset remarks.")
+            }
+        });
+    });
+</script>
+
+<table id="tblSearchHWSWworkingAssetList" class="display compact table table-bordered table-primary">
+    <thead>
+        <tr>
+            <th>Sno</th>
+            <th>Team</th>
+            <th>HWSW Name</th>
+            <th>HWSW Description Category</th>
+            <th>SerialNumber VersionNumber</th>
+            <th>Asset Type</th>
+            <th>Dateof Reciept</th>
+            <th>Category</th>
+            <th>Invoice No</th>
+            <th>UnUsed</th>
+            <th>IsReturn</th>
+            <th>Asset Remarks</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.workingAssetList)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Sno)</td>
+                <td>@Html.DisplayFor(modelItem => item.Team)</td>
+                <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                <td>@Html.DisplayFor(modelItem => item.HWSWDescriptionCategory)</td>
+                <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                <td>@Html.DisplayFor(modelItem => item.DateofReciept)</td>
+                <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                <td>@Html.DisplayFor(modelItem => item.InvoiceNo)</td>
+                <td></td>
+                <td></td>
+                <td>
+                </td>
+                <td>
+                    <button type="button" id="AssetUpdate" class="rowButton btn btn-primary">Update</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

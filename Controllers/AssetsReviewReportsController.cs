@@ -162,14 +162,15 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                     mailMessage.CC.Add(new MailAddress(Session["EmpMail"].ToString()));
                     mailMessage.Subject = "Report to QMS";
                     mailMessage.IsBodyHtml = true;
-                    mailMessage.Body = "Hi,This is related to Asset Review Information.<br/><br/>" + sContent + "</table>";                 
+                    mailMessage.Body = "Hi,This is related to Asset Review Information.<br/><br/>" + sContent + "</table>";
                     mailMessage.Priority = MailPriority.High;
                     SmtpClient SmtpMail = new SmtpClient();
                     SmtpMail.Send(mailMessage);
                     //Response.Redirect("~/AuditImages.aspx?SNo=" + AssignID);
                 }
             }
-            return View();
+            ViewBag.ReportMessage = "Report sent Sucessful...";
+            return Json(ViewBag.ReportMessage, JsonRequestBehavior.AllowGet);
         }
         public ActionResult PartialAssetReviewView()
         {

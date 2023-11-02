@@ -65,6 +65,39 @@
                 }
             });
         });
+
+        $("#btnAlertMailId").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/AuditReport/AssetReviewAlertMail",               
+                success: function (response) {
+                    alert(response);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $("#EmployeeName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/AuditReport/AutoCompleteEmployeeName',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { term: request.term },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1 // Adjust as needed
+        });
     });
 </script>
 @*<div class="row">
@@ -79,6 +112,21 @@
         </ol>
     </nav>
 </div><!-- End Page Title -->
+
+<div class="row">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-3">
+        <span>Assets Review Alert Mail : </span>
+    </div>
+    <div class="col-md-2">
+        <button id="btnAlertMailId" type="submit" class="button btn btn-primary">
+            <span>Alert Mail</span>
+        </button>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-3">
 

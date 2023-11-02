@@ -18,17 +18,25 @@
                 'orderable': false,
                 'className': 'dt-body-center',
                 'render': function (data, type, full, meta) {
-                    return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+                    return '<input type="checkbox" class="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
                 }
             }],
         });
+
+        $('#tblReviewReport tbody').on('click', 'input[type="checkbox"]', function () {
+            // Uncheck all checkboxes in the column
+            $('input[type="checkbox"]').prop('checked', false);
+            // Check only the clicked checkbox
+            $(this).prop('checked', true);
+        });
     });
 
-    $(document).on('click', '.editLink', function (e) {
+    $('#tblReviewReport tbody').on('click', '.editLink', function (e) {
         var table = $('#tblReviewReport').DataTable();
         var data = table.row($(this).parents('tr')).data();
+        var checkbox = $(this).closest('tr').find('input.checkbox');
         // If checkbox is checked
-        if (table.$('input[type="checkbox"]').is(":checked")) {
+        if (checkbox.prop('checked')) {
             $.ajax({
                 url: "/AssetsReviewReports/ReportToQMS", // Replace with your controller and action method
                 data: {
@@ -45,7 +53,7 @@
                     Remarks: data[11],
                 },
                 success: function (result) {
-                    alert("Report sent Sucessful..."); // Load the content into the container
+                    alert(result); // Load the content into the container
                 }
             });
         }

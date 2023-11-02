@@ -11,7 +11,8 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
         public string AssetType { get; set; }
         public string Team { get; set; }
         public string SerilaNoInvoiceNo { get; set; }
-        public List<WorkingAssetList> workingAssetList { get; set; }
+        public string HWSWName { get; set; }
+        public List<WorkingAssetList> workingAssetList { get; set; }     
 
     }
     public class WorkingAssetList 
@@ -25,5 +26,8 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
         public string DateofReciept { get; set; }
         public string Category { get; set; }
         public string InvoiceNo { get; set; }
+        public bool UnUsed { get; set; }
+        public bool IsReturn { get; set; }
+        public string AssetRemarks { get; set; }
     }
 }

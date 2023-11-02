@@ -106,12 +106,13 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             //mailMessage.To.Add(new MailAddress(Session["EmpMail"].ToString()));
             //mailMessage.Subject = "Asset is DeAllocated";
             //mailMessage.IsBodyHtml = true;
-            //mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" + "<tr>" + "<th> EmpID </th>" + "<th> EmployeeName </th>" + "<th> Team </th>" + "<th> AssetType </th>" + "<th> AssetName </th>" + "<th> AssetSerialNo </th>" + "<th> DeallocatedDate </th>" + "</tr>" + "<tr>" + "<td>" 
+            //mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" + "<tr>" + "<th> EmpID </th>" + "<th> EmployeeName </th>" + "<th> Team </th>" + "<th> AssetType </th>" + "<th> AssetName </th>" + "<th> AssetSerialNo </th>" + "<th> DeallocatedDate </th>" + "</tr>" + "<tr>" + "<td>"
             //    + EmployeeID + "</td>" + "<td>" + EmployeeName + "<td>" + Team + "<td>" + AssetType + "</td>" + "<td>" + HWSWName + "</td>" + "<td>" + SerialNumberVersionNumber + "</td>" + "<td>" + DateTime.Now.ToString() + "</td>" + "</tr>" + "</table>";
             //SmtpClient smtpClient = new SmtpClient();
             //smtpClient.Send(mailMessage);
             //mailMessage.Priority = MailPriority.High;
-            return RedirectToAction("Index");
+            ViewBag.MailMessage = "Your asset was successfully relocated.";
+            return Json(ViewBag.MailMessage, JsonRequestBehavior.AllowGet);
         }
     }
 }

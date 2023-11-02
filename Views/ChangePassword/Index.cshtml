@@ -1,0 +1,32 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.ChangePasswordModel
+
+<style>
+    .row{
+        margin-bottom:0.5rem;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-6">
+        <span>EmployeeID : </span>
+    </div>
+    <div class="col-md-6">
+        @Html.TextBoxFor(m=>m.EmployeeID, new { @readonly = "readonly", @class = "form-control" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <span>New Password : </span>
+    </div>
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.NewPassword, new {@type="password", @class = "form-control" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <span>Confirm Password : </span>
+    </div>
+    <div class="col-md-6">
+        @Html.TextBoxFor(m => m.ConfirmPassword, new { @type = "password", @class = "form-control" })
+    </div>
+</div>

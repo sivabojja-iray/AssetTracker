@@ -6,17 +6,22 @@
         $("#AssetName").on("change", function () {
             var assetBelongsToselected = $(this).val();
             var partialContainerView = $('#partialView'); // Get the target container
-
-            // Use AJAX to load the partial view content into the container
-            $.ajax({
-                url: "/NotWorkingAssetList/ReturnedAssetstoClientPartialView", // Replace with your controller and action method
-                data: {
-                    assetBelongsToselected: assetBelongsToselected
-                },
-                success: function (result) {
-                    partialContainerView.html(result); // Load the content into the container
-                }
-            });
+            if (assetBelongsToselected == "") {
+                partialContainerView.hide();
+            }
+            else {
+                // Use AJAX to load the partial view content into the container
+                $.ajax({
+                    url: "/NotWorkingAssetList/ReturnedAssetstoClientPartialView", // Replace with your controller and action method
+                    data: {
+                        assetBelongsToselected: assetBelongsToselected
+                    },
+                    success: function (result) {
+                        partialContainerView.html(result); // Load the content into the container
+                        partialContainerView.show();
+                    }
+                });
+            }
         });
     });
     function DisplayProgressMessage() {

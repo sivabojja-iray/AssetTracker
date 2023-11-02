@@ -1383,7 +1383,6 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         }
         private List<AssetTransferRecords> AssetTransferRecordHWSWNameList(string query, string HWSWName)
         {
-
             SqlConnection con = new SqlConnection(constr);
             SqlCommand cmd = new SqlCommand(query, con);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -1412,6 +1411,48 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                 list.Add(reportsModel);
             }
             return list;
+        }
+        public JsonResult AutoCompleteEmployeeNameTextBox(string term)
+        {
+            List<string> suggestions = GetSuggestionsFromDatabase(term, "select EmployeeName from EmployeeList where EmployeeName LIKE @term", "EmployeeName");
+            return Json(suggestions, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult AutoCompleteEmployeeIDTextBox(string term)
+        {
+            List<string> suggestions = GetSuggestionsFromDatabase(term, "select EmpID from EmployeeList where EmpID LIKE @term", "EmpID");
+            return Json(suggestions, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AutoCompleteAssetTypeTextBox(string term)
+        {
+            List<string> suggestions = GetSuggestionsFromDatabase(term, "select distinct(AssetType) from SaveAsset where AssetType LIKE @term", "AssetType");
+            return Json(suggestions, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AutoCompleteHWSWNameTextBox(string term)
+        {
+            List<string> suggestions = GetSuggestionsFromDatabase(term, "select distinct(HWSWName) from SaveAsset where HWSWName LIKE @term", "HWSWName");
+            return Json(suggestions, JsonRequestBehavior.AllowGet);
+        }
+        private List<string> GetSuggestionsFromDatabase(string term,string query,string columnName)
+        {
+            // Implement your database query here and return a list of suggestions
+            // Example using SqlConnection and SqlCommand (replace with your own database connection method):
+            using (SqlConnection connection = new SqlConnection(constr))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@term", term + "%");
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        List<string> suggestions = new List<string>();
+                        while (reader.Read())
+                        {
+                            suggestions.Add(reader[columnName].ToString());
+                        }
+                        return suggestions;
+                    }
+                }
+            }
         }
     }
 }

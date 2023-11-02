@@ -16,13 +16,14 @@
 </style>
 
 <script>
-    debugger;
     $(document).ready(function () {
         // Attach an event listener to the dropdown change event
         $("#AssetBelongsTo").on("change", function () {
-            debugger;
             var assetBelongsToselectedValue = $(this).val();
             $('#AssetType').empty();
+            $('#AssetType').append("<option>-- Select --</option>");
+            $('#Team').empty();
+            $('#Team').append("<option>-- Select Team --</option>");
             var partialContainer = $("#partialContainer"); // Get the target container
 
             // Use AJAX to load the partial view content into the container
@@ -30,43 +31,88 @@
                 url: "/WorkingAssetList/AssetBelongsLoadPartialView", // Replace with your controller and action method
                 data: { assetBelongsToselectedValue: assetBelongsToselectedValue },
                 success: function (result) {
-                    partialContainer.html(result); // Load the content into the container
-                    $('#Team').empty();
-                    $('#Team').append("<option>-- Select Team --</option>");
+                    partialContainer.html(result); // Load the content into the container               
                 }
             });
 
-            if ($('#AssetBelongsTo').val() != "--Select Assets Belongs To--") {
-                var RequestRaisedOptions = {};
-                RequestRaisedOptions.url = "/WorkingAssetList/AssetType";
-                RequestRaisedOptions.type = "POST";
-                RequestRaisedOptions.datatype = "json";
-                RequestRaisedOptions.contentType = "application/json";
-                RequestRaisedOptions.success = function (result) {
+            if ($('#AssetBelongsTo').val() != "--Select Assets Belongs To--")
+            {
+                if ($('#AssetBelongsTo').val() == "")
+                {
                     $('#AssetType').empty();
                     $('#AssetType').append("<option>-- Select --</option>");
-                    for (var i = 0; i < result.length; i++) {
-                        /* debugger;  */
-                        $('#AssetType').append("<option>" + result[i] + "</option>");
-                    }
-                    $('#AssetType').prop("disabled", false);
-                };
-                RequestRaisedOptions.error = function () {
-                    alert("Error in Getting AssetTypes!!");
-                };
-                $.ajax(RequestRaisedOptions);
-            } else {
+                    var Options = {};
+                    Options.url = "/WorkingAssetList/AssetTeam";
+                    Options.type = "POST";
+                    Options.datatype = "json";
+                    Options.contentType = "application/json";
+                    Options.success = function (result) {
+                        $('#Team').empty();
+                        $('#Team').append("<option>-- Select Team --</option>");
+                        for (var i = 0; i < result.length; i++) {
+                            /* debugger;  */
+                            $('#Team').append("<option>" + result[i] + "</option>");
+                        }
+                        $('#Team').prop("disabled", false);
+                    };
+                    Options.error = function () {
+                        alert("Error in Getting AssetTypes!!");
+                    };
+                    $.ajax(Options);
+                }
+                else
+                {
+                    var RequestRaisedOptions = {};
+                    RequestRaisedOptions.url = "/WorkingAssetList/AssetType";
+                    RequestRaisedOptions.type = "POST";
+                    RequestRaisedOptions.datatype = "json";
+                    RequestRaisedOptions.contentType = "application/json";
+                    RequestRaisedOptions.success = function (result)
+                    {
+                        $('#AssetType').empty();
+                        $('#AssetType').append("<option>-- Select --</option>");
+                        for (var i = 0; i < result.length; i++) {
+                            /* debugger;  */
+                            $('#AssetType').append("<option>" + result[i] + "</option>");
+                        }
+                        $('#AssetType').prop("disabled", false);
+                    };
+                    RequestRaisedOptions.error = function ()
+                    {
+                        alert("Error in Getting AssetTypes!!");
+                    };
+                    $.ajax(RequestRaisedOptions);
+
+                    var Options = {};
+                    Options.url = "/WorkingAssetList/AssetTeam";
+                    Options.type = "POST";
+                    Options.datatype = "json";
+                    Options.contentType = "application/json";
+                    Options.success = function (result) {
+                        $('#Team').empty();
+                        $('#Team').append("<option>-- Select Team --</option>");
+                        for (var i = 0; i < result.length; i++) {
+                            /* debugger;  */
+                            $('#Team').append("<option>" + result[i] + "</option>");
+                        }
+                        $('#Team').prop("disabled", false);
+                    };
+                    Options.error = function () {
+                        alert("Error in Getting AssetTypes!!");
+                    };
+                    $.ajax(Options);
+                }
+            }
+            else
+            {
                 $('#AssetType').empty();
                 $('#AssetType').prop("disabled", true);
-            }
-
-            if ($('#AssetBelongsTo').val() != "--Select Assets Belongs To--") {
-                var RequestRaisedOptions = {};
-                RequestRaisedOptions.url = "/WorkingAssetList/AssetTeam";
-                RequestRaisedOptions.type = "POST";
-                RequestRaisedOptions.datatype = "json";
-                RequestRaisedOptions.contentType = "application/json";
-                RequestRaisedOptions.success = function (result) {
+                var Options = {};
+                Options.url = "/WorkingAssetList/AssetTeam";
+                Options.type = "POST";
+                Options.datatype = "json";
+                Options.contentType = "application/json";
+                Options.success = function (result) {
                     $('#Team').empty();
                     $('#Team').append("<option>-- Select Team --</option>");
                     for (var i = 0; i < result.length; i++) {
@@ -75,13 +121,10 @@
                     }
                     $('#Team').prop("disabled", false);
                 };
-                RequestRaisedOptions.error = function () {
+                Options.error = function () {
                     alert("Error in Getting AssetTypes!!");
                 };
-                $.ajax(RequestRaisedOptions);
-            } else {
-                $('#Team').empty();
-                $('#Team').prop("disabled", true);
+                $.ajax(Options);
             }
         });
     });
@@ -123,9 +166,26 @@
                     alert("Error in Getting AssetTypes!!");
                 };
                 $.ajax(RequestRaisedOptions);
-            } else {
-                $('#Team').empty();
-                $('#Team').prop("disabled", true);
+            }
+            else {
+                var RequestRaisedOptions = {};
+                RequestRaisedOptions.url = "/WorkingAssetList/AssetTeam";
+                RequestRaisedOptions.type = "POST";
+                RequestRaisedOptions.datatype = "json";
+                RequestRaisedOptions.contentType = "application/json";
+                RequestRaisedOptions.success = function (result) {
+                    $('#Team').empty();
+                    $('#Team').append("<option>-- Select Team --</option>");
+                    for (var i = 0; i < result.length; i++) {
+                        /* debugger;  */
+                        $('#Team').append("<option>" + result[i] + "</option>");
+                    }
+                    $('#Team').prop("disabled", false);
+                };
+                RequestRaisedOptions.error = function () {
+                    alert("Error in Getting AssetTypes!!");
+                };
+                $.ajax(RequestRaisedOptions);
             }
         });
     });
@@ -157,13 +217,38 @@
     $(document).ready(function () {
         $(".btnSearchSubmit").click(function () {
             var serialNoInvoiceNo = $("#SerilaNoInvoiceNo").val();
+            var partialContainer = $("#partialContainer");
             $.ajax({
                 type: "POST",
                 url: "/WorkingAssetList/SearchSerialNoInvoiceNo",
                 data: { serialNoInvoiceNo: serialNoInvoiceNo },
                 success: function (response) {
-                    $("#SearchSerialNoInvoiceNoModal").find(".modal-body").html(response);
-                    $("#SearchSerialNoInvoiceNoModal").modal('show');
+                    partialContainer.empty();
+                    partialContainer.html(response);
+                    partialContainer.show();
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $(".btnHWSWNameSearchSubmit").click(function () {
+            var HWSWName = $("#HWSWName").val();
+            var partialContainer = $("#partialContainer");
+            $.ajax({
+                type: "POST",
+                url: "/WorkingAssetList/SearchHWSWName",
+                data: { HWSWName: HWSWName },
+                success: function (response) {
+                    partialContainer.empty();
+                    partialContainer.html(response);
+                    partialContainer.show();
                 },
                 failure: function (response) {
                     alert(response.responseText);
@@ -186,6 +271,23 @@
         return true;
         this.submit();
     }
+
+    $(document).ready(function () {
+        $("#HWSWName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/WorkingAssetList/AutoCompleteHWSWName',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { term: request.term },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1 // Adjust as needed
+        });
+    });
 </script>
 
 <div class="pagetitle">
@@ -201,7 +303,7 @@
 @using (Html.BeginForm("PDFReport", "WorkingAssetList", FormMethod.Post))
 {
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
 
         </div>
         <div class="col-md-2">
@@ -221,51 +323,41 @@
         </div>
     </div>
 }
-@using (Html.BeginForm("SerialNoInvoiceNoPDFReprot", "WorkingAssetList", FormMethod.Post))
-{
-    <div class="row">
-        <div class="col-md-3">
 
-        </div>
-        <div class="col-md-2">
-            <span>SerialNo/InvoiceNo : </span>
-        </div>
-        <div class="col-md-2">
-            @Html.TextBoxFor(m => m.SerilaNoInvoiceNo, new { @class = "form-control" })
-        </div>
-        <div class="col-md-1">
-            <button id="" type="button" class="btnSearchSubmit button btn btn-primary" data-toggle="modal" data-target="#SearchSerialNoInvoiceNoModal">
-                Search
-            </button>
-        </div>
-        <div class="col-md-1">
-            <button type="submit" class="button btn btn-primary">
-                <i class="fas fa-fw fa-file-pdf"></i>
-                <span>PDF</span>
-            </button>
-        </div>
+<div class="row">
+    <div class="col-md-2">
+
     </div>
-}
+    <div class="col-md-3">
+        <span>SerialNo/InvoiceNo : </span>
+    </div>
+    <div class="col-md-2">
+        @Html.TextBoxFor(m => m.SerilaNoInvoiceNo, new { @class = "form-control" })
+    </div>
+    <div class="col-md-1">
+        <button id="" type="button" class="btnSearchSubmit button btn btn-primary">
+            Search
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2">
+
+    </div>
+    <div class="col-md-3">
+        <span>HWSWName/DeviceName : </span>
+    </div>
+    <div class="col-md-2">
+        @Html.TextBoxFor(m => m.HWSWName, new { @class = "form-control" })
+    </div>
+    <div class="col-md-1">
+        <button type="button" class="btnHWSWNameSearchSubmit button btn btn-primary">
+            Search
+        </button>
+    </div>
+</div>
 
 <div id="partialContainer">
 
 </div>
-
-<div id="SearchSerialNoInvoiceNoModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="SearchSerialNoModalLable" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header text-center">
-                <h5 class="modal-title fs-5" id="SearchSerialNoModalLable">Reports</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-

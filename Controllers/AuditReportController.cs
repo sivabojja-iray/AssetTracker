@@ -11,6 +11,7 @@ using System.IO;
 using System.Drawing.Drawing2D;
 using System.Drawing;
 using Org.BouncyCastle.Ocsp;
+using System.Net.Mail;
 
 namespace I_RAY_ASSET_TRACKER_MVC.Controllers
 {
@@ -189,6 +190,56 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                 }
             }
             return RedirectToAction("Index");
+        }
+        public ActionResult AssetReviewAlertMail()
+        {
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            SqlCommand cmd = new SqlCommand("select TOP(5) EmpID,Mail FROM EmployeeList ORDER BY NEWID()", sqlConnection);
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            List<string> list = new List<string>();
+            foreach (DataRow row in dt.Rows)
+            {
+                list.Add(row["Mail"].ToString());
+            }
+            foreach (string item in list)
+            {
+                MailMessage mail = new MailMessage("assettracker@i-raysolutions.com", item, "Audit Alert", "Hi");
+                mail.Body = "";
+                mail.Priority = MailPriority.High;
+                SmtpClient smtp = new SmtpClient();
+                smtp.Send(mail);
+            }
+            ViewBag.AlertMailMessage = "Alert Mail Sent Successful..";
+            return Json(ViewBag.AlertMailMessage, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AutoCompleteEmployeeName(string term)
+        {
+            List<string> suggestions = GetSuggestionsFromDatabase(term, "select EmployeeName from EmployeeList where EmployeeName LIKE @term", "EmployeeName");
+            return Json(suggestions, JsonRequestBehavior.AllowGet);
+        }
+        private List<string> GetSuggestionsFromDatabase(string term, string query, string columnName)
+        {
+            // Implement your database query here and return a list of suggestions
+            // Example using SqlConnection and SqlCommand (replace with your own database connection method):
+            using (SqlConnection connection = new SqlConnection(constr))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@term", term + "%");
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        List<string> suggestions = new List<string>();
+                        while (reader.Read())
+                        {
+                            suggestions.Add(reader[columnName].ToString());
+                        }
+                        return suggestions;
+                    }
+                }
+            }
         }
     }
 }

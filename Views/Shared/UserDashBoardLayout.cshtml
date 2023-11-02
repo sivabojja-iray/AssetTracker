@@ -412,6 +412,10 @@
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Activity Log
                                 </a>
+                                <a id="ChangePasswordID" class="dropdown-item" data-toggle="modal" data-target="#ChangePasswordModal" href="javascript:void(0);">
+                                    <i class="fa fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Change Password
+                                </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -429,7 +433,9 @@
 
                     <!-- Page Heading -->
                     <!--<div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">-->@*Dashboard*@<!--</h1>
+                        <h1 class="h3 mb-0 text-gray-800">-->
+                    @*Dashboard*@
+                    <!--</h1>
                         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                             <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
                         </a>
@@ -510,6 +516,34 @@
         </div>
     </div>
 
+    @*------------------Modal PopUp For Change Password------------------------*@
+    <div id="ChangePasswordModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="ChangePasswordModalLable" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div class="pagetitle">
+                        <h1>Change Password</h1>
+                        <nav>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active">Change Password</li>
+                            </ol>
+                        </nav>
+                    </div><!-- End Page Title -->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <a id="btnChangePasswordId" class="button btn btn-primary" href="#">Change Password</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap core JavaScript-->
     <script src="~/Content/vendor/jquery/jquery.min.js"></script>
     <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -565,6 +599,67 @@
             });
         });
 
+
+        $(function () {
+            $("#ChangePasswordID").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/ChangePassword/Index",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (response) {
+                        $("#ChangePasswordModal").find(".modal-body").html(response);
+                        $("#ChangePasswordModal").modal('show');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+
+        $(function () {
+            $("#btnChangePasswordId").click(function () {
+                var NewPassword = $('#NewPassword').val();
+                var ConfirmPassword = $('#ConfirmPassword').val();
+                if (NewPassword == '') {
+                    alert('Please Enter the New Password.');
+                    return false;
+                }
+                if (ConfirmPassword == '') {
+                    alert('Please Enter the Confirm Password.');
+                    return false;
+                }
+                if (NewPassword === ConfirmPassword) {
+                    alert('Passwords match!');
+                }
+                else {
+                    alert('Passwords do not match!');
+                    return false;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/ChangePassword/PasswordChangedDetails",
+                    data: {
+                        NewPassword: NewPassword,
+                        ConfirmPassword: ConfirmPassword
+                    },
+                    success: function (response) {
+                        alert(response);
+                        $('.btn-secondary').click();
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

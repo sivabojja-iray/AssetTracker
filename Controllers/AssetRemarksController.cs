@@ -97,7 +97,6 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             mailMessage.Priority = MailPriority.High;
             SmtpClient smtp = new SmtpClient();
             smtp.Send(mailMessage);
-
             return View();
         }
     }

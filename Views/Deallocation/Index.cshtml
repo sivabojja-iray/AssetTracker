@@ -85,10 +85,8 @@
                 AssignDate: data[9],
                 ReturnDate: data[10]
             },
-            contentType: "application/json; charset=utf-8",
-            dataType: "html",
             success: function (response) {
-                alert("The deallocate request was successfully sent..");
+                alert(response);
                 window.location.href = '/Deallocation/Index';
             }
         });
@@ -204,4 +202,3 @@
     Page @(Model.Table1Data.PageCount < Model.Table1Data.PageNumber ? 0 : Model.Table1Data.PageNumber)
     of @Model.Table1Data.PageCount @Html.PagedListPager(Model.Table1Data, page => Url.Action("Index", new { page }))
 </div>*@
-
