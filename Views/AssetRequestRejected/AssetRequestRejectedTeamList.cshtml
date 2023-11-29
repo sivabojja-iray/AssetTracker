@@ -1,0 +1,45 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetRequestRejectedModel
+
+<style>
+    #tblAssetRequestReject th {
+        background-color: #ffc107;
+    }
+
+    tr {
+        text-align: center;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        var dataTable = $('#tblAssetRequestReject').DataTable();
+    });
+</script>
+
+<div class="row">
+    <table id="tblAssetRequestReject" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>Emp ID</th>
+                <th>Emp Team</th>
+                <th>Asset Team</th>
+                <th>Asset Type</th>
+                <th>HWSW Name</th>
+                <th>Request Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.assetRequestRejects)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.EmpID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmpTeam)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetTeam)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AssetType)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HWSWName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

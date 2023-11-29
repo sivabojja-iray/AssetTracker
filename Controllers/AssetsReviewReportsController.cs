@@ -103,16 +103,16 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         {
             string qms = "0";
             string sContent = string.Empty;
-            sContent = "<table border='1'>" +
-                "<tr><td>Employee ID</td><td>Employee Name</td><td>Employee Team</td>" +
-                "<td>Asset Type</td><td>H/W S/W Name</td><td>SerialNumber</td><td>Asset belongs to ?</td>" +
-                "<td>Reviewed By</td><td>Reviewed Date</td><td>Remarks</td><tr>";
+            sContent = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" +
+                "<tr><td bgcolor='#ffc107'>Employee ID</td><td bgcolor='#ffc107'>Employee Name</td><td bgcolor='#ffc107'>Employee Team</td>" +
+                "<td bgcolor='#ffc107'>Asset Type</td><td bgcolor='#ffc107'>H/W S/W Name</td><td bgcolor='#ffc107'>SerialNumber</td><td bgcolor='#ffc107'>Asset belongs to ?</td>" +
+                "<td bgcolor='#ffc107'>Reviewed By</td><td bgcolor='#ffc107'>Reviewed Date</td><td bgcolor='#ffc107'>Remarks</td><tr>";
             string UnUsed = "0";
             sContent += "<tr><td>" + EmpID + "</td><td>" + EmployeeName + "</td>" +
                               "<td>" + Team + "</td>" +
                               "<td>" + AssetType + "</td>" +
                               "<td>" + HWSWName + "</td>" +
-                              "<td>" + SerialNumber + "</td>" +
+                              "<td style='font-weight:bold;font-size:15px;'>" + SerialNumber + "</td>" +
                               "<td>" + Assetbelongsto + "</td>" +
                               "<td>" + ReviewBy + "</td>" +
                               "<td>" + ReviewDate + "</td>" +
@@ -144,7 +144,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             if (dr2.Read())
             {
                 EmpMail = dr2["Mail"].ToString();
-                Session["EmpMail"] = EmpMail;
+                //Session["EmpMail"] = EmpMail;
             }
             con.Close();
             con.Open();
@@ -159,7 +159,8 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                     MailMessage mailMessage = new MailMessage();
                     mailMessage.From = new MailAddress("assettracker@i-raysolutions.com");
                     mailMessage.To.Add(new MailAddress("raghavendra.saini@i-raysolutions.com"));
-                    mailMessage.CC.Add(new MailAddress(Session["EmpMail"].ToString()));
+                    mailMessage.To.Add(new MailAddress("phani.n@i-raysolutions.com"));
+                    mailMessage.CC.Add(new MailAddress(EmpMail));
                     mailMessage.Subject = "Report to QMS";
                     mailMessage.IsBodyHtml = true;
                     mailMessage.Body = "Hi,This is related to Asset Review Information.<br/><br/>" + sContent + "</table>";

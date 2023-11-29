@@ -11,6 +11,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
         public List<AdminTable1Model> adminTable1Model { get; set; }
         public List<AdminTable2Model> adminTable2Model { get; set; }
         public List<adminNotification> adminNotifications { get; set; }
+        public List<Notifation> adminNotificationManager { get; set; }
     }
     public class AdminTable1Model
     {

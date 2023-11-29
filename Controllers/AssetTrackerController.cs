@@ -203,39 +203,38 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                 int j = command.ExecuteNonQuery();
                 sqlConnection.Close();
 
-                //SqlCommand sqlCommand = new SqlCommand("SELECT EmployeeName,Mail FROM EmployeeList WHERE EmpID='" + Session["username"] + "'", sqlConnection);
-                //sqlConnection.Open();
-                //SqlDataReader reader = sqlCommand.ExecuteReader();
-                //string mail = null;
-                //string employeeNAme = null;
-                //if (reader.Read())
-                //{
-                //    mail = reader["Mail"].ToString();
-                //    employeeNAme = reader["EmployeeName"].ToString();
-                //    sqlConnection.Close();
-                //}
-
-                //MailMessage mailMessage = new MailMessage();
-                //mailMessage.From = new MailAddress("assettracker@i-raysolutions.com");
-                //mailMessage.To.Add(new MailAddress("siva.bojja143@gmail.com"));
-                //mailMessage.Subject = "Request Asset";
-                //mailMessage.IsBodyHtml = true;
-                //mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" +
-                //    "<tr>" + "<th> EmpID </th>" + "<th> EmployeeName </th>" +
-                //    "<th> Request Raised to ? </th>" + "<th> AssetType </th>" +
-                //    "<th> SerialNumber </th>" + "<th> HWSWName </th>" +
-                //    "<th>RequestDate </th>" + "<th> Quantity </th>" + "</tr>" +
-                //    "<tr>" + "<td>" + Session["username"] + "</td>" + "<td>" +
-                //    employeeNAme + "</td>" + "<td>" + assetRequest.RequestRaisedTo
-                //    + "</td>" + "<td>" + assetRequest.AssetType + "</td>" + "<td>"
-                //    + assetRequest.AvailableSerialNumber + "</td>" + "<td>" +
-                //    assetRequest.AssetName + "</td>" + "<td>" + assetRequest.RequestDate
-                //    + "</td>" + "<td>" + assetRequest.NumberofAssetsRequired + "</td>" + "</tr>" + "</table>";
-                //mailMessage.Priority = MailPriority.High;
-                //SmtpClient smtpClient = new SmtpClient();
-                //smtpClient.Send(mailMessage);
-
-                System.Threading.Thread.Sleep(1000);
+                SqlCommand sqlCommand = new SqlCommand("SELECT EmployeeName,Mail FROM EmployeeList WHERE EmpID='" + Session["username"] + "'", sqlConnection);
+                sqlConnection.Open();
+                SqlDataReader reader = sqlCommand.ExecuteReader();
+                string mail = null;
+                string employeeNAme = null;
+                if (reader.Read())
+                {
+                    mail = reader["Mail"].ToString();
+                    employeeNAme = reader["EmployeeName"].ToString();
+                    sqlConnection.Close();
+                }
+                MailMessage mailMessage = new MailMessage();
+                mailMessage.From = new MailAddress("assettracker@i-raysolutions.com");
+                mailMessage.To.Add(new MailAddress(mail));
+                mailMessage.To.Add("phani.n@i-raysolutions.com");
+                mailMessage.Subject = "AssetRequest";
+                mailMessage.IsBodyHtml = true;
+                mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" +
+                    "<tr>" + "<th bgcolor='#ffc107'> EmpID </th>" + "<th bgcolor='#ffc107'> EmployeeName </th>" +
+                    "<th bgcolor='#ffc107'> Request Raised to ? </th>" + "<th bgcolor='#ffc107'> AssetType </th>" +
+                    "<th bgcolor='#ffc107'> SerialNumber </th>" + "<th bgcolor='#ffc107'> HWSWName </th>" +
+                    "<th bgcolor='#ffc107'>RequestDate </th>" + "<th bgcolor='#ffc107'> Quantity </th>" + "</tr>" +
+                    "<tr>" + "<td>" + Session["username"] + "</td>" + "<td>" +
+                    employeeNAme + "</td>" + "<td>" + assetRequest.RequestRaisedTo
+                    + "</td>" + "<td>" + assetRequest.AssetType + "</td>" + "<td style='font-weight:bold;font-size:20px;'>"
+                    + assetRequest.AvailableSerialNumber + "</td>" + "<td>" +
+                    assetRequest.AssetName + "</td>" + "<td>" + assetRequest.RequestDate
+                    + "</td>" + "<td>" + assetRequest.NumberofAssetsRequired + "</td>" + "</tr>" + "</table>";
+                mailMessage.Priority = MailPriority.High;
+                SmtpClient smtpClient = new SmtpClient();
+                smtpClient.Send(mailMessage);
+                TempData["Message"] = "Asset Request Sent Successfully..";
                 return RedirectToAction("Index");
             }
             return View(assetRequest);

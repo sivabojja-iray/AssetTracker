@@ -2,15 +2,22 @@
 
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
-    //if (Session["Role"].ToString() == "AssetManager")
-    //{
-    //    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
-    //}
-    //else if (Session["Role"].ToString() == "User")
-    //{
-    //    Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
-    //}
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
 }
 
 
@@ -26,7 +33,7 @@
         box-shadow: 0px 0px 5px 2px #ffc107 !important;
     }
 
-       /* .btn:active {
+    /* .btn:active {
             transform: translateY(1rem);
         }*/
 
@@ -106,10 +113,16 @@
         this.submit();
     }
 </script>
-
-@*<div class="text-center">
-        <h4>Assign-Asset</h4>
-    </div>*@
+<div class="pagetitle">
+    <h1>Assign Asset</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item">Assign Asset</li>
+            <li class="breadcrumb-item active">Approve Assign Asset</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
 
 @using (Html.BeginForm("SaveAssignAsset", "AssignAsset", FormMethod.Post))
 {
@@ -123,7 +136,7 @@
     <div class="row">
         <div class="mx-auto col-12 col-md-10 col-lg-8">
             <div class="form-horizontal pad animate__animated animate__zoomIn animate__delay-0.8s">
-                <h4 class="text-center">Assign-Asset</h4>
+                @*<h4 class="text-center">Assign-Asset</h4>*@
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <table align="center" width="100%">
@@ -308,10 +321,10 @@
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
                                     @*<input type="submit" id="btnsendreq" value="Assign" class="button btn btn-primary btn-customized mt-4" />*@
-                                    <button type="submit" class="button btn btn-primary btn-customized mt-4" onclick="return DisplayProgressMessage(this, 'Assing...');">
-                                        Assign Asset
+                                    <button type="submit" class="btn btn-primary btn-customized mt-4" onclick="return DisplayProgressMessage(this, 'Assing...');">
+                                        <i class="fa fa-share" aria-hidden="true">Assign Asset</i>
                                     </button>
-                                    <button id="redirectButton" type="button" class="button btn btn-secondary btn-customized mt-4">Close</button>
+                                    <button id="redirectButton" type="button" class="btn btn-secondary btn-customized mt-4"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
                                 </div>
                             </div>
                         </td>

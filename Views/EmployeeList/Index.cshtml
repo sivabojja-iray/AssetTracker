@@ -178,13 +178,13 @@
                     <td>@Html.DisplayFor(modelItem => item.Mail)</td>
                     <td>@Html.DisplayFor(modelItem => item.ContactNumber)</td>
                     <td>
-                        <a class="selectemployee button btn btn-primary" data-toggle="modal" data-target="#employeeUpdateModal" href="javascript:void(0);">
-                            Select
+                        <a class="selectemployee btn btn-primary" data-toggle="modal" data-target="#employeeUpdateModal" href="javascript:void(0);">
+                            <i class="fa fa-pen-square" aria-hidden="true"></i>
                         </a>
                     </td>
                     <td>
                         <a class="button btn btn-danger" href="javascript:void(0);">
-                            Delete
+                            <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
                     </td>
                 </tr>
@@ -197,7 +197,16 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <h5 class="modal-title fs-5" id="employeeUpdateModalLable">Employee update details</h5>
+                <div class="pagetitle">
+                    <h1>Employee-List</h1>
+                    <nav>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item">Employee-List</li>
+                            <li class="breadcrumb-item active">Employee update details</li>
+                        </ol>
+                    </nav>
+                </div><!-- End Page Title -->
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -205,8 +214,8 @@
             <div class="modal-body">
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btnsubmit btn btn-primary">Update</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btnsubmit btn btn-primary"><i class="fa fa-wrench" aria-hidden="true">Update</i></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
             </div>
         </div>
     </div>

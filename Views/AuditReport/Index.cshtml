@@ -2,7 +2,22 @@
 
 @{
     ViewBag.Title = "AuditReport";
-    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
 }
 
 <style>
@@ -121,8 +136,8 @@
         <span>Assets Review Alert Mail : </span>
     </div>
     <div class="col-md-2">
-        <button id="btnAlertMailId" type="submit" class="button btn btn-primary">
-            <span>Alert Mail</span>
+        <button id="btnAlertMailId" type="submit" class="btn btn-primary">
+            <i class="fa fa-envelope" aria-hidden="true"></i><span>Alert Mail</span>
         </button>
     </div>
 </div>
@@ -139,7 +154,7 @@
     </div>
     <div class="col-md-2">
         <button id="AuditReviewEmployeeId" type="submit" class="button btn btn-primary">
-            <span>Get Details</span>
+            <i class="fa fa-search" aria-hidden="true"></i><span>Get Details</span>
         </button>
     </div>
 </div>
@@ -155,7 +170,7 @@
     </div>
     <div class="col-md-2">
         <button id="AuditReviewEmployeeName" type="submit" class="button btn btn-primary">
-            <span>Get Details</span>
+            <i class="fa fa-search" aria-hidden="true"></i><span>Get Details</span>
         </button>
     </div>
 </div>

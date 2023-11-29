@@ -1,0 +1,62 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetEntryModel
+
+<script>
+    function DisplayAssetlist(ctl, msg) {
+        var AssetListfileupload = $('#AssetListfileupload');
+        if (AssetListfileupload.val() == '') {
+            alert('Please select the File.');
+            return false;
+        }
+        return true;
+        this.submit();
+    }
+
+    //function DisplayEmployeelist(ctl, msg) {
+    //    var EmployeeListfileupload = $('#EmployeeListfileupload');
+    //    if (EmployeeListfileupload.val() == '') {
+    //        alert('Please select the File.');
+    //        return false;
+    //    }
+    //    return true;
+    //    this.submit();
+    //}
+</script>
+
+<form id="fileUploadForm" action="@Url.Action("UploadAssetList", "AssetEntry")" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="form-group col-md-5">
+            <div class="col-md-12">
+                <span>Upload Assetlist to Database :</span>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <div class="col-md-12">
+                @Html.TextBoxFor(m => m.AssetListfileupload, new { type = "file", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <div class="col-md-12">
+                <button id="fileUploadExcel" type="submit" onclick="return DisplayAssetlist(this, 'Uploading...');" class="btnsubmit btn btn-primary"><i class="fa fa-list" aria-hidden="true">AssetList</i></button>
+            </div>
+        </div>
+    </div>
+</form>
+@*<form id="fileUploadForm" action="@Url.Action("UploadEmployeelist", "AssetEntry")" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="form-group col-md-5">
+            <div class="col-md-12">
+                <span>Upload EmployeeList to Database :</span>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <div class="col-md-12">
+                @Html.TextBoxFor(m => m.EmployeeListfileupload, new { type = "file", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <div class="col-md-12">
+                <button id="fileUploadExcel" type="submit" onclick="return DisplayEmployeelist(this, 'Uploading...');" class="btnsubmit btn btn-primary">EmployeeList</button>
+            </div>
+        </div>
+    </div>
+</form>*@

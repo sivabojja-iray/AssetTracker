@@ -1,7 +1,22 @@
 ﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetsReviewReportsModel
 
 @{
-    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
 }
 
 <style>
@@ -104,12 +119,12 @@
         </div>
         <div class="col-md-2">
             <button id="TeamAssetReviewId" type="button" data-toggle="modal" data-target="#assetReviewModal" class="button btn btn-primary">
-                Assets Review
+                <i class="fa fa-search" aria-hidden="true">Assets Review</i>
             </button>
         </div>
         <div class="col-md-2">
             <button type="submit" onclick="return DisplayProgressMessage();" class="button btn btn-primary">
-                <i class="fas fa-fw fa-file-pdf"></i>
+                <i class="fa fa-arrow-circle-down" aria-hidden="true"></i><i class="fas fa-fw fa-file-pdf"></i>
                 <span>PDF</span>
             </button>
         </div>
@@ -129,12 +144,12 @@
         </div>
         <div class="col-md-2">
             <button id="EmployeeIDAssetReviewId" data-toggle="modal" data-target="#assetReviewModal" type="button" class="button btn btn-primary">
-                Assets Review
+                <i class="fa fa-search" aria-hidden="true">Assets Review</i>
             </button>
         </div>
         <div class="col-md-2">
             <button type="submit" onclick="return ValidationMessage();" class="button btn btn-primary">
-                <i class="fas fa-fw fa-file-pdf"></i>
+                <i class="fa fa-arrow-circle-down" aria-hidden="true"></i><i class="fas fa-fw fa-file-pdf"></i>
                 <span>PDF</span>
             </button>
         </div>
@@ -152,7 +167,7 @@
             <div class="modal-body">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
             </div>
         </div>
     </div>

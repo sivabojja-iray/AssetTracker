@@ -2,11 +2,28 @@
 
 @{
     ViewBag.Title = "AssetEntry";
-    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    var Role = Session["Role"] as string;
+    if (Role == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Role == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Role == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Role == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    var message = TempData["Message"] as string;
 }
 
 <style>
-  /*  h4 {
+    /*  h4 {
         font-size: 2rem;
     }*/
 
@@ -25,6 +42,10 @@
 
     .row {
         margin-bottom: 2rem;
+    }
+
+    #consumableId, #BilkId {
+        color: red;
     }
 </style>
 
@@ -180,6 +201,62 @@
         return true;
         this.submit();
     }
+
+    $(function () {
+        $("#BilkId").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/AssetEntry/BulkEntryAssets",
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#BilkIdModal").find(".modal-body").html(response);
+                    $("#BilkIdModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#consumableId").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/AssetEntry/ConsumableBulkEntryAssets",
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#consumableIdModal").find(".modal-body").html(response);
+                    $("#consumableIdModal").modal('show');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#dismissBtn").click(function () {
+            // Hide the error message div
+            $("#Message").fadeOut();
+        });
+    });
+
+    window.onload = function () {
+        var divToHide = document.getElementById('Message');
+        setTimeout(function () {
+            divToHide.style.display = 'none';
+        }, 8000);
+    };
 </script>
 
 <div class="pagetitle">
@@ -192,6 +269,26 @@
     </nav>
 </div><!-- End Page Title -->
 
+@if (!string.IsNullOrEmpty(message))
+{
+    <div id="Message" class="alert alert-success">
+        @message<button id="dismissBtn" type="button" class="close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-3"></div>
+    <div class="col-md-3">
+        <a id="consumableId" data-toggle="modal" data-target="#consumableIdModal" href="javascript:void(0);"><i class="fa fa-arrow-right" aria-hidden="true">Consumables-Bluk Entry</i></a>
+    </div>
+    <div class="col-md-3">
+        <a id="BilkId" data-toggle="modal" data-target="#BilkIdModal" href="javascript:void(0);"><i class="fa fa-arrow-right" aria-hidden="true">Bulk Entry?Click here</i></a>
+    </div>
+</div>
+
 @using (Html.BeginForm("SaveAsset", "AssetEntry", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -199,7 +296,7 @@
         <div class="mx-auto col-12 col-md-10">
             <div class="form-horizontal pad animate__animated animate__zoomIn animate__delay-0.8s">
                 @*<h4 class="text-center">Asset Entry</h4>
-                <hr />*@
+                    <hr />*@
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <table id="tblAssetEntry" align="center" width="100%">
                     <tr>
@@ -537,13 +634,70 @@
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-12">
                                     <button type="submit" class="button btn btn-primary btn-customized mt-4" onclick="return DisplayProgressMessage(this, 'SaveAsset...');">
-                                        Save Details
+                                        <i class="fa fa-cloud" aria-hidden="true">Save Details</i>
                                     </button>
                                 </div>
                             </div>
                         </td>
                     </tr>
                 </table>
+            </div>
+        </div>
+    </div>
+}
+
+<div id="BilkIdModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="BilkIdModalLable" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <div class="pagetitle">
+                    <h1>My Request-List</h1>
+                    <nav>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item">Asset Entry</li>
+                            <li class="breadcrumb-item active">Bulk Entry</li>
+                        </ol>
+                    </nav>
+                </div><!-- End Page Title -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("SaveAssetInQuantity", "AssetEntry", FormMethod.Post))
+{
+    <div id="consumableIdModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="consumableIdModalLable" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div class="pagetitle">
+                        <h1>My Request-List</h1>
+                        <nav>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item">Asset Entry</li>
+                                <li class="breadcrumb-item active">SaveAssetInQuantity</li>
+                            </ol>
+                        </nav>
+                    </div><!-- End Page Title -->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="return DisplayErrorMessage();" class="btn btn-primary"><i class="fa fa-cloud" aria-hidden="true">Save</i></button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
+                </div>
             </div>
         </div>
     </div>

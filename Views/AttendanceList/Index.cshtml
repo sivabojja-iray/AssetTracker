@@ -2,7 +2,22 @@
 
 @{
     ViewBag.Title = "AttendanceList";
-    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
 }
 
 <style>
@@ -76,7 +91,7 @@
         </div>
         <div class="form-group col-md-3">
             <div class="col-md-12">
-                <button id="fileUploadExcel" type="submit" onclick="return DisplayProgressMessage(this, 'Uploading...');" class="btnsubmit btn btn-primary">Upload</button>
+                <button id="fileUploadExcel" type="submit" onclick="return DisplayProgressMessage(this, 'Uploading...');" class="btnsubmit btn btn-primary"><i class="fa fa-upload" aria-hidden="true">Upload</i></button>
             </div>
         </div>
     </div>

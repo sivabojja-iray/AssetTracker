@@ -4,7 +4,22 @@
 
 @{
     ViewBag.Title = "AssetDeallocation";
-    Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
 }
 
 <style>
@@ -189,7 +204,7 @@
                         <td>@Html.DisplayFor(modelItem => item.ExpectedReturnDate)</td>
                         <td>
                             <a class="Deallocation button btn btn-primary" href="javascript:void(0);">
-                                Deallocation
+                                <i class="fa fa-reply" aria-hidden="true">Deallocation</i>
                             </a>
                         </td>
                     </tr>

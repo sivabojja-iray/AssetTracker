@@ -226,7 +226,7 @@ p {
         .login-form .group .button {
             background: #1161ee;
             color: #ffc107;
-            box-shadow: 0px 0px 10px 2px #ffc107;
+           /* box-shadow: 0px 0px 10px 2px #ffc107;*/
         }
 
             .login-form .group .button:active {

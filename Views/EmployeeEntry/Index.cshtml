@@ -11,9 +11,7 @@
 </style>
 
 <script>
-  /*  debugger;*/
     function registerUser() {
-      /*  debugger;*/
          var username = $('#EmployeeID').val();
          var email = $('#Mail').val();
         var firstname = $('#FirstName').val();
@@ -99,8 +97,6 @@
             </div>
         </div>
     </div>
-
-
     <div class="row">
         <div class="form-group col-md-4 ml-auto">
             @Html.Label("FirstName : ")
@@ -111,8 +107,6 @@
             </div>
         </div>
     </div>
-
-
     <div class="row">
         <div class="form-group col-md-4 ml-auto">
             @Html.Label("MiddleName : ")
@@ -123,7 +117,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="form-group col-md-4 ml-auto">
             @Html.Label("LastName : ")
@@ -134,7 +127,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="form-group col-md-4 ml-auto">
             @Html.Label("Team : ")
@@ -145,7 +137,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="form-group col-md-4 ml-auto">
             @Html.Label("Role : ")
@@ -156,7 +147,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="form-group col-md-4 ml-auto">
             @Html.Label("Mail : ")
@@ -167,7 +157,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="form-group col-md-4 ml-auto">
             @Html.Label("ContactNumber : ")
@@ -179,17 +168,16 @@
         </div>
     </div>
 </form>
-
 <div class="row">
     <div class="form-group col-md-4 ml-auto">
 
     </div>
     <div class="form-group col-md-6">
-        <button id="btnsubmit" type="submit" onclick="registerUser()" class="btn btn-primary">Submit</button>
+        <button id="btnsubmit" type="submit" onclick="registerUser()" class="btn btn-primary"><i class="fa fa-cloud" aria-hidden="true">Save</i></button>
     </div>
 </div>
 <div class="row">
-    <a id="tempEmpId" href="#">To Tranfer Data from Temp EmpID to Permanent EmpID?Click here</a>
+    <a id="tempEmpId" href="#"><i class="fa fa-arrow-right" aria-hidden="true">To Tranfer Data from Temp EmpID to Permanent EmpID?Click here</i></a>
 </div>
 <div id="tempEmployeeID">
 

@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
@@ -18,20 +19,23 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
     public class UserController : Controller
     {
         string constr = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
-       
+        string m;
+        string n;
+        string r;
         // GET: User
         public ActionResult Index()
         {
-            if (Session["username"] != null)
+            string UserID = Session["username"].ToString();
+            if (UserID != null)
             {            
                 SqlConnection con = new SqlConnection(constr);
-                SqlCommand cmd = new SqlCommand("SELECT COUNT(AssetType) FROM AssignAsset where EmpID='" + Session["username"] + "'");
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(AssetType) FROM AssignAsset where EmpID='" + UserID + "'");
                 cmd.Connection = con;
                 con.Open();
                 int i = Convert.ToInt32(cmd.ExecuteScalar());
                 ViewBag.TotalAssetsUserHave = i;
 
-                SqlCommand comnd = new SqlCommand("SELECT AssignID,EmployeeName,Assetbelongsto,AssetType,HWSWName,SerialNumberVersionNumber,AssignDate,ExpectedReturnDate FROM AssignAsset WHERE EmpID='" + Session["username"] + "'order by AssignID");
+                SqlCommand comnd = new SqlCommand("SELECT AssignID,EmployeeName,Assetbelongsto,AssetType,HWSWName,SerialNumberVersionNumber,AssignDate,ExpectedReturnDate FROM AssignAsset WHERE EmpID='" + UserID + "'order by AssignID");
                 comnd.Connection = con;
                 SqlDataAdapter adp = new SqlDataAdapter(comnd);
                 DataTable dt = new DataTable();
@@ -53,7 +57,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                     dataModels.Add(userList);
                 }
 
-                SqlCommand command = new SqlCommand("SELECT FromEmployeeName,Assetbelongsto,AssetType,HWSWName,SerialNumberVersionNumber,AssetTransferDate,FromEmpID,ToEmpID,TeamToWhichAssetisTransfered,ToEmployeeName FROM AssetTransfer where ToEmpID='" + Session["username"] + "'");
+                SqlCommand command = new SqlCommand("SELECT FromEmployeeName,Assetbelongsto,AssetType,HWSWName,SerialNumberVersionNumber,AssetTransferDate,FromEmpID,ToEmpID,TeamToWhichAssetisTransfered,ToEmployeeName FROM AssetTransfer where ToEmpID='" + UserID + "'");
                 command.Connection = con;
                 SqlDataAdapter ad = new SqlDataAdapter(command);
                 DataTable dataTable = new DataTable();
@@ -77,10 +81,32 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                     list.Add(table2Model);
                 }
 
+                SqlCommand com = new SqlCommand();
+                com.Connection = con;
+                com.CommandText = "sp_notification";
+                com.CommandType = CommandType.StoredProcedure;
+                com.Parameters.Add(new SqlParameter("@Event", SqlDbType.VarChar, 50));
+                com.Parameters["@Event"].Value = "Select";
+                SqlDataAdapter sqlda = new SqlDataAdapter(com);
+                DataTable dataTa = new DataTable();
+                sqlda.Fill(dataTa);
+                List<Notifation> dataList = new List<Notifation>();
+                foreach (DataRow row in dataTa.Rows)
+                {
+                    Notifation notifation = new Notifation();
+                    {
+                        notifation.Name = row["Name"].ToString();
+                        notifation.Notification = row["Notification111"].ToString();
+                        notifation.Date = row["Last_Update"].ToString();
+                    }
+                    dataList.Add(notifation);
+                }
+
                 var viewModal = new UserModel
                 {
                     Table1Data=dataModels,
-                    Table2Data=list
+                    Table2Data=list,
+                    userNotificationManager=dataList
                 };
                 con.Close();
                 return View(viewModal);
@@ -92,8 +118,9 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         }      
         public JsonResult EmployeeName(string selectedTeam)
         {
+            string UserID = Session["username"].ToString();
             List<string> EmployeeList = new List<string>();
-            EmployeeList = populateEmployeeListDropdown("SELECT DISTINCT EmpID,EmployeeName FROM EmployeeList WHERE Team='" + selectedTeam + "'");
+            EmployeeList = populateEmployeeListDropdown("SELECT DISTINCT EmpID,EmployeeName FROM EmployeeList WHERE Team='" + selectedTeam + "' AND EmpID NOT IN('" + UserID + "')");
             return Json(EmployeeList);
         }
         private List<string> populateEmployeeListDropdown(string query)
@@ -149,6 +176,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         }
         public ActionResult SaveTransferAsset(Table1Model userModel) 
         {
+            string UserID = Session["username"].ToString();
             SqlConnection sqlConnection = new SqlConnection(constr);
             SqlCommand cmd = new SqlCommand("INSERT INTO AssetTransfer VALUES(@FromEmployeeName,@Assetbelongsto,@AssetType,@HWSWName,@SerialNumberVersionNumber,@AssetTransferDate,@FromEmpID,@ToEmpID,@TeamToWhichAssetisTransfered,@ToEmployeeName)", sqlConnection);
             cmd.CommandType = CommandType.Text;
@@ -162,54 +190,202 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             cmd.Parameters.AddWithValue("@HWSWName", userModel.HWSWName);
             cmd.Parameters.AddWithValue("@SerialNumberVersionNumber", userModel.SerialNumberVersionNumber);
             cmd.Parameters.AddWithValue("@AssetTransferDate", DateTime.Now.ToString());
-            cmd.Parameters.AddWithValue("@FromEmpID", Session["username"]);
+            cmd.Parameters.AddWithValue("@FromEmpID", UserID);
             cmd.Parameters.AddWithValue("@ToEmpID", i);
             cmd.Parameters.AddWithValue("@TeamToWhichAssetisTransfered", userModel.AssetTransferTeam);
             cmd.Parameters.AddWithValue("@ToEmployeeName", userModel.AssetTransferEmployeeName);
             cmd.ExecuteNonQuery();
             sqlConnection.Close();
-            Thread.Sleep(1000);
+            TempData["TransferAssetMessage"] = "Asset Transfer Successfully..";
+            SqlCommand cmd5 = new SqlCommand("SELECT Mail FROM EmployeeList WHERE EmpID='" + i + "'", sqlConnection);
+            SqlCommand cmd6 = new SqlCommand("SELECT Mail FROM EmployeeList WHERE EmpID='" + UserID + "'", sqlConnection);
+            sqlConnection.Open();
+            SqlDataReader dr = cmd5.ExecuteReader();
+            if (dr.Read())
+            {
+                n = dr["Mail"].ToString();
+                sqlConnection.Close();
+                sqlConnection.Open();
+                SqlDataReader dr2 = cmd6.ExecuteReader();
+                if (dr2.Read())
+                {
+                    m = dr2["Mail"].ToString();
+                    sqlConnection.Close();
+                }
+                MailMessage mailMessage = new MailMessage();
+                mailMessage.From = new MailAddress("assettracker@i-raysolutions.com");
+                mailMessage.To.Add(new MailAddress(n));
+                mailMessage.To.Add(new MailAddress(m));
+                mailMessage.Subject = "Asset Transfer Request";
+                mailMessage.IsBodyHtml = true;
+                mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" + "<tr>" + "<th bgcolor='#ffc107'> FromEmloyeeName </th>" + "<th bgcolor='#ffc107'> Assetbelongsto </th>" + "<th bgcolor='#ffc107'> AssetType </th>" + "<th bgcolor='#ffc107'> HWSWName </th>" + "<th bgcolor='#ffc107'> SerialNumber/VersionNumber </th>" + "<th bgcolor='#ffc107'> FromEmpID </th>" + "<th bgcolor='#ffc107'> ToEmpID </th>" + "<th bgcolor='#ffc107'> Asset is being Transferred </th>" + "<th bgcolor='#ffc107'> EmployeeName </th>" + "</tr>" +
+                    "<tr>" + "<td>" + userModel.EmployeeName + "</td>" + "<td>" + userModel.Assetbelongsto + "</td>" + "<td>" + userModel.AssetType + "</td>" + "<td>" + userModel.HWSWName + "</td>" + "<td style='font-weight:bold;font-size:15px;'>" + userModel.SerialNumberVersionNumber + "</td>" + "<td>" + UserID + "</td>" + "<td>" + i + "</td>" + "<td>" + userModel.AssetTransferTeam + "</td>" + "<td>" + userModel.AssetTransferEmployeeName + "</td>" + "</tr>" + "</table>";
+                SmtpClient smtpClient = new SmtpClient();
+                smtpClient.Send(mailMessage);
+                sqlConnection.Close();
+            }         
             return RedirectToAction("Index"); 
         }
-        public ActionResult SaveTransferAssetFromEmployee(int? id,Table2Model table2Model)
+        public ActionResult SaveTransferAssetFromEmployee(int fromEmpID, string serialnumber, Table2Model table2Model)
         {
+            string UserID = Session["username"].ToString();
             SqlConnection sqlConnection = new SqlConnection(constr);
-            SqlCommand cmd = new SqlCommand("select ToEmpID,ToEmployeeName,TeamToWhichAssetisTransfered,SerialNumberVersionNumber from AssetTransfer where FromEmpID='" + id + "'", sqlConnection);
+            SqlCommand cmd = new SqlCommand("select FromEmployeeName,Assetbelongsto,AssetType,HWSWName,SerialNumberVersionNumber,AssetTransferDate,FromEmpID,ToEmpID,TeamToWhichAssetisTransfered,ToEmployeeName from AssetTransfer where SerialNumberVersionNumber='" + serialnumber + "'and FromEmpID='" + fromEmpID + "'", sqlConnection);
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
-            table2Model.ToEmpID = dt.Rows[0][0].ToString();
-            table2Model.ToEmployeeName = dt.Rows[0][1].ToString();
-            table2Model.TeamToWhichAssetisTransfered = dt.Rows[0][2].ToString();
-            table2Model.SerialNumberVersionNumber = dt.Rows[0][3].ToString();
-            SqlCommand command = new SqlCommand("UPDATE AssignAsset SET EmpID='" + table2Model.ToEmpID + "',EmployeeName='" + table2Model.ToEmployeeName + "',Team='" + table2Model.TeamToWhichAssetisTransfered + "' where EmpID='" + id + "' and SerialNumberVersionNumber='" + table2Model.SerialNumberVersionNumber + "'", sqlConnection);
+            table2Model.FromEmployeeName = dt.Rows[0][0].ToString();
+            table2Model.Assetbelongsto = dt.Rows[0][1].ToString();
+            table2Model.AssetType = dt.Rows[0][2].ToString();
+            table2Model.HWSWName = dt.Rows[0][3].ToString();
+            table2Model.SerialNumberVersionNumber = dt.Rows[0][4].ToString();
+            table2Model.AssetTransferDate = dt.Rows[0][5].ToString();
+            table2Model.FromEmpID = dt.Rows[0][6].ToString();
+            table2Model.ToEmpID = dt.Rows[0][7].ToString();
+            table2Model.TeamToWhichAssetisTransfered = dt.Rows[0][8].ToString();
+            table2Model.ToEmployeeName = dt.Rows[0][9].ToString();
+            SqlCommand command = new SqlCommand("UPDATE AssignAsset SET EmpID='" + table2Model.ToEmpID + "',EmployeeName='" + table2Model.ToEmployeeName + "',Team='" + table2Model.TeamToWhichAssetisTransfered + "' where EmpID='" + table2Model.FromEmpID + "' and SerialNumberVersionNumber='" + serialnumber + "'", sqlConnection);
             sqlConnection.Open();
             command.CommandType = CommandType.Text;
             command.ExecuteNonQuery();
             sqlConnection.Close();
 
-            SqlCommand sql = new SqlCommand("DELETE FROM AssetTransfer WHERE SerialNumberVersionNumber='" + table2Model.SerialNumberVersionNumber + "' and FromEmpID='" + id + "'", sqlConnection);
+            SqlCommand cmd8 = new SqlCommand("INSERT INTO AssetTransferRecords VALUES(@FromEmpID,@FromEmployeeName,@Assetbelongsto,@AssetType,@HWSWName,@SerialNumberVersionNumber,@AssetTransferDate,@ToEmpID,@TeamToWhichAssetisTransfered,@ToEmployeeName)", sqlConnection);
+            cmd8.CommandType = CommandType.Text;
+            cmd8.Parameters.AddWithValue("@FromEmpID", table2Model.FromEmpID);
+            cmd8.Parameters.AddWithValue("@FromEmployeeName", table2Model.FromEmployeeName);
+            cmd8.Parameters.AddWithValue("@Assetbelongsto", table2Model.Assetbelongsto);
+            cmd8.Parameters.AddWithValue("@AssetType", table2Model.AssetType);
+            cmd8.Parameters.AddWithValue("@HWSWName", table2Model.HWSWName);
+            cmd8.Parameters.AddWithValue("@SerialNumberVersionNumber", table2Model.SerialNumberVersionNumber);
+            cmd8.Parameters.AddWithValue("@AssetTransferDate", table2Model.AssetType);
+            cmd8.Parameters.AddWithValue("@ToEmpID", table2Model.ToEmpID);
+            cmd8.Parameters.AddWithValue("@TeamToWhichAssetisTransfered", table2Model.TeamToWhichAssetisTransfered);
+            cmd8.Parameters.AddWithValue("@ToEmployeeName", table2Model.ToEmployeeName);
+            sqlConnection.Open();
+            cmd8.ExecuteNonQuery();
+            sqlConnection.Close();
+
+            SqlCommand sql = new SqlCommand("DELETE FROM AssetTransfer WHERE SerialNumberVersionNumber='" + serialnumber + "' and FromEmpID='" + fromEmpID + "'", sqlConnection);
             sqlConnection.Open();
             sql.CommandType = CommandType.Text;
             sql.ExecuteNonQuery();
             sqlConnection.Close();
 
+            SqlCommand cmd5 = new SqlCommand("SELECT Mail FROM EmployeeList WHERE EmpID='" + UserID + "'", sqlConnection);
+            SqlCommand cmd6 = new SqlCommand("SELECT Mail FROM EmployeeList WHERE EmployeeName='" + table2Model.FromEmployeeName + "'", sqlConnection);
+            SqlCommand cmd7 = new SqlCommand("SELECT Mail FROM EmployeeList WHERE Role='Manager' AND Team='" + table2Model.TeamToWhichAssetisTransfered + "'", sqlConnection);
+            sqlConnection.Open();
+            SqlDataReader dr = cmd5.ExecuteReader();
+            if (dr.Read())
+            {
+                m = dr["Mail"].ToString();
+                sqlConnection.Close();
+            }
+            sqlConnection.Open();
+            SqlDataReader dr2 = cmd6.ExecuteReader();
+            if (dr2.Read())
+            {
+                n = dr2["Mail"].ToString();
+                sqlConnection.Close();
+            }
+            sqlConnection.Open();
+            SqlDataReader dr3 = cmd7.ExecuteReader();
+            if (dr3.Read())
+            {
+                r = dr3["Mail"].ToString();
+                sqlConnection.Close();
+            }
+            else
+            {
+                r = "phani.n@i-raysolutions.com";
+            }
+            TempData["TransferAssetMessage"] = "Tranfer asset approval successfully..";
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("assettracker@i-raysolutions.com");
+            mailMessage.To.Add(new MailAddress(n));
+            mailMessage.To.Add(new MailAddress(m));
+            mailMessage.To.Add(new MailAddress(r));
+            mailMessage.To.Add("phani.n@i-raysolutions.com");
+            mailMessage.Subject = "Asset Request has been Aproved";
+            mailMessage.IsBodyHtml = true;
+            mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" +
+                "<tr>" + "<th bgcolor='#ffc107'> FromEmloyeeName </th>" + "<th bgcolor='#ffc107'> Assetbelongsto </th>" + "<th bgcolor='#ffc107'> AssetType </th>" + "<th bgcolor='#ffc107'> HWSWName </th>" + "<th bgcolor='#ffc107'> SerialNumber/VersionNumber </th>" + "<th bgcolor='#ffc107'> FromEmpID </th>" + "<th bgcolor='#ffc107'> ToEmpID </th>" + "<th bgcolor='#ffc107'> Asset is being Transferred </th>" + "<th bgcolor='#ffc107'> EmployeeName </th>" + "</tr>" +
+                "<tr>" + "<td>" + table2Model.FromEmployeeName + "</td>" + "<td>" + table2Model.Assetbelongsto + "</td>" + "<td>" + table2Model.AssetType + "</td>" + "<td>" + table2Model.HWSWName + "</td>" + "<td style='font-weight:bold;font-size:15px;'>" + table2Model.SerialNumberVersionNumber + "</td>" + "<td>" + table2Model.FromEmpID + "</td>" + "<td>" + table2Model.ToEmpID + "</td>" + "<td>" + table2Model.TeamToWhichAssetisTransfered + "</td>" + "<td>" + table2Model.ToEmployeeName + "</td>" + "</tr>" + "</table>";
+            SmtpClient smtpClient = new SmtpClient();
+            smtpClient.Send(mailMessage);
             return RedirectToAction("Index");
         }
-        public ActionResult RejectTransferAssetFromEmployee(int? id, Table2Model table2Model)
+        public ActionResult RejectTransferAssetFromEmployee(int fromEmpID, string serialnumber, Table2Model table2Model)
         {
+            string UserID = Session["username"].ToString();
             SqlConnection sqlConnection = new SqlConnection(constr);
-            SqlCommand cmd = new SqlCommand("select SerialNumberVersionNumber from AssetTransfer where FromEmpID='" + id + "'", sqlConnection);
+            SqlCommand cmd = new SqlCommand("select FromEmployeeName,Assetbelongsto,AssetType,HWSWName,SerialNumberVersionNumber,AssetTransferDate,FromEmpID,ToEmpID,TeamToWhichAssetisTransfered,ToEmployeeName from AssetTransfer where SerialNumberVersionNumber='" + serialnumber + "'and FromEmpID='" + fromEmpID + "'", sqlConnection);
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
-            table2Model.SerialNumberVersionNumber = dt.Rows[0][0].ToString();
+            table2Model.FromEmployeeName = dt.Rows[0][0].ToString();
+            table2Model.Assetbelongsto = dt.Rows[0][1].ToString();
+            table2Model.AssetType = dt.Rows[0][2].ToString();
+            table2Model.HWSWName = dt.Rows[0][3].ToString();
+            table2Model.SerialNumberVersionNumber = dt.Rows[0][4].ToString();
+            table2Model.AssetTransferDate = dt.Rows[0][5].ToString();
+            table2Model.FromEmpID = dt.Rows[0][6].ToString();
+            table2Model.ToEmpID = dt.Rows[0][7].ToString();
+            table2Model.TeamToWhichAssetisTransfered = dt.Rows[0][8].ToString();
+            table2Model.ToEmployeeName = dt.Rows[0][9].ToString();
 
-            SqlCommand sql = new SqlCommand("DELETE FROM AssetTransfer WHERE SerialNumberVersionNumber='" + table2Model.SerialNumberVersionNumber + "' and FromEmpID='" + id + "'", sqlConnection);
+            SqlCommand sql = new SqlCommand("DELETE FROM AssetTransfer WHERE SerialNumberVersionNumber='" + serialnumber + "' and FromEmpID='" + fromEmpID + "'", sqlConnection);
             sqlConnection.Open();
             sql.CommandType = CommandType.Text;
             sql.ExecuteNonQuery();
             sqlConnection.Close();
+
+            SqlCommand cmd5 = new SqlCommand("SELECT Mail FROM EmployeeList WHERE EmpID='" + UserID + "'", sqlConnection);
+            SqlCommand cmd6 = new SqlCommand("SELECT Mail FROM EmployeeList WHERE EmpID='" + fromEmpID + "'", sqlConnection);
+            SqlCommand cmd7 = new SqlCommand("SELECT Mail FROM EmployeeList WHERE Role='Manager' AND Team='" + table2Model.TeamToWhichAssetisTransfered + "'", sqlConnection);
+            sqlConnection.Open();
+            SqlDataReader dr = cmd5.ExecuteReader();
+            if (dr.Read())
+            {
+                m = dr["Mail"].ToString();
+                sqlConnection.Close();
+            }
+            sqlConnection.Open();
+            SqlDataReader dr2 = cmd6.ExecuteReader();
+            if (dr2.Read())
+            {
+                n = dr2["Mail"].ToString();
+                sqlConnection.Close();
+            }
+            sqlConnection.Open();
+            SqlDataReader dr3 = cmd7.ExecuteReader();
+            if (dr3.Read())
+            {
+                r = dr3["Mail"].ToString();
+                sqlConnection.Close();
+            }
+            else
+            {
+                r = "phani.n@i-raysolutions.com";
+            }
+
+            TempData["RejectTransferAssetMessage"] = "Asset Transfer has been Rejected..";
+
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("assettracker@i-raysolutions.com");
+            mailMessage.To.Add(new MailAddress(n));
+            mailMessage.To.Add(new MailAddress(m));
+            mailMessage.To.Add(new MailAddress(r));
+            mailMessage.To.Add("phani.n@i-raysolutions.com");
+            mailMessage.Subject = "Asset Request has been Rejected";
+            mailMessage.IsBodyHtml = true;
+            mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" +
+                "<tr>" + "<th bgcolor='#ffc107'> FromEmloyeeName </th>" + "<th bgcolor='#ffc107'> Assetbelongsto </th>" + "<th bgcolor='#ffc107'> AssetType </th>" + "<th bgcolor='#ffc107'> HWSWName </th>" + "<th bgcolor='#ffc107'> SerialNumber/VersionNumber </th>" + "<th bgcolor='#ffc107'> FromEmpID </th>" + "<th bgcolor='#ffc107'> ToEmpID </th>" + "<th bgcolor='#ffc107'> Asset is being Transferred </th>" + "<th bgcolor='#ffc107'> EmployeeName </th>" + "</tr>" +
+                "<tr>" + "<td>" + table2Model.FromEmployeeName + "</td>" + "<td>" + table2Model.Assetbelongsto + "</td>" + "<td>" + table2Model.AssetType + "</td>" + "<td>" + table2Model.HWSWName + "</td>" + "<td style='font-weight:bold;font-size:15px;'>" + table2Model.SerialNumberVersionNumber + "</td>" + "<td>" + table2Model.FromEmpID + "</td>" + "<td>" + table2Model.ToEmpID + "</td>" + "<td>" + table2Model.TeamToWhichAssetisTransfered + "</td>" + "<td>" + table2Model.ToEmployeeName + "</td>" + "</tr>" + "</table>";
+            SmtpClient smtpClient = new SmtpClient();
+            smtpClient.Send(mailMessage);
+
             return RedirectToAction("Index");
         }
     }

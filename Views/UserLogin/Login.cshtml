@@ -1,11 +1,5 @@
 ﻿@model I_RAY_ASSET_TRACKER_MVC.Models.LoginModelClass
 
-@*@{
-        ViewBag.Title = "Login";
-        //Layout = "~/Views/Shared/_Layout.cshtml";
-    }*@
-
-
 @Styles.Render("~/Content/css")
 @Scripts.Render("~/bundles/modernizr")
 
@@ -32,6 +26,9 @@
         }
         button#btnEmpId {
             margin-top: 35px;
+        }
+        #RememberMeId{
+            color:white;
         }
     </style>
     <script>
@@ -74,7 +71,7 @@
                         </div>
                         <div class="group">
                             <input id="check" type="checkbox" class="inputlabel check" checked>
-                            <label for="check"><span class="icon"></span> Keep me Signed in</label>
+                            <label id="RememberMeId" for="check"><span class="icon"></span> Keep me Signed in</label>
                         </div>
                         <div class="group">
                             @*<input type="submit" class="button glow-on-hover" value="Sign In">*@

@@ -10,6 +10,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
     {
         public List<Table1Model> Table1Data { get; set; }
         public List<Table2Model> Table2Data { get; set; }
+        public List<Notifation> userNotificationManager { get; set; }
     }
     public class Table1Model
     {

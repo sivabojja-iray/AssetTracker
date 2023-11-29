@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var username = Session["EmployeeName"] as string;
+}
+
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -32,9 +36,9 @@
     @Scripts.Render("~/bundles/modernizr")
 
     <style>
-        .btn {
+       /* .btn {
             box-shadow: 0px 0px 5px 2px #ffc107 !important;
-        }
+        }*/
 
         .submit-progress-bg {
             background-color: lightgray;
@@ -104,7 +108,7 @@
 </head>
 <body id="page-top">
     <div id="spinner-overlay">
-        <img height="300" width="300" src="~/Images/Icon/lodinggif.gif" alt="Loading..." />
+        <img height="200" width="200" src="~/Images/Icon/lodinggif.gif" alt="Loading..." />
     </div>
 
     <div class="submit-progress visually-hidden">
@@ -393,7 +397,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="employeename">@Session["EmployeeName"]</span>
+                                <span class="employeename">@username</span>
                                 <img class="img-profile rounded-circle"
                                      src="~/Content/img/undraw_profile.svg">
                             </a>
@@ -483,8 +487,8 @@
                 </div>
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
-                    <button class="button btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="button btn btn-primary" href="~/UserLogin/Login">Logout</a>
+                    <button class="button btn btn-secondary" type="button" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Cancel</i></button>
+                    <a class="btn btn-primary" href="~/UserLogin/Signout"><i class="fa fa-sign-out-alt" aria-hidden="true">Logout</i></a>
                 </div>
             </div>
         </div>
@@ -510,7 +514,7 @@
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
                 </div>
             </div>
         </div>
@@ -537,7 +541,7 @@
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
                     <a id="btnChangePasswordId" class="button btn btn-primary" href="#">Change Password</a>
                 </div>
             </div>
@@ -566,6 +570,9 @@
     <script src="~/Scripts/jquery-3.4.1.min.js"></script>
     <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+
+    <!-- Auto complete textbox scripts -->
+    <script src="~/Scripts/jquery-ui-1.13.2.min.js"></script>
 
     <script>
         function preventBack() { window.history.forward(); }

@@ -2,7 +2,22 @@
 
 @{
     ViewBag.Title = "AssetReviewReports";
-    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
 }
 
 <style>
@@ -22,15 +37,22 @@
             var partialContainerView = $('#AssetsReviewReportspartialView'); // Get the target container
 
             // Use AJAX to load the partial view content into the container
-            $.ajax({
-                url: "/AssetsReviewReports/AssetsReviewReportsTeamList", // Replace with your controller and action method
-                data: {
-                    EmployeeTeam: EmployeeTeam
-                },
-                success: function (result) {
-                    partialContainerView.html(result); // Load the content into the container
-                }
-            });
+            if (EmployeeTeam == '') {
+                partialContainerView.hide();
+                alert("Please select the Team");              
+            }
+            else {
+                $.ajax({
+                    url: "/AssetsReviewReports/AssetsReviewReportsTeamList", // Replace with your controller and action method
+                    data: {
+                        EmployeeTeam: EmployeeTeam
+                    },
+                    success: function (result) {
+                        partialContainerView.html(result); // Load the content into the container
+                        partialContainerView.show();
+                    }
+                });
+            }
         });
     });
 
@@ -50,7 +72,7 @@
     </div>
     <div class="col-md-3">
         <a id="btnApprove" class="button btn btn-primary" href="@Url.Action("PartialAssetReviewView", "AssetsReviewReports")">
-            Review Reports
+            <i class="fa fa-reply" aria-hidden="true">Review Reports</i>
         </a>
     </div>
 </div>

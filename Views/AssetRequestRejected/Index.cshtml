@@ -1,0 +1,63 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetRequestRejectedModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+}
+
+<style>
+    .row{
+        margin-top:1rem;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        // Attach an event listener to the dropdown change event
+        $("#Team").on("change", function () {
+            var Team = $(this).val();
+            var partialContainerView = $('#AssetRequestRejectedListpartialView'); // Get the target container
+
+            // Use AJAX to load the partial view content into the container
+            if (Team == '') {
+                partialContainerView.hide();
+                alert("Please select the Team");
+            }
+            else {
+                $.ajax({
+                    url: "/AssetRequestRejected/AssetRequestRejectedTeamList", // Replace with your controller and action method
+                    data: {
+                        Team: Team
+                    },
+                    success: function (result) {
+                        partialContainerView.html(result); // Load the content into the container
+                        partialContainerView.show();
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<div class="pagetitle">
+    <h1>Asset Request-Rejected List</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Assign Asset</a></li>
+            <li class="breadcrumb-item active">Asset Request Rejected List</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-3 form-group"><span>Asset belongs to ?</span></div>
+    <div class="col-md-3 form-group"> @Html.DropDownListFor(m => m.Team, new SelectList(new[] { "FSW", "SV" }), "---Select Team---", new { @class = "form-control" })</div>
+</div>
+
+<div class="row">
+    <div id="AssetRequestRejectedListpartialView">
+
+    </div>
+</div>

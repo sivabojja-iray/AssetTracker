@@ -35,5 +35,21 @@ namespace I_RAY_ASSET_TRACKER_MVC.Models
         public bool no { get; set; }
         public bool Hardware { get; set; }
         public bool Software { get; set; }
+        public string AssetListfileupload { get; set; }
+        public string ConsumableBulkEntryTeam { get; set; }
+        public string ConsumableBulkEntryHWSWname { get; set; }
+        public string ConsumableBulkEntryHWSWValidatedby { get; set; }
+        public string ConsumableBulkEntryHWSWDescriptionCategory { get; set; }
+        public string ConsumableBulkEntryQuantity { get; set; }
+        public string ConsumableBulkEntryAssetType { get; set; }
+        public string ConsumableBulkEntryDateofReciept { get; set; }
+        public bool ConsumableBulkEntryyes { get; set; }
+        public bool ConsumableBulkEntryno { get; set; }
+        public string ConsumableBulkEntryHWSWVerifiedBy { get; set; }
+        public string ConsumableBulkEntryHWSWVerifiedValidatedDate { get; set; }
+        public string ConsumableBulkEntryInvoiceNumber { get; set; }
+        public string ConsumableBulkEntryRemarks { get; set; }
+        public string ConsumableBulkEntryRecordUpdatedby { get; set; }
+        public string ConsumableBulkEntryRecordUpdatedDate { get; set; }
     }
 }

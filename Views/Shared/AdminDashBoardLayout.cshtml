@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var username = Session["EmployeeName"] as string;
+}
+
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -31,9 +35,9 @@
     @Scripts.Render("~/bundles/modernizr")
 
     <style>
-        .btn {
+       /* .btn {
             box-shadow: 0px 0px 5px 2px #ffc107 !important;
-        }
+        }*/
 
         .assign-progress-bg {
             background-color: lightgray;
@@ -252,7 +256,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#"
+                <a class="nav-link collapsed" href="~/NotificationManager/Index"
                    aria-expanded="true">
                     <i class="fa fa-bell"></i>
                     <span>Notification Manager</span>
@@ -496,7 +500,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="employeename">@Session["EmployeeName"]</span>
+                                <span class="employeename">@username</span>
                                 <img class="img-profile rounded-circle"
                                      src="~/Content/img/undraw_profile.svg">
                             </a>
@@ -586,8 +590,8 @@
                 </div>
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
-                    <button class="button btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="button btn btn-primary" href="~/UserLogin/Login">Logout</a>
+                    <button class="button btn btn-secondary" type="button" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Cancel</i></button>
+                    <a class="btn btn-primary" href="~/UserLogin/Signout"><i class="fa fa-sign-out-alt" aria-hidden="true">Logout</i></a>
                 </div>
             </div>
         </div>
@@ -615,7 +619,7 @@
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
                 </div>
             </div>
         </div>
@@ -643,7 +647,7 @@
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
                 </div>
             </div>
         </div>
@@ -670,7 +674,7 @@
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
                     <a id="btnChangePasswordId" class="button btn btn-primary" href="#">Change Password</a>
                 </div>
             </div>

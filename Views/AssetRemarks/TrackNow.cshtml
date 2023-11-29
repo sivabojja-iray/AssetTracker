@@ -11,7 +11,7 @@
 <script>
    /* debugger;*/
     $(document).ready(function () {
-        $('.btn').click(function () {
+        $('.btnReportToAM').click(function () {
          /*   debugger;*/
             var row = $(this).closest('tr');
             var EmployeeName = row.find('td:eq(0)').text();
@@ -35,8 +35,9 @@
                     AssignDate: AssignDate,
                     AssetRemarks: AssetRemarks
                 },
-                success: function (data) {
-                    alert("Email sent successfully!");
+                success: function (response) {
+                    alert(response);
+                    window.location.href = '/AssetRemarks/Index';
                 },
                 error: function () {
                     alert("Error sending email");
@@ -83,7 +84,7 @@
                     <td>@Html.DisplayFor(modelItem => item.SerialNumberVersionNumber)</td>
                     <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
                     <td>@Html.TextAreaFor(modelItem => item.AssetRemarks)</td>
-                    <td><button type="submit" class="btn btn-primary">ReportToAM</button></td>
+                    <td><button type="submit" class="btnReportToAM btn btn-primary">ReportToAM</button></td>
                 </tr>
             }
         }

@@ -2,8 +2,22 @@
 
 @{
     ViewBag.Title = "AssetClearanceLetter";
-    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
-    //var successMessage = TempData["SuccessMessage"] as string;
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
     var errorMessage = TempData["ErrorMessage"] as string;
 }
 
@@ -31,6 +45,13 @@
             this.submit();
         });
     });
+
+    window.onload = function () {
+        var divToHide = document.getElementById('errorMessage');
+        setTimeout(function () {
+            divToHide.style.display = 'none';
+        }, 8000);
+    };
 </script>
 <div class="pagetitle">
     <h1>Asset Clearance Letter - NOC</h1>
@@ -55,7 +76,7 @@
             @Html.TextBoxFor(m => m.EmpID, new { @class = "form-control" })
         </div>
         <div class="col-md-2">
-            <button type="submit" id="AssetClearanceLetterID" class="btn btn-primary">Asset Clearance</button>
+            <button type="submit" id="AssetClearanceLetterID" class="btn btn-primary"><i class="fa fa-clone" aria-hidden="true">Asset Clearance</i></button>
         </div>
     </div>
 }

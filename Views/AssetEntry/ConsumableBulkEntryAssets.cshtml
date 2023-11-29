@@ -1,0 +1,192 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetEntryModel
+
+<script>
+    $(function () {
+        $('#ConsumableBulkEntryyes').click(function () {
+            $('#ConsumableBulkEntryno').prop("checked", false);
+        })
+        $('#ConsumableBulkEntryno').click(function () {
+            $('#ConsumableBulkEntryyes').prop("checked", false);
+        });
+    });
+
+    function DisplayErrorMessage() {
+        var team = $('#ConsumableBulkEntryTeam');
+        var HWSWname = $('#ConsumableBulkEntryHWSWname');
+        var HWSWValidatedby = $('#ConsumableBulkEntryHWSWValidatedby');
+        var HWSWDescriptionCategory = $('#ConsumableBulkEntryHWSWDescriptionCategory');
+        var AssetType = $('#ConsumableBulkEntryAssetType');
+        var DateofReciept = $('#ConsumableBulkEntryDateofReciept');
+        var HWSWVerifiedBy = $('#ConsumableBulkEntryHWSWVerifiedBy');
+        var HWSWVerifiedValidatedDate = $('#ConsumableBulkEntryHWSWVerifiedValidatedDate');
+        var InvoiceNumber = $('#ConsumableBulkEntryInvoiceNumber');
+        var Remarks = $('#ConsumableBulkEntryRemarks');
+        var chkyes = document.getElementById("ConsumableBulkEntryyes").checked;
+        var ckyno = document.getElementById("ConsumableBulkEntryno").checked;
+        var RecordUpdatedby = $('#ConsumableBulkEntryRecordUpdatedby');
+        var RecordUpdatedDate = $('#ConsumableBulkEntryRecordUpdatedDate');
+        var Quantity = $('#ConsumableBulkEntryQuantity');
+        if (team.val() == '') {
+            alert('Please select the Team.');
+            return false;
+        }
+        if (HWSWname.val() == '') {
+            alert('Please Enter the HWSWname.');
+            return false;
+        }
+        if (HWSWValidatedby.val() == '') {
+            alert('Please Enter the HW/SW Validated by?.');
+            return false;
+        }
+        if (HWSWDescriptionCategory.val() == '') {
+            alert('Please Enter the HW/SW Description/Category.');
+            return false;
+        }
+        if (AssetType.val() == '') {
+            alert('Please select the Asset Type.');
+            return false;
+        }
+        if (DateofReciept.val() == '') {
+            alert('Please select the Date of Reciept.');
+            return false;
+        }
+        if (HWSWVerifiedBy.val() == '') {
+            alert('Please Enter the HW/SW Verified By.');
+            return false;
+        }
+        if (HWSWVerifiedValidatedDate.val() == '') {
+            alert('Please select the HW/SW Verified/Validated Date.');
+            return false;
+        }
+        if (InvoiceNumber.val() == '') {
+            alert('Please Enter the Invoice Number.');
+            return false;
+        }
+        if (Remarks.val() == '') {
+            alert('Please Enter the Remarks.');
+            return false;
+        }
+        if ((chkyes == "") && (ckyno == "")) {
+            alert("Choose whether the asset belongs to GN or not.");
+            return false;
+        }
+        if ((Hardware == "") && (Software == "")) {
+            alert("Choose Category.");
+            return false;
+        }
+        if (RecordUpdatedby.val() == '') {
+            alert('Please Enter the Record Updated by?.');
+            return false;
+        }
+        if (RecordUpdatedDate.val() == '') {
+            alert('Please select the Record Updated Date.');
+            return false;
+        }
+        if (Quantity.val() == '') {
+            alert('Please Enter the Quantity.');
+            return false;
+        }
+        return true;
+        this.submit();
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Team : ")
+            @Html.DropDownListFor(m => m.ConsumableBulkEntryTeam, new SelectList(new[] { "FSW", "SV", "Other", }), "---Select Team---", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("HW/SW Name : ")
+            @Html.TextBoxFor(m => m.ConsumableBulkEntryHWSWname, new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("HW/SW Validated by ? : ")
+            @Html.TextBoxFor(m => m.ConsumableBulkEntryHWSWValidatedby, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("HW/SW Description/Category : ")
+            @Html.TextBoxFor(m => m.ConsumableBulkEntryHWSWDescriptionCategory, new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Invoice Number : ")
+            @Html.TextBoxFor(m => m.ConsumableBulkEntryInvoiceNumber, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Asset Type : ")
+            @Html.DropDownListFor(m => m.ConsumableBulkEntryAssetType, new SelectList(new[] { "Receiver", "Cables", "Flex strips","Adaptors","Inserts","Battery" }), "---Select Asset Type---", new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Date of Reciept : ")
+            @Html.TextBoxFor(m => m.ConsumableBulkEntryDateofReciept, new { @type = "date", @class = "form-control" })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Quantity : ")
+            @Html.TextBoxFor(m => m.ConsumableBulkEntryQuantity, new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("HW/SW Verified By : ")
+            @Html.TextBoxFor(m => m.ConsumableBulkEntryHWSWVerifiedBy, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("HW/SW Verified/Validated Date : ")
+            @Html.TextBoxFor(m => m.ConsumableBulkEntryHWSWVerifiedValidatedDate, new { @type = "date", @class = "form-control" })
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Is Asset Belongs to GN/Not : ")
+            @Html.CheckBoxFor(m => m.ConsumableBulkEntryyes)<span>Yes</span>
+            @Html.CheckBoxFor(m => m.ConsumableBulkEntryno)<span>No</span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Remarks : ")
+            @Html.TextAreaFor(m => m.ConsumableBulkEntryRemarks, new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Record Updated by ? : ")
+            @Html.TextBoxFor(m => m.ConsumableBulkEntryRecordUpdatedby, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Record Updated Date : ")
+            @Html.TextBoxFor(m => m.ConsumableBulkEntryRecordUpdatedDate, new { @type = "date", @class = "form-control" })
+        </div>
+    </div>
+</div>

@@ -2,7 +2,22 @@
 
 @{
     ViewBag.Title = "WorkingAssetList";
-    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
 }
 
 <style>
@@ -315,9 +330,9 @@
         <div class="col-md-2">
             @Html.DropDownListFor(m => m.Team, (IEnumerable<SelectListItem>)ViewData["Team"], "-- Select Team --", new { @class = "form-control" })
         </div>
-        <div class="col-md-1">
+        <div class="col-md-2">
             <button type="submit" class="button btn btn-primary" onclick="return DisplayProgressMessage(this, 'Generate...');">
-                <i class="fas fa-fw fa-file-pdf"></i>
+                <i class="fa fa-download" aria-hidden="true"></i> <i class="fas fa-fw fa-file-pdf"></i>
                 <span>PDF</span>
             </button>
         </div>
@@ -336,7 +351,7 @@
     </div>
     <div class="col-md-1">
         <button id="" type="button" class="btnSearchSubmit button btn btn-primary">
-            Search
+            <i class="fa fa-search" aria-hidden="true">Search</i>
         </button>
     </div>
 </div>
@@ -353,7 +368,7 @@
     </div>
     <div class="col-md-1">
         <button type="button" class="btnHWSWNameSearchSubmit button btn btn-primary">
-            Search
+            <i class="fa fa-search" aria-hidden="true">Search</i>
         </button>
     </div>
 </div>

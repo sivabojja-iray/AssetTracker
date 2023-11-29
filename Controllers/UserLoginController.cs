@@ -40,7 +40,6 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                     {
                         ModelState.AddModelError("Password", "Please Enter The Password !");
                     }
-
                     if (ModelState.IsValid)
                     {
                         string EncryptPWD = Cryptography.Encrypt(lc.Password);
@@ -65,22 +64,21 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                         SqlCommand cmd5 = new SqlCommand("select EmployeeName from EmployeeList where EmpID='" + lc.UserName + "'", sqlConnection);
                         string n = (string)(cmd5.ExecuteScalar());
                         Session["EmployeeName"] = n;
-
                         if (i > 0)
                         {
-                            return Redirect("~/User/Index");
+                            return RedirectToAction("Index", "User");
                         }
                         else if (j > 0)
                         {
-                            return Redirect("~/Admin/Index");
+                            return RedirectToAction("Index", "Admin");
                         }
                         else if (k > 0)
                         {
-                            return Redirect("~/Admin/Index");
+                            return RedirectToAction("Index", "Admin");
                         }
                         else if (l > 0)
                         {
-                            return Redirect("~/Admin/Index");
+                            return RedirectToAction("Index", "Admin");
                         }
                         else
                         {
@@ -132,8 +130,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
                         }
                     }
                         return View(lc);
-            }
-           
+            }         
             return View(lc);          
         }
         public ActionResult forgotPassword()
@@ -202,6 +199,11 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             }
             sqlConnection.Close();
             return Json(ViewBag.Role,JsonRequestBehavior.AllowGet); 
+        }
+        public ActionResult Signout()
+        {
+            Session.Clear();
+            return RedirectToAction("Login", "UserLogin");
         }
     }
 }

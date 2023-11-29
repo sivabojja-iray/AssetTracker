@@ -1,0 +1,229 @@
+﻿@model I_RAY_ASSET_TRACKER_MVC.Models.NotificationManagerModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    var firstName = TempData["FirstName"] as string;
+    var Message = TempData["Message"] as string;
+    var DeleteMessage = TempData["DeleteMessage"] as string;
+}
+
+<style>
+    #tblNotificationManagerID th {
+        background-color: #ffc107;
+        text-align: center;
+    }
+
+    #tblNotificationManagerID td {
+        vertical-align: middle;
+        text-align: center;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#tblNotificationManagerID').DataTable({
+        });
+    });
+
+    $(document).ready(function () {
+        var table = $('#tblNotificationManagerID').DataTable();
+        $('#tblNotificationManagerID tfoot').on('click', '#myButton', function () {
+            var Message = $('#txtNotification').val();
+            // Make AJAX call to MVC action
+            $.ajax({
+                url: '/NotificationManager/NotificationMessageDetails',
+                method: 'POST',
+                data: { Message: Message },
+                success: function (data) {
+                    // Handle success, maybe update the DataTable with the new data
+                    alert(data);
+                    window.location.href = '/NotificationManager/Index';
+                },
+                error: function () {
+                    // Handle error
+                    alert('Error occurred');
+                }
+            });
+        });
+    });
+
+    $(document).on('click', '.editnotification', function (e) {
+        e.preventDefault();
+        var table = $('#tblNotificationManagerID').DataTable();
+        var data = table.row($(this).parents('tr')).data();
+        $.ajax({
+            url: "/NotificationManager/NotificationUpdateDetails", // Replace with your controller and action method
+            data: {
+                Sno: data[0],
+                Name: data[1],
+                Message: data[2],
+                Date: data[3]
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (response) {
+                $("#NotificationUpdateModal").find(".modal-body").html(response);
+                $("#NotificationUpdateModal").modal('show');
+            }
+        });
+    });
+
+    window.onload = function () {
+        var divToHide = document.getElementById('Message');
+        setTimeout(function () {
+            divToHide.style.display = 'none';
+        }, 8000);
+    };
+
+    window.onload = function () {
+        var divToHide = document.getElementById('DeleteMessage');
+        setTimeout(function () {
+            divToHide.style.display = 'none';
+        }, 8000);
+    };
+
+    $(document).on('click', '.deletenotification', function (e) {
+        e.preventDefault();
+        var table = $('#tblNotificationManagerID').DataTable();
+        var data = table.row($(this).parents('tr')).data();
+        $.ajax({
+            url: "/NotificationManager/NotificationDeleteDetails", // Replace with your controller and action method
+            data: {
+                Sno: data[0],
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (response) {
+                $("#logoutModal").find(".modal-body").html(response);
+                $("#logoutModal").modal('show');
+            }
+        });
+    });
+
+    $(function () {
+        $("#dismissBtn").click(function () {
+            // Hide the error message div
+            $("#Message").fadeOut();
+            $("#DeleteMessage").fadeOut();
+        });
+    });
+</script>
+
+<div class="pagetitle">
+    <h1>Notification Manager</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Notification Manager</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+@if (!string.IsNullOrEmpty(Message))
+{
+    <div id="Message" class="alert alert-success">
+        @Message<button id="dismissBtn" type="button" class="close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(DeleteMessage))
+{
+    <div id="DeleteMessage" class="alert alert-danger">
+        @DeleteMessage<button id="dismissBtn" type="button" class="close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+
+<div class="row justify-content-center">
+    <table id="tblNotificationManagerID" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>Sno</th>
+                <th>Name</th>
+                <th>Notification</th>
+                <th>Date</th>
+                <th>Manage</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.notifations)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Sno)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Notification)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                    <td>
+                        <a id="btnEdit" class="editnotification btn btn-primary" data-toggle="modal" data-target="#NotificationUpdateModal" href="javascript:void(0);"><i class="fa fa-pen-square"></i></a>
+                        <a id="btnDelete" class="deletenotification btn btn-danger" data-toggle="modal" data-target="#logoutModal" href="#"><i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot align="center">
+            <tr>
+                <td></td>
+                <td>@firstName</td>
+                <td><textarea id="txtNotification" rows="3" cols="30"></textarea></td>
+                <td><button id="myButton">Add Data</button></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+@using (Html.BeginForm("NotificationUpdateDetailsSave", "NotificationManager", FormMethod.Post))
+{
+    <div id="NotificationUpdateModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-label="NotificationUpdateModalLable" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div class="pagetitle">
+                        <h1>Notification Manager</h1>
+                        <nav>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item">Notification Manager</li>
+                                <li class="breadcrumb-item active">Notification update details</li>
+                            </ol>
+                        </nav>
+                    </div><!-- End Page Title -->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btnUpdate btn btn-primary"><i class="fa fa-wrench" aria-hidden="true">Update</i></button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("NotificationMessageDelete", "NotificationManager", FormMethod.Post))
+{
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Delete?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button class="button btn btn-danger" type="button" data-dismiss="modal"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button>
+                    <button type="submit" class="button btn btn-success" href="#"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

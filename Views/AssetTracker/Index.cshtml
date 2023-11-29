@@ -1,7 +1,6 @@
 ﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetRequestModal
 @{
     ViewBag.Title = "AssetRequest";
-    //Layout = "~/Views/Shared/DashBoardLayout.cshtml";
     if (Session["Role"].ToString() == "AssetManager")
     {
         Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
@@ -10,6 +9,15 @@
     {
         Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
     }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    var Message = TempData["Message"] as string;
 }
 
 @Styles.Render("~/Content/css")
@@ -20,9 +28,9 @@
         font-size: 2rem;
     }*/
 
-    .btn {
+    /*.btn {
         box-shadow: 0px 0px 5px 2px #ffc107 !important;
-    }
+    }*/
 
     /* .btn:active {
             transform: translateY(1rem);
@@ -103,15 +111,15 @@
         }
 
         // Turn off the "Save" button and change text
-        $(ctl).prop("disabled", true).text(msg);
-        // Gray out background on page
-        $("body").addClass("submit-progress-bg");
+        //$(ctl).prop("disabled", true).text(msg);
+        //// Gray out background on page
+        //$("body").addClass("submit-progress-bg");
 
-        // Wrap in setTimeout so the UI can update the spinners
-        setTimeout(function () {
-            $(".submit-progress").removeClass("visually-hidden");
-        }, 1);
-        $(ctl).prop("disabled", false).text(msg);
+        //// Wrap in setTimeout so the UI can update the spinners
+        //setTimeout(function () {
+        //    $(".submit-progress").removeClass("visually-hidden");
+        //}, 1);
+        //$(ctl).prop("disabled", false).text(msg);
         return true;
         this.submit();
     }
@@ -247,6 +255,20 @@
         //    alert("Request Send Successfully....");
         //})
     });
+
+    $(function () {
+        $("#dismissBtn").click(function () {
+            // Hide the error message div
+            $("#Message").fadeOut();
+        });
+    });
+
+    window.onload = function () {
+        var divToHide = document.getElementById('Message');
+        setTimeout(function () {
+            divToHide.style.display = 'none';
+        }, 8000);
+    }
 </script>
 
 <div class="pagetitle">
@@ -258,6 +280,15 @@
         </ol>
     </nav>
 </div><!-- End Page Title -->
+
+@if (!string.IsNullOrEmpty(Message))
+{
+    <div id="Message" class="alert alert-success">
+        @Message<button id="dismissBtn" type="button" class="close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
 
 @using (Html.BeginForm("SendRequest", "AssetTracker", FormMethod.Post))
 {
@@ -460,7 +491,7 @@
                                 <div>
                                     @*<input type="submit" id="submitButton" value="Send Request" class="button btn btn-primary btn-customized mt-4" onclick="return DisplayProgressMessage(this, 'Sending...');" />*@
                                     <button id="btnsubmit" type="submit" class="button btn btn-primary btn-customized mt-4" onclick="return DisplaySendProgressMessage(this, 'Sending...');">
-                                        Send Request
+                                        <i class="fa fa-share-square" aria-hidden="true">Send Request</i>
                                     </button>
                                 </div>
                             </div>

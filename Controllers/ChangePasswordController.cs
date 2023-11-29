@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 
@@ -41,6 +42,24 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             SqlCommand cmd = new SqlCommand(s, con);
             cmd.ExecuteNonQuery();
             con.Close();
+            SqlCommand sqlCommand = new SqlCommand("SELECT EmployeeName,Mail FROM EmployeeList WHERE EmpID='" + Session["username"] + "'", con);
+            con.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+            string mail = null;
+            if (reader.Read())
+            {
+                mail = reader["Mail"].ToString();
+                con.Close();
+            }
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("assettracker@i-raysolutions.com");
+            mailMessage.To.Add(new MailAddress(mail));
+            mailMessage.Subject = "New Password";
+            mailMessage.IsBodyHtml = true;
+            mailMessage.Body = "The New Password is " + " <span style='font-weight:bold;font-size:20px;'>" + DecryptPwd + "</span>" + "";
+            mailMessage.Priority = MailPriority.High;
+            SmtpClient smtpClient = new SmtpClient();
+            smtpClient.Send(mailMessage);
             ViewBag.ConfirmMessage = "Password Change Successfull...";
             return Json(ViewBag.ConfirmMessage, JsonRequestBehavior.AllowGet);
         }

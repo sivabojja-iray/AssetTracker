@@ -2,15 +2,24 @@
 
 @{
     ViewBag.Title = "AssignAsset";
-    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
-    //if (Session["Role"].ToString() == "AssetManager")
-    //{
-    //    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
-    //}
-    //else if (Session["Role"].ToString() == "User")
-    //{
-    //    Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
-    //}
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    var Message = TempData["Message"] as string;
+    var RejectMessage = TempData["RejectMessage"] as string;
 }
 
 @Styles.Render("~/Content/css")
@@ -22,9 +31,13 @@
         font-size: 2rem;
     }*/
 
-    .btn {
-        box-shadow: 0px 0px 5px 2px #ffc107 !important;
+    #RequestRejectedID {
+        color: red;
     }
+
+    /*.btn {
+        box-shadow: 0px 0px 5px 2px #ffc107 !important;
+    }*/
 
     /*.btn:active {
             transform: translateY(0.3rem);
@@ -159,6 +172,29 @@
         });
     });
 
+    $(function () {
+        $("#dismissBtn").click(function () {
+            // Hide the error message div
+            $("#Message").fadeOut();
+        });
+    });
+    $(function () {
+        $("#RejectBtn").click(function () {
+            // Hide the error message div
+            $("#RejectMessage").fadeOut();
+        });
+    });
+
+    window.onload = function () {
+        var divToHide = document.getElementById('Message');
+        var RejectdivToHide = document.getElementById('RejectMessage');
+        setTimeout(function () {
+            divToHide.style.display = 'none';
+        }, 8000);
+        setTimeout(function () {
+            RejectdivToHide.style.display = 'none';
+        }, 8000);
+    };
 </script>
 
 <div class="pagetitle">
@@ -170,6 +206,33 @@
         </ol>
     </nav>
 </div><!-- End Page Title -->
+
+@if (!string.IsNullOrEmpty(Message))
+{
+    <div id="Message" class="alert alert-success">
+        @Message<button id="dismissBtn" type="button" class="close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+
+@if (!string.IsNullOrEmpty(RejectMessage))
+{
+    <div id="RejectMessage" class="alert alert-danger">
+        @RejectMessage<button id="RejectBtn" type="button" class="close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+        <a id="RequestRejectedID" href="@Url.Action("Index", "AssetRequestRejected")"><i class="fa fa-arrow-right" aria-hidden="true">Request-Rejected List Click Here?</i></a>
+    </div>
+</div>
 
 <div class="row">
     <table id="tblAssignAsset" class="display compact table table-bordered table-primary">
@@ -205,12 +268,12 @@
                     <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
                     <td>
                         <a id="btnApprove" class="button btn btn-success" href="@Url.Action("ApprovalAssignAsset", "AssignAsset", new { id = item.RequestID})">
-                            Approve
+                            <i class="fa fa-thumbs-up" aria-hidden="true"></i>
                         </a>
                     </td>
                     <td>
-                        <a class="button btn btn-danger" href="@Url.Action("RejectAssignAsset", "AssignAsset", new { id = item.RequestID})">
-                            Reject
+                        <a class="button btn btn-danger" href="@Url.Action("RejectAssignAsset", "AssignAsset", new { id = item.RequestID,EmpID=item.EmployeeID})">
+                            <i class="fa fa-thumbs-down" aria-hidden="true"></i>
                         </a>
                     </td>
                 </tr>

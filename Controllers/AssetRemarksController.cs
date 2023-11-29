@@ -16,6 +16,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
     public class AssetRemarksController : Controller
     {
         string constr = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
+        string mail;
         // GET: AssetRemarks
         public ActionResult Index()
         {
@@ -41,10 +42,11 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         }
         public ActionResult TrackNow(string SerailNo)
         {
+            string UserID = Session["username"].ToString();
             SqlConnection sqlConnection = new SqlConnection(constr);
             SqlCommand cmd = new SqlCommand("sp_MyAssetsRemarks", sqlConnection);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@EmpID", Session["username"]);
+            cmd.Parameters.AddWithValue("@EmpID", UserID);
             cmd.Parameters.AddWithValue("@SerialNumberVersionNumber", SerailNo);
             DataTable dt = new DataTable();
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
@@ -69,35 +71,63 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
         }
         public ActionResult SendMailReportToAM(string EmployeeName,string Team,string Assetbelongsto,string AssetType,string HWSWName,string SerialNumberVersionNumber,string AssignDate,string AssetRemarks)
         {
-            string mail;
+            string UserID = Session["username"].ToString();        
             SqlConnection sqlConnection = new SqlConnection(constr);
-            SqlCommand cmd = new SqlCommand("select Mail from EmployeeList where EmpID='" + Session["username"] + "'", sqlConnection);
+            SqlCommand cmd = new SqlCommand("select Mail from EmployeeList where EmpID='" + UserID + "'", sqlConnection);
             sqlConnection.Open();
             SqlDataReader dataReader = cmd.ExecuteReader();
             if(dataReader.Read())
             {
                 mail = dataReader["Mail"].ToString();
-                FormsAuthentication.SetAuthCookie(mail, true);
-                Session["Mail"] = mail;
+                //FormsAuthentication.SetAuthCookie(mail, true);
+                //Session["Mail"] = mail;
             }
 
             MailMessage mailMessage = new MailMessage();
             mailMessage.From = new MailAddress("assettracker@i-raysolutions.com");
-
-            mailMessage.To.Add(new MailAddress("assettracker@i-raysolutions.com"));
-            mailMessage.CC.Add(new MailAddress(Session["Mail"].ToString()));
+            mailMessage.To.Add(new MailAddress("phani.n@i-raysolutions.com"));
+            mailMessage.CC.Add(new MailAddress(mail));
             mailMessage.Subject = "Asset Remarks By Employee";
             mailMessage.IsBodyHtml = true;         
-            mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" + "<tr>" + "<th> EmpID </th>" 
-                + "<th> EmployeeName </th>" + "<th> EmployeeTeam </th>" + "<th> Asset belongs to? </th>" + "<th> AssetType </th>" + "<th>HWSWName </th>" 
-                + "<th> Asset Serialnumber </th>" + "<th> Asset Remarks </th>" + "</tr>" + "<tr>" + "<td>" + Session["username"] + "</td>" + "<td>" 
+            mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" + "<tr>" + "<th bgcolor='#ffc107'> EmpID </th>"
+                + "<th bgcolor='#ffc107'> EmployeeName </th>" + "<th bgcolor='#ffc107'> EmployeeTeam </th>" + "<th bgcolor='#ffc107'> Asset belongs to? </th>" + "<th bgcolor='#ffc107'> AssetType </th>" + "<th bgcolor='#ffc107'>HWSWName </th>"
+                + "<th bgcolor='#ffc107'> Asset Serialnumber </th>" + "<th bgcolor='#ffc107'> Asset Remarks </th>" + "</tr>" + "<tr>" + "<td>" + UserID + "</td>" + "<td>" 
                 + EmployeeName + "</td>" + "<td>" + Team + "</td>" + "<td>" + Assetbelongsto + "</td>" + "<td>" + AssetType + "</td>" + "<td>" 
-                + HWSWName + "</td>" + "<td>" + SerialNumberVersionNumber + "</td>" + "<td>" + AssetRemarks + "</td>" + "</tr>" + "</table>";
+                + HWSWName + "</td>" + "<td style='font-weight:bold;font-size:15px;'>" + SerialNumberVersionNumber + "</td>" + "<td>" + AssetRemarks + "</td>" + "</tr>" + "</table>";
 
             mailMessage.Priority = MailPriority.High;
             SmtpClient smtp = new SmtpClient();
             smtp.Send(mailMessage);
-            return View();
+            ViewBag.MailMessage = "Email Sent Successfully...";
+            return Json(ViewBag.MailMessage, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AutoCompleteSerialNumberVersionNumberTextBox(string term)
+        {
+            string UserID = Session["username"].ToString();
+            List<string> suggestions = GetSuggestionsFromDatabase(term, "select SerialNumberVersionNumber from AssignAsset where EmpID='" + UserID + "' and SerialNumberVersionNumber LIKE @term", "SerialNumberVersionNumber");
+            return Json(suggestions, JsonRequestBehavior.AllowGet);
+        }
+        private List<string> GetSuggestionsFromDatabase(string term, string query, string columnName)
+        {
+            // Implement your database query here and return a list of suggestions
+            // Example using SqlConnection and SqlCommand (replace with your own database connection method):
+            using (SqlConnection connection = new SqlConnection(constr))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@term", term + "%");
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        List<string> suggestions = new List<string>();
+                        while (reader.Read())
+                        {
+                            suggestions.Add(reader[columnName].ToString());
+                        }
+                        return suggestions;
+                    }
+                }
+            }
         }
     }
 }

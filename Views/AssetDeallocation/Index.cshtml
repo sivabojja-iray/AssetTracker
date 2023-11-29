@@ -2,7 +2,22 @@
 
 @{
     ViewBag.Title = "AssetDeallocation";
-    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
 }
 
 <style>
@@ -12,24 +27,93 @@
 </style>
 
 <script>
-    $(document).ready(function () {
-        $('form').submit(function (event) {
-            event.preventDefault();
+    //$(document).ready(function () {
+    //    $('form').submit(function (event) {
+    //        event.preventDefault();
 
+    //        $.ajax({
+    //            url: $(this).attr('action'),
+    //            type: $(this).attr('method'),
+    //            data: $(this).serialize(),
+    //            success: function (result) {
+    //                $('#SearchEmployeeID').html(result);
+    //            },
+    //            error: function () {
+    //                alert('Error occurred while fetching employee details.');
+    //            }
+    //        });
+    //    });
+    //});
+    $(document).ready(function () {
+        $("#btnEmployeeID").click(function () {
+            var EmployeeId = $('#EmployeeID').val();
+            var partialView = $('#partialView'); // Get the target container
+            if (EmployeeId.trim() === '') {
+                alert('Please Enter the EmployeeID...');
+                return false;
+            }
             $.ajax({
-                url: $(this).attr('action'),
-                type: $(this).attr('method'),
-                data: $(this).serialize(),
-                success: function (result) {
-                    $('#SearchEmployeeID').html(result);
+                type: "POST",
+                url: "/AssetDeallocation/SearchEmployeeID",
+                data: {
+                    EmployeeId: EmployeeId
                 },
-                error: function () {
-                    alert('Error occurred while fetching employee details.');
+                success: function (response) {
+                    partialView.html(response);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
                 }
             });
         });
     });
 
+    $(document).ready(function () {
+        $("#btnEmployeeName").click(function () {
+            var EmployeeName = $('#EmployeeName').val();
+            var partialView = $('#partialView'); // Get the target container
+            if (EmployeeName.trim() === '') {
+                alert('Please Enter the EmployeeName...');
+                return false;
+            }
+            $.ajax({
+                type: "POST",
+                url: "/AssetDeallocation/SearchEmployeeName",
+                data: {
+                    EmployeeName: EmployeeName
+                },
+                success: function (response) {
+                    partialView.html(response);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $("#EmployeeName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Reports/AutoCompleteEmployeeNameTextBox',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { term: request.term },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1 // Adjust as needed
+        });
+    });
 </script>
 
 <div class="pagetitle">
@@ -42,26 +126,37 @@
     </nav>
 </div><!-- End Page Title -->
 
-@using (Html.BeginForm("SearchEmployeeID", "AssetDeallocation", FormMethod.Post))
-{
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="row">
-                <div class="col-md-4">
-                    <span>EmployeeID :</span>
-                </div>
-                <div class="col-md-4">
-                    @Html.TextBoxFor(m => m.EmployeeID, new { @class = "form-control" })
-                </div>
-                <div class="col-md-4">
-                    <button id="btnEmployeeID" type="submit" class="btn btn-primary">GO</button>
-                </div>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-4">
+                <span>EmployeeID :</span>
+            </div>
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.EmployeeID, new { @class = "form-control" })
+            </div>
+            <div class="col-md-4">
+                <button id="btnEmployeeID" type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true">Search</i></button>
             </div>
         </div>
     </div>
-}
-
-<div id="SearchEmployeeID">
-    @Html.Partial("_SearchEmployeeIDpartialView")
 </div>
-
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-4">
+                <span>EmployeeName :</span>
+            </div>
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.EmployeeName, new { @class = "form-control" })
+            </div>
+            <div class="col-md-4">
+                <button id="btnEmployeeName" type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true">Search</i></button>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div id="SearchEmployeeID">
+        @Html.Partial("_SearchEmployeeIDpartialView")
+    </div>*@
+<div id="partialView"></div>

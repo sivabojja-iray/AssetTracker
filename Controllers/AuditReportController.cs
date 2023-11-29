@@ -206,7 +206,7 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             foreach (string item in list)
             {
                 MailMessage mail = new MailMessage("assettracker@i-raysolutions.com", item, "Audit Alert", "Hi");
-                mail.Body = "";
+                mail.Body = "Asset Reviw Alert";
                 mail.Priority = MailPriority.High;
                 SmtpClient smtp = new SmtpClient();
                 smtp.Send(mail);

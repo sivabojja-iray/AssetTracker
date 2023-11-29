@@ -1,7 +1,22 @@
 ﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AssetRemarksModel
 @{
     ViewBag.Title = "AssetRemarks";
-    Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
 }
 <style>
     .row {
@@ -39,6 +54,23 @@
             });
         });
     });
+
+    $(document).ready(function () {
+        $("#SerialNumberVersionNumber").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/AssetRemarks/AutoCompleteSerialNumberVersionNumberTextBox',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { term: request.term },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1 // Adjust as needed
+        });
+    });
 </script>
 
 <div class="pagetitle">
@@ -61,7 +93,7 @@
         </div>
         <div class="form-group col-md-3">
             <a id="tracknowId" class="button btn btn-primary" data-toggle="modal" data-target="#tracknowDataModal" href="javascript:void(0);">
-                Track Now
+                <i class="fa fa-search" aria-hidden="true">Track Now</i>
             </a>
         </div>
     </div>
@@ -78,7 +110,7 @@
             <div class="modal-body">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
             </div>
         </div>
     </div>

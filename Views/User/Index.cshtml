@@ -4,22 +4,44 @@
 
 @{
     ViewBag.Title = "UserDashBoard";
-    Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    var Role = Session["Role"] as string;
+    if (Role == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Role == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Role == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Role == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    var TransferAssetMessage = TempData["TransferAssetMessage"] as string;
+    var RejectMessge = TempData["RejectTransferAssetMessage"] as string;
 }
 
 @Styles.Render("~/Content/css")
 @Scripts.Render("~/bundles/modernizr")
 
 <style>
-    .btn {
+    /* .btn {
         box-shadow: 0px 0px 5px 2px #ffc107 !important;
-    }
+    }*/
 
     #tblUserAssetsHaveList th {
         background-color: #ffc107;
     }
 
     #table1 th {
+        background-color: #ffc107;
+    }
+
+    #tblUserNotificationManager th {
         background-color: #ffc107;
     }
 
@@ -82,8 +104,9 @@
 
 <script>
     $(document).ready(function () {
-         $('#tblUserAssetsHaveList').DataTable();
+        $('#tblUserAssetsHaveList').DataTable();
         $('#table1').DataTable();
+        $('#tblUserNotificationManager').DataTable();
     });
 
     $(document).on('click', '.TransferAsset', function (e) {
@@ -141,19 +164,44 @@
             return false;
         }
 
-        // Turn off the "Save" button and change text
-        $(ctl).prop("disabled", true).text(msg);
-        // Gray out background on page
-        $("body").addClass("transfer-progress-bg");
+        //// Turn off the "Save" button and change text
+        //$(ctl).prop("disabled", true).text(msg);
+        //// Gray out background on page
+        //$("body").addClass("transfer-progress-bg");
 
-        // Wrap in setTimeout so the UI can update the spinners
-        setTimeout(function () {
-            $(".transfer-progress").removeClass("visually-hidden");
-        }, 1);
-        $(ctl).prop("disabled", false).text(msg);
+        //// Wrap in setTimeout so the UI can update the spinners
+        //setTimeout(function () {
+        //    $(".transfer-progress").removeClass("visually-hidden");
+        //}, 1);
+        //$(ctl).prop("disabled", false).text(msg);
         return true;
         this.submit();
     }
+
+    window.onload = function () {
+        var divToHide = document.getElementById('TransferAssetMessage');
+        var Reject = document.getElementById('RejectMessge');
+        setTimeout(function () {
+            divToHide.style.display = 'none';          
+        }, 8000);
+        setTimeout(function () {
+            Reject.style.display = 'none';          
+        }, 8000);
+    };
+
+    $(function () {
+        $("#dismissBtn").click(function () {
+            // Hide the error message div
+            $("#TransferAssetMessage").fadeOut();
+        });
+    });
+
+    $(function () {
+        $("#RejectBtn").click(function () {
+            // Hide the error message div
+            $("#RejectMessge").fadeOut();
+        });
+    });
 </script>
 
 <div class="pagetitle">
@@ -165,6 +213,24 @@
         </ol>
     </nav>
 </div><!-- End Page Title -->
+
+@if (!string.IsNullOrEmpty(TransferAssetMessage))
+{
+    <div id="TransferAssetMessage" class="alert alert-success">
+        @TransferAssetMessage<button id="dismissBtn" type="button" class="close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(RejectMessge))
+{
+    <div id="RejectMessge" class="alert alert-danger">
+        @RejectMessge<button id="RejectBtn" type="button" class="close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
 
 <div class="row">
     <!-- Total Assets Card Example -->
@@ -230,7 +296,7 @@
                         <td>@Html.DisplayFor(modelItem => item.ExpectedReturnDate)</td>
                         <td>
                             <a class="TransferAsset button btn btn-primary" data-toggle="modal" data-target="#partialModal" href="javascript:void(0);">
-                                Transfer
+                                <i class="fa fa-paper-plane"></i>
                             </a>
                         </td>
                     </tr>
@@ -281,13 +347,13 @@
                     <td>@Html.DisplayFor(modelItem => item.TeamToWhichAssetisTransfered)</td>
                     <td>@Html.DisplayFor(modelItem => item.ToEmployeeName)</td>
                     <td>
-                        <a id="btnApprove" class="button btn btn-success" href="@Url.Action("SaveTransferAssetFromEmployee", "User", new { id = item.FromEmpID})">
-                            Approve
+                        <a id="btnApprove" class="button btn btn-success" href="@Url.Action("SaveTransferAssetFromEmployee", "User", new { serialnumber = item.SerialNumberVersionNumber,fromEmpID=item.FromEmpID})">
+                            <i class="fa fa-thumbs-up" aria-hidden="true"></i>
                         </a>
                     </td>
                     <td>
-                        <a class="button btn btn-danger" href="@Url.Action("RejectTransferAssetFromEmployee", "User", new { id = item.FromEmpID})">
-                            Reject
+                        <a class="button btn btn-danger" href="@Url.Action("RejectTransferAssetFromEmployee", "User", new { serialnumber = item.SerialNumberVersionNumber,fromEmpID=item.FromEmpID})">
+                            <i class="fa fa-thumbs-down" aria-hidden="true"></i>
                         </a>
                     </td>
                 </tr>
@@ -300,6 +366,30 @@
         of @Model.Table2Data.PageCount @Html.PagedListPager(Model.Table2Data, page => Url.Action("Index", new { page }))
     </div>*@
 
+<div class="row">
+    <h4>Notification</h4>
+</div>
+<div class="row">
+    <table id="tblUserNotificationManager" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Notification</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.userNotificationManager)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Notification)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @using (Html.BeginForm("SaveTransferAsset", "User", FormMethod.Post))
 {
@@ -316,8 +406,8 @@
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" onclick="return DisplaySendProgressMessage(this, 'Transfer...');" class="btn btn-primary">Transfer Asset</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" onclick="return DisplaySendProgressMessage(this, 'Transfer...');" class="btn btn-primary"><i class="fa fa-paper-plane">Transfer Asset</i></button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
                 </div>
             </div>
         </div>

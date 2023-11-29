@@ -2,7 +2,6 @@
 
 @{
     ViewBag.Title = "AssetTracking";
-    //Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
     if (Session["Role"].ToString() == "AssetManager")
     {
         Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
@@ -10,6 +9,14 @@
     else if (Session["Role"].ToString() == "User")
     {
         Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
     }
 }
 

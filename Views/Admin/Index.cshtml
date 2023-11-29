@@ -1,10 +1,26 @@
 ﻿@model I_RAY_ASSET_TRACKER_MVC.Models.AdminModel
 
-@using PagedList.Mvc
-
 @{
     ViewBag.Title = "Admin";
-    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    var Role = Session["Role"] as string;
+    if (Role == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Role == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Role == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Role == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    var TransferAssetMessage = TempData["TransferAssetMessage"] as string;
+    var RejectMessge = TempData["RejectTransferAssetMessage"] as string;
 }
 
 <style>
@@ -27,7 +43,7 @@
         background-color: #ffc107;
     }
 
-  /*  table#tblAdminAssetsHaveList {
+    /*  table#tblAdminAssetsHaveList {
         width: auto;
         margin-left: 8rem;
     }*/
@@ -36,11 +52,13 @@
         background-color: #ffc107;
     }
 
-   /* table#tblAdminTransferList {
+    #tblAdminNotificationManager th {
+        background-color: #ffc107;
+    }
+    /* table#tblAdminTransferList {
         width: auto;
         margin-left: 1rem;
     }*/
-
     tr {
         text-align: center;
     }
@@ -48,7 +66,7 @@
     /*.pagination {
         margin-block-start: revert;
         margin-left: 13rem;*/
-        /*  margin-top: 1rem;*/
+    /*  margin-top: 1rem;*/
     /*}
 
     .pagination-container {
@@ -116,7 +134,17 @@
 </style>
 
 <script>
-    window.onload = function () {
+    window.onload = function ()
+    {
+        var divToHide = document.getElementById('TransferAssetMessage');
+        var Reject = document.getElementById('RejectMessge');
+        setTimeout(function () {
+            divToHide.style.display = 'none';
+        }, 8000);
+        setTimeout(function () {
+            Reject.style.display = 'none';
+        }, 8000);
+
     var chart = new CanvasJS.Chart("TotalAssetschartContainer", {
         exportEnabled: true,
         animationEnabled: true,
@@ -290,9 +318,10 @@
         },
     ]
 });
-chart.render();
+        chart.render();
 
-        function explodePie(e) {
+        function explodePie(e)
+        {
             if (typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
                 e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
             } else {
@@ -300,7 +329,8 @@ chart.render();
             }
             e.chart.render();
         }
-        function toggleDataSeries(e) {
+        function toggleDataSeries(e)
+        {
             if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
                 e.dataSeries.visible = false;
             }
@@ -314,6 +344,7 @@ chart.render();
     $(document).ready(function () {
         $('#tblAdminAssetsHaveList').DataTable();
         $('#tblAdminTransferList').DataTable();
+        $('#tblAdminNotificationManager').DataTable();
     });
 
     $(document).on('click', '.AdminTransferAsset', function (e) {
@@ -340,31 +371,6 @@ chart.render();
         });
     });
 
-    //$(function () {
-    //    $("#tblAdminAssetsHaveList .AdminTransferAsset").click(function () {
-    //          /*debugger;*/
-    //        var Id = $(this).closest("tr").find("td").eq(0).html();
-    //        $.ajax({
-    //            type: "POST",
-    //            url: "/Admin/TransferAsset",
-    //            data: '{Id: "' + Id + '" }',
-    //            contentType: "application/json; charset=utf-8",
-    //            dataType: "html",
-    //            success: function (response) {
-    //               /* *//* debugger;*/
-    //                $("#AdminpartialModal").find(".modal-body").html(response);
-    //                $("#AdminpartialModal").modal('show');
-    //            },
-    //            failure: function (response) {
-    //                alert(response.responseText);
-    //            },
-    //            error: function (response) {
-    //                alert(response.responseText);
-    //            }
-    //        });
-    //    });
-    //});
-
     function DisplaySendProgressMessage(ctl, msg) {
         /* debugger;*/
         var AssetTransferTeam = $('#AssetTransferTeam');
@@ -378,19 +384,33 @@ chart.render();
             return false;
         }
 
-        // Turn off the "Save" button and change text
-        $(ctl).prop("disabled", true).text(msg);
-        // Gray out background on page
-        $("body").addClass("transfer-progress-bg");
+        //// Turn off the "Save" button and change text
+        //$(ctl).prop("disabled", true).text(msg);
+        //// Gray out background on page
+        //$("body").addClass("transfer-progress-bg");
 
-        // Wrap in setTimeout so the UI can update the spinners
-        setTimeout(function () {
-            $(".transfer-progress").removeClass("visually-hidden");
-        }, 1);
-        $(ctl).prop("disabled", false).text(msg);
+        //// Wrap in setTimeout so the UI can update the spinners
+        //setTimeout(function () {
+        //    $(".transfer-progress").removeClass("visually-hidden");
+        //}, 1);
+        //$(ctl).prop("disabled", false).text(msg);
         return true;
         this.submit();
     }
+
+    $(function () {
+        $("#dismissBtn").click(function () {
+            // Hide the error message div
+            $("#TransferAssetMessage").fadeOut();
+        });
+    });
+
+    $(function () {
+        $("#RejectBtn").click(function () {
+            // Hide the error message div
+            $("#RejectMessge").fadeOut();
+        });
+    });
 </script>
 
 <div class="pagetitle">
@@ -402,6 +422,24 @@ chart.render();
         </ol>
     </nav>
 </div><!-- End Page Title -->
+
+@if (!string.IsNullOrEmpty(TransferAssetMessage))
+{
+    <div id="TransferAssetMessage" class="alert alert-success">
+        @TransferAssetMessage<button id="dismissBtn" type="button" class="close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(RejectMessge))
+{
+    <div id="RejectMessge" class="alert alert-danger">
+        @RejectMessge<button id="RejectBtn" type="button" class="close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
 
 <div class="row">
     <!-- Total Assets Card Example -->
@@ -547,8 +585,8 @@ chart.render();
                     <td>@Html.DisplayFor(modelItem => item.AssignDate)</td>
                     <td>@Html.DisplayFor(modelItem => item.ExpectedReturnDate)</td>
                     <td>
-                        <a class="AdminTransferAsset button btn btn-primary" data-toggle="modal" data-target="#AdminpartialModal" href="javascript:void(0);">
-                            Transfer
+                        <a class="AdminTransferAsset btn btn-primary" data-toggle="modal" data-target="#AdminpartialModal" href="javascript:void(0);">
+                            <i class="fa fa-paper-plane"></i>
                         </a>
                     </td>
                 </tr>
@@ -598,13 +636,13 @@ chart.render();
                     <td>@Html.DisplayFor(modelItem => item.TeamToWhichAssetisTransfered)</td>
                     <td>@Html.DisplayFor(modelItem => item.ToEmployeeName)</td>
                     <td>
-                        <a id="btnApprove" class="button btn btn-success" href="@Url.Action("SaveTransferAssetFromEmployee", "Admin", new { id = item.FromEmpID})">
-                            Approve
+                        <a id="btnApprove" class="btn btn-success" href="@Url.Action("SaveTransferAssetFromEmployee", "Admin", new { serialnumber = item.SerialNumberVersionNumber,fromEmpID=item.FromEmpID})">
+                            <i class="fa fa-thumbs-up" aria-hidden="true"></i>
                         </a>
                     </td>
                     <td>
-                        <a class="button btn btn-danger" href="@Url.Action("RejectTransferAssetFromEmployee", "Admin", new { id = item.FromEmpID})">
-                            Reject
+                        <a class="btn btn-danger" href="@Url.Action("RejectTransferAssetFromEmployee", "Admin", new { serialnumber = item.SerialNumberVersionNumber,fromEmpID=item.FromEmpID})">
+                            <i class="fa fa-thumbs-down" aria-hidden="true"></i>
                         </a>
                     </td>
                 </tr>
@@ -616,6 +654,31 @@ chart.render();
         Page @(Model.adminTable2Model.PageCount < Model.adminTable2Model.PageNumber ? 0 : Model.adminTable2Model.PageNumber)
         of @Model.adminTable2Model.PageCount @Html.PagedListPager(Model.adminTable2Model, page => Url.Action("Index", new { page }))
     </div>*@
+<div class="row">
+    <h4>Notification</h4>
+</div>
+<div class="row">
+    <table id="tblAdminNotificationManager" class="display compact table table-bordered table-primary">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Notification</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.adminNotificationManager)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Notification)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
 @using (Html.BeginForm("SaveTransferAsset", "Admin", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -631,8 +694,8 @@ chart.render();
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" onclick="return DisplaySendProgressMessage(this, 'Transfer...');" class="btn btn-primary">Transfer Asset</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" onclick="return DisplaySendProgressMessage(this, 'Transfer...');" class="btn btn-primary"><i class="fa fa-paper-plane">Transfer Asset</i></button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true">Close</i></button>
                 </div>
             </div>
         </div>

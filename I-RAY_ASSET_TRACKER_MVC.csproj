@@ -174,6 +174,7 @@
     <Compile Include="Controllers\AssetDeallocationController.cs" />
     <Compile Include="Controllers\AssetEntryController.cs" />
     <Compile Include="Controllers\AssetRemarksController.cs" />
+    <Compile Include="Controllers\AssetRequestRejectedController.cs" />
     <Compile Include="Controllers\AssetsReviewReportsController.cs" />
     <Compile Include="Controllers\AssetTrackerController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="Controllers\EmployeeListController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MyRequestListController.cs" />
+    <Compile Include="Controllers\NotificationManagerController.cs" />
     <Compile Include="Controllers\NotWorkingAssetListController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\UpdateAssetController.cs" />
@@ -205,6 +207,7 @@
     <Compile Include="Models\AssetEntryModel.cs" />
     <Compile Include="Models\AssetRemarksModel.cs" />
     <Compile Include="Models\AssetRequestModal.cs" />
+    <Compile Include="Models\AssetRequestRejectedModel.cs" />
     <Compile Include="Models\AssetsReviewReportsModel.cs" />
     <Compile Include="Models\AssetTrackingModel.cs" />
     <Compile Include="Models\AssignAssetApproval.cs" />
@@ -216,6 +219,7 @@
     <Compile Include="Models\EmployeeList.cs" />
     <Compile Include="Models\LoginModelClass.cs" />
     <Compile Include="Models\MyRequestListModel.cs" />
+    <Compile Include="Models\NotificationManagerModel.cs" />
     <Compile Include="Models\NotWorkingAssetListModel.cs" />
     <Compile Include="Models\ReportsModel.cs" />
     <Compile Include="Models\UpdateAssetModel.cs" />
@@ -2449,9 +2453,17 @@
     <Content Include="Views\UserLogin\forgotPassword.cshtml" />
     <Content Include="Views\ChangePassword\Index.cshtml" />
     <Content Include="Views\WorkingAssetList\SearchHWSWName.cshtml" />
+    <Content Include="Views\AssetEntry\BulkEntryAssets.cshtml" />
+    <Content Include="Views\AssetEntry\ConsumableBulkEntryAssets.cshtml" />
+    <Content Include="Views\AssetRequestRejected\Index.cshtml" />
+    <Content Include="Views\AssetRequestRejected\AssetRequestRejectedTeamList.cshtml" />
+    <Content Include="Views\NotificationManager\Index.cshtml" />
+    <Content Include="Views\NotificationManager\NotificationUpdatePartialView.cshtml" />
+    <Content Include="Views\NotificationManager\NotificationDeletePartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Files\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

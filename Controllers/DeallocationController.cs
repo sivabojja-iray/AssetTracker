@@ -18,7 +18,6 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
     public class DeallocationController : Controller
     {
         string constr = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
-        string r;
         string m;
         // GET: Deallocation
         public ActionResult Index(int? page)
@@ -93,34 +92,27 @@ namespace I_RAY_ASSET_TRACKER_MVC.Controllers
             con.Open();
             cmd4.ExecuteNonQuery();
             con.Close();
-            SqlCommand sqlCommand1 = new SqlCommand("SELECT Mail  FROM EmployeeList WHERE EmpID='" + Session["username"] + "'", con);
-            SqlCommand sqlCommand = new SqlCommand("SELECT Mail  FROM EmployeeList WHERE Team='" + Team + "' AND Role='Manager'", con);
+            SqlCommand sqlCommand1 = new SqlCommand("SELECT Mail FROM EmployeeList WHERE EmpID='" + Session["username"] + "'", con);
             con.Open();
-            SqlDataReader dr = sqlCommand.ExecuteReader();
-            if (dr.Read())
-            {
-                r = dr["Mail"].ToString();
-                con.Close();
-                con.Open();
-                SqlDataReader dr2 = sqlCommand1.ExecuteReader();
+            SqlDataReader dr2 = sqlCommand1.ExecuteReader();
                 if (dr2.Read())
                 {
                     m = dr2["Mail"].ToString();
                     con.Close();
                 }
-            }
             MailMessage mailMessage = new MailMessage();
-            mailMessage.From = new MailAddress(m);
-            mailMessage.To.Add(new MailAddress(r));
+            mailMessage.From = new MailAddress("assettracker@i-raysolutions.com");
+            mailMessage.To.Add(new MailAddress("phani.n@i-raysolutions.com"));
+            mailMessage.To.Add(new MailAddress(m));
             mailMessage.Subject = "Asset Deallocation Request";
             mailMessage.IsBodyHtml = true;
-            mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" + "<tr>" + "<th> EmpID </th>" + "<th> EmployeeName </th>" + "<th> Team </th>" + "<th> Assetbelongsto </th>" + "<th> AssetType </th>" + "<th> HWSWName </th>" + "<th> SerialNumberVersionNumber </th>" +
-                "<th> InvoiceNo </th>" + "<th> AssignDate </th>" + "<th> ExpectedReturnDate </th>" + "</tr>" + "<tr>" + "<td>" + Session["username"] + "</td>" + "<td>" + EmployeeName + "</td>" + "<td>" + Team + "</td>" + "<td>" + Assetbelongsto + "</td>" + "<td>" + AssetType + "</td>" +
-                "<td>" + HWSWName + "</td>" + "<td>" + SerialNumberVersionNumber + "</td>" + "<td>" + InvoiceNo + "</td>" + "<td>" + AssignDate + "</td>" + "<td>" + ReturnDate + "</tr>" + "</table>";
+            mailMessage.Body = "<table style= 'border: 1 ; align='center' border-color: #6495ED width: 100%' border='5'>" + "<tr>" + "<th bgcolor='#ffc107'> EmpID </th>" + "<th bgcolor='#ffc107'> EmployeeName </th>" + "<th bgcolor='#ffc107'> Team </th>" + "<th bgcolor='#ffc107'> Assetbelongsto </th>" + "<th bgcolor='#ffc107'> AssetType </th>" + "<th bgcolor='#ffc107'> HWSWName </th>" + "<th bgcolor='#ffc107'> SerialNumberVersionNumber </th>" +
+                "<th bgcolor='#ffc107'> InvoiceNo </th>" + "<th bgcolor='#ffc107'> AssignDate </th>" + "<th bgcolor='#ffc107'> ExpectedReturnDate </th>" + "</tr>" + "<tr>" + "<td>" + Session["username"] + "</td>" + "<td>" + EmployeeName + "</td>" + "<td>" + Team + "</td>" + "<td>" + Assetbelongsto + "</td>" + "<td>" + AssetType + "</td>" +
+                "<td style='font-weight:bold;font-size:15px;'>" + HWSWName + "</td>" + "<td style='font-weight:bold;font-size:15px;'>" + SerialNumberVersionNumber + "</td>" + "<td>" + InvoiceNo + "</td>" + "<td>" + AssignDate + "</td>" + "<td>" + ReturnDate + "</tr>" + "</table>";
             SmtpClient smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
             con.Close();
-            ViewBag.DeallocationRequestMessage = "The deallocate request was successfully sent..";
+            ViewBag.DeallocationRequestMessage = "The request for asset deallocation was sent through successfully...";
             return Json(ViewBag.DeallocationRequestMessage,JsonRequestBehavior.AllowGet);
         }
     }

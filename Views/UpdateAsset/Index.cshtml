@@ -2,7 +2,22 @@
 
 @{
     ViewBag.Title = "UpdateAsset";
-    Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    if (Session["Role"].ToString() == "AssetManager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "User")
+    {
+        Layout = "~/Views/Shared/UserDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Manager")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
+    else if (Session["Role"].ToString() == "Admin")
+    {
+        Layout = "~/Views/Shared/AdminDashBoardLayout.cshtml";
+    }
 }
 
 <style>
@@ -53,7 +68,7 @@
                     @Html.TextBoxFor(m => m.SerialNumber, new { @class = "form-control" })
                 </div>
                 <div class="col-md-4">
-                    <button id="showDataTableBtn" type="submit" class="btn btn-primary">Search</button>
+                    <button id="showDataTableBtn" type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true">Search</i></button>
                 </div>
             </div>
         </div>
